@@ -1,0 +1,21 @@
+{
+    "website_name": "داشبورد 2024",
+    "website_url": "loc22alhost.com",
+    "tax_number": "123123",
+    "address": "الرياض",
+    "building_number": "159",
+    "street_number": "1",
+    "phone": "0555555555",
+    "iban": "759212313543241351",
+    "is_tax": null,
+    "is_can_send_email": null,
+    "website_status": 1,
+    "logo": "settings/1700291887logo-icon.png",
+    "fav": "settings/1700291887logo-icon.png",
+    "maintainance_message": "نعتذر الموقع مغلق",
+    "whatsapp": "111111",
+    "snapchat": null,
+    "twitter": null,
+    "facebook": null,
+    "instagram": null
+}
