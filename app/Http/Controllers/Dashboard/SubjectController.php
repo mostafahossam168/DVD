@@ -6,10 +6,17 @@ use App\Models\User;
 use App\Models\Grade;
 use App\Models\Subject;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 
 class SubjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:read_subjects|create_subjects|update_subjects|delete_subjects', ['only' => ['index', 'store']]);
+        $this->middleware('permission:create_subjects', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update_subjects', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_subjects', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

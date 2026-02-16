@@ -58,7 +58,7 @@
 
 
         {{-- @endcan --}}
-        {{-- @can('read_statistics_home')
+        @can('read_statistics_home')
             <div class="row g-3 mb-2">
                 @can('read_admins')
                     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -114,13 +114,13 @@
                         </div>
                     </div>
                 @endcan
-                @can('read_categories')
+                @can('read_stages')
                     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                         <div class="box-statistic purple">
                             <div class="right-side">
-                                <h6 class="name">الاقسام</h6>
-                                <h3 class="amount num-stat" data-goal="{{ \App\Models\Category::count() }}">0</h3>
-                                <a href="{{ route('dashboard.categories.index') }}" class="link-view">عرض جميع الاقسام</a>
+                                <h6 class="name">المراحل الدراسيه</h6>
+                                <h3 class="amount num-stat" data-goal="{{ \App\Models\Stage::count() }}">0</h3>
+                                <a href="{{ route('dashboard.stages.index') }}" class="link-view">عرض جميع المراحل الدراسيه</a>
                             </div>
                             <div class="left-side">
                                 <p class="status-number up"> </i></p>
@@ -133,7 +133,7 @@
                 @endcan
                 <div class="col-12 col-md-12">
                     <div class="row g-3">
-                        <div class="col-12 col-md-6">
+                        {{-- <div class="col-12 col-md-6">
                             <div class="card">
                                 <div class="card-header bg-white">
                                     📊 إحصائيات التسجيل في الكورسات </div>
@@ -141,19 +141,19 @@
                                     <canvas id="enrollmentsChart" height="200"></canvas>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-12 col-md-6">
                             <div class="row g-3">
-                                @can('read_courses')
+                                @can('read_subjects')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic green">
                                             <div class="right-side">
-                                                <h6 class="name">الكورسات</h6>
+                                                <h6 class="name">المواد</h6>
                                                 <h3 class="amount"><span class="num-stat"
-                                                        data-goal="{{ \App\Models\Course::count() }}">0</span>
+                                                        data-goal="{{ \App\Models\Subject::count() }}">0</span>
                                                 </h3>
-                                                <a href="{{ route('dashboard.courses.index') }}" class="link-view">عرض جميع
-                                                    الكورسات</a>
+                                                <a href="{{ route('dashboard.subjects.index') }}" class="link-view">عرض جميع
+                                                    المواد</a>
                                             </div>
                                             <div class="left-side">
                                                 <p class="status-number"></p>
@@ -164,13 +164,13 @@
                                         </div>
                                     </div>
                                 @endcan
-                                @can('read_lessons')
+                                @can('read_lectuers')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic ">
                                             <div class="right-side">
                                                 <h6 class="name">الدروس</h6>
-                                                <h3 class="amount num-stat" data-goal="{{ App\Models\Lesson::count() }}">0</h3>
-                                                <a href="{{ route('dashboard.lessons.index') }}" class="link-view">عرض جميع
+                                                <h3 class="amount num-stat" data-goal="{{ App\Models\Lecture::count() }}">0</h3>
+                                                <a href="{{ route('dashboard.lectuers.index') }}" class="link-view">عرض جميع
                                                     الدروس</a>
                                             </div>
                                             <div class="left-side">
@@ -202,7 +202,7 @@
                                         </div>
                                     </div>
                                 @endcan
-                                @can('read_coupones')
+                                {{-- @can('read_coupones')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic purple">
                                             <div class="right-side">
@@ -220,8 +220,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endcan
-                                @can('read_contacts')
+                                @endcan --}}
+                                {{-- @can('read_contacts')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic purple">
                                             <div class="right-side">
@@ -239,7 +239,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endcan
+                                @endcan --}}
                                 @can('read_settings')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic blue">
@@ -263,9 +263,37 @@
                     </div>
                 </div>
             </div>
-        @endcan --}}
+        @endcan
     </div>
 @endsection
+@push('scripts')
+    <script>
+        if (document.querySelectorAll(".num-stat")) {
+            let numStats = document.querySelectorAll(".num-stat");
+            let started = false;
+            document.addEventListener("DOMContentLoaded", function() {
+                numStats.forEach((num) => startCount(num));
+            });
+
+            function startCount(el) {
+                let goal = el.dataset.goal;
+                let duration = 1000; // تحديد المدة الزمنية
+                let start = null;
+
+                function updateCount(timestamp) {
+                    if (!start) start = timestamp;
+                    let progress = timestamp - start;
+                    let increment = Math.floor((progress / duration) * goal);
+                    el.textContent = increment > goal ? goal : increment;
+                    if (progress < duration) {
+                        requestAnimationFrame(updateCount);
+                    }
+                }
+                requestAnimationFrame(updateCount);
+            }
+        }
+    </script>
+@endpush
 {{-- @push('scripts')
     <script>
         if (document.querySelectorAll(".num-stat")) {

@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Stage;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 
 class StageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:read_stages|create_stages|update_stages|delete_stages', ['only' => ['index', 'store']]);
+        $this->middleware('permission:create_stages', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update_stages', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_stages', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

@@ -19,4 +19,13 @@ class Plan extends Model
     {
         return $this->hasMany(TeacherSubscription::class);
     }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', true);
+    }
+    public function scopeInactive($q)
+    {
+        return $q->where('status', false);
+    }
 }

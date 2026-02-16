@@ -18,4 +18,13 @@ class Material extends Model
     {
         return $this->belongsTo(Lecture::class);
     }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', true);
+    }
+    public function scopeInactive($q)
+    {
+        return $q->where('status', false);
+    }
 }

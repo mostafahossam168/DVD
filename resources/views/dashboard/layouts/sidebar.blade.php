@@ -91,6 +91,57 @@
                 </a>
             </li>
         @endcan
+        @can('read_plans')
+            <li class="list-item {{ request()->routeIs('dashboard.plans.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.plans.index') }}">
+                    <div>
+                        <i class="fa-solid fa-sitemap"></i>
+                        اشتراكات المدرسين
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_lectuers')
+            <li class="list-item {{ request()->routeIs('dashboard.lectuers.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.lectuers.index') }}">
+                    <div>
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        الدروس
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_materials')
+            <li class="list-item {{ request()->routeIs('dashboard.materials.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.materials.index') }}">
+                    <div>
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        materials
+                    </div>
+                </a>
+            </li>
+        @endcan
+
+        @can('read_quizes')
+            <li class="list-item {{ request()->routeIs('dashboard.quizes.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.quizes.index') }}">
+                    <div>
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        الاختبارات
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_questions')
+            <li class="list-item {{ request()->routeIs('dashboard.questions.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.questions.index') }}">
+                    <div>
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        الاسئله
+                    </div>
+                </a>
+            </li>
+        @endcan
         {{-- @endcan --}}
         {{-- <li class="list-item">
             <a href="index.html">
