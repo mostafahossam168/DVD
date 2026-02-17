@@ -1,8 +1,8 @@
 {
-    "website_name": "داشبورد 2024",
+    "website_name": "منصة فاهم",
     "website_url": "loc22alhost.com",
     "tax_number": "123123",
-    "address": "الرياض",
+    "address": "القاهره , مصر",
     "building_number": "159",
     "street_number": "1",
     "phone": "0555555555",
@@ -16,6 +16,8 @@
     "whatsapp": "111111",
     "snapchat": null,
     "twitter": null,
-    "facebook": null,
-    "instagram": null
+    "facebook": "https://www.facebook.com/share/1ArJ6mUkzz/",
+    "instagram": "https://www.instagram.com/fahem.education",
+    "youtube":"https://youtube.com/@fahem-education",
+    "tiktok":"https://www.tiktok.com/@fahem.education"
 }

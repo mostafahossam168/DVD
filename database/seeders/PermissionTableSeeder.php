@@ -28,7 +28,7 @@ class PermissionTableSeeder extends Seeder
 
         Permission::truncate();
         Role::truncate();
-        $admin_role = Role::create(['name' => 'مدير عام']);
+        $admin_role = Role::create(['name' => 'admin']);
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
             $admin_role->givePermissionTo($permission);

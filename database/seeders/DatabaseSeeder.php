@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             StageSeeder::class,
             SubjectSeeder::class,
             SettingSeeder::class,
+            // PermissionTableSeeder::class,
         ]);
     }
 }

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Routing\Controller;
+use Illuminate\Routing\Controller;
 
-class AdminController extends \Illuminate\Routing\Controller
+class AdminController extends Controller
 {
     public function __construct()
     {

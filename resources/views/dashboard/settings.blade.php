@@ -103,6 +103,29 @@
                 <div class="col-12 col-md-4">
                     <div class="inp-holder">
                         <label class="special-input">
+                            <span> فيسبوك</span>
+                            <div class="box-input">
+                                <input type="tel" name="facebook" value="{{ setting('facebook') }}" id="">
+                                <img src="img/icons/call.png" alt="icon" class="icon">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="inp-holder">
+                        <label class="special-input">
+                            <span>انستجرام</span>
+                            <div class="box-input">
+                                <input type="tel" name="instagram" value="{{ setting('instagram') }}"
+                                    id="">
+                                <img src="img/icons/call.png" alt="icon" class="icon">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="inp-holder">
+                        <label class="special-input">
                             <span>رقم الحساب (الايبان)</span>
                             <div class="box-input">
                                 <input type="number" name="iban" value="{{ setting('iban') }}" id="">
