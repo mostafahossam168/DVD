@@ -23,10 +23,23 @@ class MaterialController extends Controller
     {
         $status = request('status');
         $search = request('search');
+        $lecture_id = request('lecture_id');
 
-        $items = Material::when($search, function ($q) use ($search) {
-            $q->whereAny(['title', 'description'], 'LIKE',  "%$search%");
+        $query = Material::with(['lecture.subject']);
+
+        // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الملفات للدروس الخاصة بالمواد الخاصة به
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $query->whereHas('lecture.subject.teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            });
+        }
+
+        $items = $query->when($search, function ($q) use ($search) {
+            $q->whereAny(['title'], 'LIKE',  "%$search%");
         })
+            ->when($lecture_id, function ($q) use ($lecture_id) {
+                $q->where('lecture_id', $lecture_id);
+            })
             ->when($status, function ($q) use ($status) {
                 if ($status == 'yes') {
                     $q->active();
@@ -36,10 +49,19 @@ class MaterialController extends Controller
                 }
             })->latest()->paginate(20);
 
-        $count_all = Material::count();
-        $count_active = Material::active()->count();
-        $count_inactive = Material::inactive()->count();
-        $lectuers = Lecture::get();
+        $count_all = $query->count();
+        $count_active = (clone $query)->active()->count();
+        $count_inactive = (clone $query)->inactive()->count();
+
+        // جلب الدروس للمدرس فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $lectuers = Lecture::whereHas('subject.teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            })->get();
+        } else {
+            $lectuers = Lecture::get();
+        }
+
         return view('dashboard.materials.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'lectuers'));
     }
 
@@ -62,6 +84,14 @@ class MaterialController extends Controller
             'file' => 'required|file|mimes:pdf,doc,docx|max:10000',
             'status' => 'required|boolean',
         ]);
+
+        // التحقق من أن المدرس يضيف ملف لدرس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
+            if (!$lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                return redirect()->back()->with('error', 'غير مصرح لك بإضافة ملف لهذا الدرس');
+            }
+        }
 
         $data['file'] = store_file($request->file, 'materials');
         Material::create($data);
@@ -89,13 +119,30 @@ class MaterialController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $item =  Material::findOrFail($id);
+        $item = Material::with(['lecture.subject'])->findOrFail($id);
+
+        // التحقق من أن المدرس يعدل ملف لدرس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            if (!$item->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                abort(403, 'غير مصرح لك بتعديل هذا الملف');
+            }
+        }
+
         $data = $request->validate([
             'lecture_id' => 'required|exists:lectures,id',
             'title' => 'required|string',
             'file' => 'nullable|file|mimes:pdf,doc,docx|max:10000',
             'status' => 'required|boolean',
         ]);
+
+        // التحقق من أن المدرس يضيف ملف لدرس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
+            if (!$lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                return redirect()->back()->with('error', 'غير مصرح لك بإضافة ملف لهذا الدرس');
+            }
+        }
+
         if ($request->hasFile('file')) {
             delete_file($item->file);
             $data['file'] = store_file($request->file, 'materials');
@@ -109,9 +156,17 @@ class MaterialController extends Controller
      */
     public function destroy(string $id)
     {
-        $item =  Material::findOrFail($id);
+        $item = Material::with(['lecture.subject'])->findOrFail($id);
+
+        // التحقق من أن المدرس يحذف ملف لدرس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            if (!$item->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                abort(403, 'غير مصرح لك بحذف هذا الملف');
+            }
+        }
+
         delete_file($item->file);
         $item->delete();
-        return redirect()->route('dashboard.materials.index')->with('success', 'تم حفظ البيانات بنجاح');
+        return redirect()->route('dashboard.materials.index')->with('success', 'تم حذف البيانات بنجاح');
     }
 }

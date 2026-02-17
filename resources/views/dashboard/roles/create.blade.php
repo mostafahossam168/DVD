@@ -41,7 +41,7 @@
                     <table class="table-role table table-bordered">
                         @foreach ($permissions as $name => $model_permissions)
                             <tr>
-                                <th> @lang($name) </th>
+                                <th> {{ trans('models.' . $name, [], 'ar') ?: ucfirst($name) }} </th>
                                 @foreach ($model_permissions as $model_permission)
                                     <td>
                                         <div class="toggle">
@@ -52,7 +52,7 @@
                                                 <span class="slider round"></span>
                                             </label>
                                             <label for="{{ $model_permission . '_' . $name }}"
-                                                class='title'>{{ __($model_permission) }}</label>
+                                                class='title'>{{ trans('actions.' . $model_permission, [], 'ar') ?: __($model_permission) }}</label>
                                         </div>
                                     </td>
                                 @endforeach

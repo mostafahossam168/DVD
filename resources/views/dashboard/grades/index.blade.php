@@ -44,6 +44,20 @@
             </div>
 
         </div>
+        
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-3">
+                <select name="stage_id" class="form-select" onchange="filterGrades()">
+                    <option value="">جميع المراحل</option>
+                    @foreach($stages as $stage)
+                        <option value="{{ $stage->id }}" @selected(request('stage_id') == $stage->id)>
+                            {{ $stage->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        
         <div class="table-responsive">
             <table class="main-table mb-2">
                 <thead>
@@ -99,4 +113,19 @@
             {{ $items->links() }}
         </div>
     </div>
+    
+    <script>
+        function filterGrades() {
+            const stageId = document.querySelector('select[name="stage_id"]').value;
+            const url = new URL(window.location.href);
+            
+            if (stageId) {
+                url.searchParams.set('stage_id', stageId);
+            } else {
+                url.searchParams.delete('stage_id');
+            }
+            
+            window.location.href = url.toString();
+        }
+    </script>
 @endsection

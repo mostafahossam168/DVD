@@ -16,14 +16,22 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
-                            <label for=""> الصف الدراسيه</label>
-                            <select name="grade_id" id="" class="form-control">
-                                <option value="">-- اختر --</option>
-                                @foreach ($grades as $grade)
-                                    <option value="{{ $grade->id }}">
-                                        {{ $grade->name }}
+                            <label for="">المرحلة الدراسية</label>
+                            <select name="stage_id" id="stage_id_subject" class="form-control">
+                                <option value="">-- اختر المرحلة --</option>
+                                @foreach ($stages as $stage)
+                                    <option value="{{ $stage->id }}">
+                                        {{ $stage->name }}
                                     </option>
                                 @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="">الصف الدراسي</label>
+                            <select name="grade_id" id="grade_id_subject" class="form-control">
+                                <option value="">-- اختر المرحلة أولاً --</option>
                             </select>
                         </div>
                     </div>

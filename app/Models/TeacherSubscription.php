@@ -10,10 +10,8 @@ class TeacherSubscription extends Model
 {
     protected $fillable = [
         'user_id',
-        'paln_id',
+        'plan_id',
         'status',
-        // 'start_date',
-        // 'end_date',
     ];
 
     public function plan()
@@ -24,5 +22,15 @@ class TeacherSubscription extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', true);
+    }
+
+    public function scopeInactive($q)
+    {
+        return $q->where('status', false);
     }
 }

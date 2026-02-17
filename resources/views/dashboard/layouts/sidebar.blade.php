@@ -65,8 +65,8 @@
             <li class="list-item {{ request()->routeIs('dashboard.stages.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.stages.index') }}">
                     <div>
-                        <i class="fa-solid fa-sitemap"></i>
-                        المراحل الدراسيه
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        المراحل الدراسية
                     </div>
                 </a>
             </li>
@@ -75,8 +75,8 @@
             <li class="list-item {{ request()->routeIs('dashboard.grades.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.grades.index') }}">
                     <div>
-                        <i class="fa-solid fa-sitemap"></i>
-                        الصفوف الدراسيه
+                        <i class="fa-solid fa-layer-group"></i>
+                        الصفوف الدراسية
                     </div>
                 </a>
             </li>
@@ -85,8 +85,8 @@
             <li class="list-item {{ request()->routeIs('dashboard.subjects.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.subjects.index') }}">
                     <div>
-                        <i class="fa-solid fa-sitemap"></i>
-                        المواد الدراسيه
+                        <i class="fa-solid fa-book"></i>
+                        المواد الدراسية
                     </div>
                 </a>
             </li>
@@ -95,8 +95,38 @@
             <li class="list-item {{ request()->routeIs('dashboard.plans.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.plans.index') }}">
                     <div>
-                        <i class="fa-solid fa-sitemap"></i>
+                        <i class="fa-solid fa-credit-card"></i>
+                        الخطط
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_teacher_subscriptions')
+            <li class="list-item {{ request()->routeIs('dashboard.teacher-subscriptions.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.teacher-subscriptions.index') }}">
+                    <div>
+                        <i class="fa-solid fa-user-check"></i>
                         اشتراكات المدرسين
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_subscriptions')
+            <li class="list-item {{ request()->routeIs('dashboard.subscriptions.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.subscriptions.index') }}">
+                    <div>
+                        <i class="fa-solid fa-user-graduate"></i>
+                        اشتراكات الطلاب
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_coupons')
+            <li class="list-item {{ request()->routeIs('dashboard.coupons.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.coupons.index') }}">
+                    <div>
+                        <i class="fa-solid fa-gift"></i>
+                        الكوبونات
                     </div>
                 </a>
             </li>
@@ -105,7 +135,7 @@
             <li class="list-item {{ request()->routeIs('dashboard.lectuers.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.lectuers.index') }}">
                     <div>
-                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        <i class="fa-solid fa-video"></i>
                         الدروس
                     </div>
                 </a>
@@ -115,8 +145,8 @@
             <li class="list-item {{ request()->routeIs('dashboard.materials.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.materials.index') }}">
                     <div>
-                        <i class="fa-solid fa-chalkboard-teacher"></i>
-                        materials
+                        <i class="fa-solid fa-file-pdf"></i>
+                        المواد التعليمية
                     </div>
                 </a>
             </li>
@@ -126,7 +156,7 @@
             <li class="list-item {{ request()->routeIs('dashboard.quizes.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.quizes.index') }}">
                     <div>
-                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        <i class="fa-solid fa-clipboard-question"></i>
                         الاختبارات
                     </div>
                 </a>
@@ -136,8 +166,8 @@
             <li class="list-item {{ request()->routeIs('dashboard.questions.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.questions.index') }}">
                     <div>
-                        <i class="fa-solid fa-chalkboard-teacher"></i>
-                        الاسئله
+                        <i class="fa-solid fa-question-circle"></i>
+                        الأسئلة
                     </div>
                 </a>
             </li>

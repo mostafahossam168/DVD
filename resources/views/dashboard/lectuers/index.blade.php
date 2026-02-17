@@ -10,7 +10,7 @@
         <div class="bar-obtions d-flex align-items-end justify-content-between flex-wrap gap-3 mb-4">
             <div class="row flex-fill g-3">
                 <div class="d-flex align-items-center gap-2 mt-2">
-                    @can('create_teachers')
+                    @can('create_lectuers')
                         <a href="{{ route('dashboard.lectuers.create') }}" class="main-btn "><i class="fas fa-plus"></i> اضافة
                         </a>
                     @endcan
@@ -38,6 +38,22 @@
             </div>
 
         </div>
+        
+        @if(isset($subjects) && $subjects->count() > 0)
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-3">
+                <select name="subject_id" class="form-select" onchange="filterLectures()">
+                    <option value="">جميع المواد</option>
+                    @foreach($subjects as $subject)
+                        <option value="{{ $subject->id }}" @selected(request('subject_id') == $subject->id)>
+                            {{ $subject->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        @endif
+        
         <x-alert-component></x-alert-component>
         <div class="table-responsive">
             <table class="main-table">
@@ -108,4 +124,21 @@
         {{ $items->links() }}
 
     </div>
+    
+    @if(isset($subjects) && $subjects->count() > 0)
+    <script>
+        function filterLectures() {
+            const subjectId = document.querySelector('select[name="subject_id"]').value;
+            const url = new URL(window.location.href);
+            
+            if (subjectId) {
+                url.searchParams.set('subject_id', subjectId);
+            } else {
+                url.searchParams.delete('subject_id');
+            }
+            
+            window.location.href = url.toString();
+        }
+    </script>
+    @endif
 @endsection

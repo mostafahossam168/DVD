@@ -79,6 +79,7 @@ return [
     'open_website'    => 'فتح على الموقع',
     'preview'         => 'معاينة',
     'price'           => 'السعر',
+    'read'            => 'عرض',
     'record'          => 'سجل',
     'restore'         => 'استعادة',
     'save'            => 'حفظ',

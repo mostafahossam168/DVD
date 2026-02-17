@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
 use App\Models\Grade;
+use App\Models\Stage;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+
 
 class SubjectController extends Controller
 {
@@ -25,11 +27,28 @@ class SubjectController extends Controller
         $status = request('status');
         $search = request('search');
         $grade_id = request('grade_id');
-        $items = Subject::when($search, function ($q) use ($search) {
+        $stage_id = request('stage_id');
+
+        $query = Subject::query();
+
+        // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط المواد الخاصة به
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $query->whereHas('teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            });
+        }
+
+        $items = $query->when($search, function ($q) use ($search) {
             $q->where('name', 'LIKE',  "%$search%");
-        })->when($grade_id, function ($q) use ($grade_id) {
-            $q->where('grade_id', $grade_id);
         })
+            ->when($stage_id, function ($q) use ($stage_id) {
+                $q->whereHas('grade', function ($query) use ($stage_id) {
+                    $query->where('stage_id', $stage_id);
+                });
+            })
+            ->when($grade_id, function ($q) use ($grade_id) {
+                $q->where('grade_id', $grade_id);
+            })
             ->when($status, function ($q) use ($status) {
                 if ($status == 'yes') {
                     $q->active();
@@ -39,12 +58,13 @@ class SubjectController extends Controller
                 }
             })->latest()->paginate(20);
 
-        $count_all = Subject::count();
-        $count_active = Subject::active()->count();
-        $count_inactive = Subject::inactive()->count();
+        $count_all = $query->count();
+        $count_active = (clone $query)->active()->count();
+        $count_inactive = (clone $query)->inactive()->count();
         $grades = Grade::all();
+        $stages = Stage::active()->get();
         $teachers = User::teachers()->get();
-        return view('dashboard.subjects.index', compact('items', 'count_all', 'teachers', 'count_active', 'count_inactive', 'grades'));
+        return view('dashboard.subjects.index', compact('items', 'count_all', 'teachers', 'count_active', 'count_inactive', 'grades', 'stages'));
     }
 
     /**

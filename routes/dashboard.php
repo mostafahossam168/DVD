@@ -18,6 +18,9 @@ use App\Http\Controllers\Dashboard\SubjectController;
 use App\Http\Controllers\Dashboard\TeacherController;
 use App\Http\Controllers\Dashboard\MaterialController;
 use App\Http\Controllers\Dashboard\QuestionController;
+use App\Http\Controllers\Dashboard\SubscriptionController;
+use App\Http\Controllers\Dashboard\TeacherSubscriptionController;
+use App\Http\Controllers\Dashboard\CouponController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'submitLogin'])->name('login-submit');
@@ -40,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('materials', MaterialController::class);
     Route::resource('quizes', QuizeController::class);
     Route::resource('questions', QuestionController::class);
+    Route::resource('subscriptions', SubscriptionController::class);
+    Route::resource('teacher-subscriptions', TeacherSubscriptionController::class);
+    Route::resource('coupons', CouponController::class);
 
     Route::get('get-grades/{id}', function ($id) {
         $classes = Grade::where('stage_id', $id)->get()->pluck('id', 'name');

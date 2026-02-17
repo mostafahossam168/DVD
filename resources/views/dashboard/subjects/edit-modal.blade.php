@@ -19,13 +19,28 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
-                            <label for=""> الصف الدراسيه</label>
-                            <select name="grade_id" id="" class="form-control">
-                                <option value="">-- اختر --</option>
-                                @foreach ($grades as $grade)
-                                    <option value="{{ $grade->id }}" @selected($grade->id == $item->grade_id)>
-                                        {{ $grade->name }}
+                            <label for="">المرحلة الدراسية</label>
+                            <select name="stage_id" id="stage_id_subject_edit{{ $item->id }}" class="form-control">
+                                <option value="">-- اختر المرحلة --</option>
+                                @foreach ($stages as $stage)
+                                    <option value="{{ $stage->id }}" @selected($stage->id == $item->grade->stage_id)>
+                                        {{ $stage->name }}
                                     </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="">الصف الدراسي</label>
+                            <select name="grade_id" id="grade_id_subject_edit{{ $item->id }}" class="form-control">
+                                <option value="">-- اختر المرحلة أولاً --</option>
+                                @foreach ($grades as $grade)
+                                    @if($grade->stage_id == $item->grade->stage_id)
+                                        <option value="{{ $grade->id }}" @selected($grade->id == $item->grade_id)>
+                                            {{ $grade->name }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

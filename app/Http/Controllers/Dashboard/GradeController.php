@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Grade;
 use App\Models\Stage;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 
 class GradeController extends Controller
 {
@@ -34,7 +34,7 @@ class GradeController extends Controller
         $count_all = Grade::count();
         $count_active = Grade::active()->count();
         $count_inactive = Grade::inactive()->count();
-        $stages = Stage::all();
+        $stages = Stage::active()->get();
         return view('dashboard.grades.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'stages'));
     }
 

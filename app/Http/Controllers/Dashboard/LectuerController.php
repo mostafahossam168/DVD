@@ -24,10 +24,23 @@ class LectuerController extends Controller
     {
         $status = request('status');
         $search = request('search');
+        $subject_id = request('subject_id');
 
-        $items = Lecture::when($search, function ($q) use ($search) {
+        $query = Lecture::with('subject');
+
+        // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الدروس للمواد الخاصة به
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $query->whereHas('subject.teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            });
+        }
+
+        $items = $query->when($search, function ($q) use ($search) {
             $q->whereAny(['title', 'description'], 'LIKE',  "%$search%");
         })
+            ->when($subject_id, function ($q) use ($subject_id) {
+                $q->where('subject_id', $subject_id);
+            })
             ->when($status, function ($q) use ($status) {
                 if ($status == 'yes') {
                     $q->active();
@@ -37,10 +50,20 @@ class LectuerController extends Controller
                 }
             })->latest()->paginate(20);
 
-        $count_all = Lecture::count();
-        $count_active = Lecture::active()->count();
-        $count_inactive = Lecture::inactive()->count();
-        return view('dashboard.lectuers.index', compact('items', 'count_all', 'count_active', 'count_inactive'));
+        $count_all = $query->count();
+        $count_active = (clone $query)->active()->count();
+        $count_inactive = (clone $query)->inactive()->count();
+
+        // جلب المواد للمدرس فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $subjects = Subject::whereHas('teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            })->active()->get();
+        } else {
+            $subjects = Subject::active()->get();
+        }
+
+        return view('dashboard.lectuers.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'subjects'));
     }
 
     /**
@@ -49,7 +72,17 @@ class LectuerController extends Controller
     public function create()
     {
         $stages = Stage::get();
-        return view('dashboard.lectuers.create', compact('stages'));
+
+        // جلب المواد للمدرس فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $subjects = Subject::whereHas('teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            })->active()->get();
+        } else {
+            $subjects = Subject::active()->get();
+        }
+
+        return view('dashboard.lectuers.create', compact('stages', 'subjects'));
     }
 
     /**
@@ -64,6 +97,14 @@ class LectuerController extends Controller
             'link' => 'required|url',
             'status' => 'required|boolean',
         ]);
+
+        // التحقق من أن المدرس يضيف درس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $subject = Subject::findOrFail($data['subject_id']);
+            if (!$subject->teachers()->where('users.id', auth()->id())->exists()) {
+                return redirect()->back()->with('error', 'غير مصرح لك بإضافة درس لهذه المادة');
+            }
+        }
 
         Lecture::create($data);
         return redirect()->route('dashboard.lectuers.index')->with('success', 'تم حفظ البيانات بنجاح');
@@ -83,8 +124,25 @@ class LectuerController extends Controller
     public function edit(string $id)
     {
         $stages = Stage::get();
-        $item = Lecture::findOrFail($id);
-        return view('dashboard.lectuers.edit', compact('item', 'stages'));
+        $item = Lecture::with('subject')->findOrFail($id);
+
+        // التحقق من أن المدرس يعدل درس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                abort(403, 'غير مصرح لك بتعديل هذا الدرس');
+            }
+        }
+
+        // جلب المواد للمدرس فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $subjects = Subject::whereHas('teachers', function ($q) {
+                $q->where('users.id', auth()->id());
+            })->active()->get();
+        } else {
+            $subjects = Subject::active()->get();
+        }
+
+        return view('dashboard.lectuers.edit', compact('item', 'stages', 'subjects'));
     }
 
     /**
@@ -92,7 +150,15 @@ class LectuerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $item = Lecture::findOrFail($id);
+        $item = Lecture::with('subject')->findOrFail($id);
+
+        // التحقق من أن المدرس يعدل درس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                abort(403, 'غير مصرح لك بتعديل هذا الدرس');
+            }
+        }
+
         $data = $request->validate([
             'title' => 'required|string',
             'subject_id' => 'required|exists:subjects,id',
@@ -100,6 +166,15 @@ class LectuerController extends Controller
             'link' => 'required|url',
             'status' => 'required|boolean',
         ]);
+
+        // التحقق من أن المدرس يضيف درس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $subject = Subject::findOrFail($data['subject_id']);
+            if (!$subject->teachers()->where('users.id', auth()->id())->exists()) {
+                return redirect()->back()->with('error', 'غير مصرح لك بإضافة درس لهذه المادة');
+            }
+        }
+
         $item->update($data);
         return redirect()->route('dashboard.lectuers.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
@@ -109,7 +184,15 @@ class LectuerController extends Controller
      */
     public function destroy(string $id)
     {
-        $item = Lecture::findOrFail($id);
+        $item = Lecture::with('subject')->findOrFail($id);
+
+        // التحقق من أن المدرس يحذف درس لمادة خاصة به فقط
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+                abort(403, 'غير مصرح لك بحذف هذا الدرس');
+            }
+        }
+
         $item->delete();
         return redirect()->route('dashboard.lectuers.index')->with('success', 'تم حذف البيانات بنجاح');
     }

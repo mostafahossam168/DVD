@@ -45,6 +45,22 @@
             </div>
 
         </div>
+        
+        @if(isset($lectuers) && $lectuers->count() > 0)
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-3">
+                <select name="lecture_id" class="form-select" onchange="filterMaterials()">
+                    <option value="">جميع الدروس</option>
+                    @foreach($lectuers as $lecture)
+                        <option value="{{ $lecture->id }}" @selected(request('lecture_id') == $lecture->id)>
+                            {{ $lecture->title }} - {{ $lecture->subject->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        @endif
+        
         <div class="table-responsive">
             <table class="main-table mb-2">
                 <thead>
@@ -103,4 +119,21 @@
             {{ $items->links() }}
         </div>
     </div>
+    
+    @if(isset($lectuers) && $lectuers->count() > 0)
+    <script>
+        function filterMaterials() {
+            const lectureId = document.querySelector('select[name="lecture_id"]').value;
+            const url = new URL(window.location.href);
+            
+            if (lectureId) {
+                url.searchParams.set('lecture_id', lectureId);
+            } else {
+                url.searchParams.delete('lecture_id');
+            }
+            
+            window.location.href = url.toString();
+        }
+    </script>
+    @endif
 @endsection
