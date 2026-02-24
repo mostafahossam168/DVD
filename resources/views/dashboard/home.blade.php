@@ -1,51 +1,7 @@
 @extends('dashboard.layouts.backend')
 
 @section('contant')
-    {{-- <style>
-        .box-online {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-            /* width: -moz-fit-content; */
-            width: fit-content;
-            padding: 6px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
 
-        .box-online .user-holder {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .box-online .user-holder .img-holder {
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-        }
-
-        .box-online .user-holder .img-holder img {
-            width: 100%;
-            height: 100%;
-            -o-object-fit: cover;
-            object-fit: cover;
-        }
-
-        .box-online .user-holder .title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0;
-        }
-
-        .box-online .icon-holder i,
-        .box-online .icon-holder svg {
-            font-size: 11px;
-            color: rgb(3, 173, 3);
-        }
-    </style> --}}
     <div class="main-side">
         <div class="d-flex align-items-center flex-warp gap-4 mb-3">
             <div class="main-title mb-0">
@@ -202,25 +158,6 @@
                                         </div>
                                     </div>
                                 @endcan
-                                {{-- @can('read_coupones')
-                                    <div class="col-12 col-md-6">
-                                        <div class="box-statistic purple">
-                                            <div class="right-side">
-                                                <h6 class="name"> العروض</h6>
-                                                <h3 class="amount num-stat" data-goal="{{ App\Models\Coupone::count() }}">0
-                                                </h3>
-                                                <a href="{{ route('dashboard.coupones.index') }}" class="link-view">عرض جميع
-                                                    العروض </a>
-                                            </div>
-                                            <div class="left-side">
-                                                <p class="status-number up"></p>
-                                                <div class="icon-holder yellow">
-                                                    <i class="fa-solid fa-gift"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endcan --}}
                                 {{-- @can('read_contacts')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic purple">
@@ -295,32 +232,6 @@
     </script>
 @endpush
 {{-- @push('scripts')
-    <script>
-        if (document.querySelectorAll(".num-stat")) {
-            let numStats = document.querySelectorAll(".num-stat");
-            let started = false;
-            document.addEventListener("DOMContentLoaded", function() {
-                numStats.forEach((num) => startCount(num));
-            });
-
-            function startCount(el) {
-                let goal = el.dataset.goal;
-                let duration = 2000; // تحديد المدة الزمنية
-                let start = null;
-
-                function updateCount(timestamp) {
-                    if (!start) start = timestamp;
-                    let progress = timestamp - start;
-                    let increment = Math.floor((progress / duration) * goal);
-                    el.textContent = increment > goal ? goal : increment;
-                    if (progress < duration) {
-                        requestAnimationFrame(updateCount);
-                    }
-                }
-                requestAnimationFrame(updateCount);
-            }
-        }
-    </script>
 
     @php
         $courses = App\Models\Course::withCount('students')->get();
