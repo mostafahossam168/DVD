@@ -15,6 +15,52 @@
 
         {{-- @endcan --}}
         @can('read_statistics_home')
+            @if($isTeacher ?? false)
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <div class="box-statistic green">
+                            <div class="right-side">
+                                <h6 class="name">موادي</h6>
+                                <h3 class="amount"><span class="num-stat" data-goal="{{ $teacherSubjectsCount ?? 0 }}">0</span></h3>
+                                <a href="{{ route('dashboard.subjects.index') }}" class="link-view">عرض المواد</a>
+                            </div>
+                            <div class="left-side">
+                                <div class="icon-holder">
+                                    <i class="fa-solid fa-book"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="box-statistic">
+                            <div class="right-side">
+                                <h6 class="name">دروسي</h6>
+                                <h3 class="amount"><span class="num-stat" data-goal="{{ $teacherLecturesCount ?? 0 }}">0</span></h3>
+                                <a href="{{ route('dashboard.lectuers.index') }}" class="link-view">عرض الدروس</a>
+                            </div>
+                            <div class="left-side">
+                                <div class="icon-holder blue">
+                                    <i class="fa-solid fa-chalkboard-teacher"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="box-statistic yellow">
+                            <div class="right-side">
+                                <h6 class="name">الطلاب المسجلين في موادي</h6>
+                                <h3 class="amount"><span class="num-stat" data-goal="{{ $teacherStudentsCount ?? 0 }}">0</span></h3>
+                                <a href="{{ route('dashboard.subscriptions.index') }}" class="link-view">عرض الطلاب</a>
+                            </div>
+                            <div class="left-side">
+                                <div class="icon-holder green">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="row g-3 mb-2">
                 @can('read_admins')
                     <div class="col-12 col-md-6 col-lg-4 col-xl-3">

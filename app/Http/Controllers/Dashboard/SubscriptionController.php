@@ -29,7 +29,15 @@ class SubscriptionController extends Controller
         $student_id = request('student_id');
         $subject_id = request('subject_id');
 
-        $items = Subscription::with(['user', 'subject'])
+        $baseQuery = Subscription::with(['user', 'subject']);
+
+        // المدرس يرى فقط اشتراكات الطلاب في مواده
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $teacherSubjectIds = Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->pluck('id');
+            $baseQuery->whereIn('subject_id', $teacherSubjectIds);
+        }
+
+        $items = $baseQuery
             ->when($search, function ($q) use ($search) {
                 $q->whereHas('user', function ($query) use ($search) {
                     $query->whereAny(['f_name', 'l_name', 'email', 'phone'], 'LIKE', "%$search%");
@@ -54,11 +62,19 @@ class SubscriptionController extends Controller
             ->latest()
             ->paginate(20);
 
-        $count_all = Subscription::count();
-        $count_active = Subscription::active()->count();
-        $count_inactive = Subscription::inactive()->count();
+        $countQuery = Subscription::query();
+        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+            $teacherSubjectIds = Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->pluck('id');
+            $countQuery->whereIn('subject_id', $teacherSubjectIds);
+        }
+        $count_all = $countQuery->count();
+        $count_active = (clone $countQuery)->active()->count();
+        $count_inactive = (clone $countQuery)->inactive()->count();
+
         $students = User::students()->active()->get();
-        $subjects = Subject::active()->get();
+        $subjects = auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')
+            ? Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->active()->get()
+            : Subject::active()->get();
 
         return view('dashboard.subscriptions.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'students', 'subjects'));
     }

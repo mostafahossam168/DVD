@@ -73,6 +73,8 @@ class TeacherController extends Controller
         $user = User::create($data);
         if ($request->role) {
             $user->assignRole($data['role']);
+        } elseif (\Spatie\Permission\Models\Role::where('name', 'teacher')->exists()) {
+            $user->assignRole('teacher');
         }
         return redirect()->route('dashboard.teachers.index')->with('success', 'تم حفظ البيانات بنجاح');
     }

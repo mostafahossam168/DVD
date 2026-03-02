@@ -33,9 +33,37 @@ class PermissionTableSeeder extends Seeder
             Permission::create(['name' => $permission]);
             $admin_role->givePermissionTo($permission);
         }
+
+        // صلاحيات المدرس (بدون إدارة النظام)
+        $teacher_permissions = [
+            'read_statistics_home',
+            'read_subjects',
+            'create_lectuers', 'read_lectuers', 'update_lectuers', 'delete_lectuers',
+            'create_materials', 'read_materials', 'update_materials', 'delete_materials',
+            'create_quizes', 'read_quizes', 'update_quizes', 'delete_quizes',
+            'create_questions', 'read_questions', 'update_questions', 'delete_questions',
+            'read_quiz_results',
+            'read_contacts',
+            'read_subscriptions',
+        ];
+        $teacher_role = Role::create(['name' => 'teacher']);
+        foreach ($teacher_permissions as $perm) {
+            $teacher_role->givePermissionTo($perm);
+        }
+
         $admin = User::find(1);
-        $admin->syncRoles($admin_role);
-        // $admin->assignRole($admin_role);
+        if ($admin) {
+            $admin->syncRoles($admin_role);
+        }
+
+        // تعيين دور teacher لجميع المستخدمين من نوع teacher الذين ليس لديهم دور admin
+        $teachers = User::where('type', 'teacher')->get();
+        foreach ($teachers as $t) {
+            if (!$t->hasRole('admin')) {
+                $t->syncRoles($teacher_role);
+            }
+        }
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -199,6 +199,7 @@
                     </div>
                 </a>
             </li>
+            @can('update_subscriptions')
             <li class="list-item {{ request()->routeIs('dashboard.subscriptions-pending') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.subscriptions-pending') }}">
                     <div>
@@ -207,6 +208,7 @@
                     </div>
                 </a>
             </li>
+            @endcan
         @endcan
         @can('read_payment_methods')
             <li class="list-item {{ request()->routeIs('dashboard.payment-methods.*') ? 'active' : '' }} ">
