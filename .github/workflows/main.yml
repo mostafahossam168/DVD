@@ -24,13 +24,13 @@ jobs:
           args: -tt
           command: |
             cd ~/domains/pxsa.org || exit 1
-            if [ -d "E-learning/.git" ]; then
+            if [ -d "DVD/.git" ]; then
               echo "🔄 Folder exists, pulling latest changes..."
-              cd E-learning && git pull origin master
+              cd DVD && git pull origin master
             else
               echo "📦 Cloning the repo..."
-              git clone https://github.com/mostafahossam168/E-learning.git
-              cd E-learning
+              git clone https://github.com/mostafahossam168/DVD.git
+              cd DVD
 
               echo "🔑 Generating app key"
               php ~/composer.phar install --no-interaction --prefer-dist
