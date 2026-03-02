@@ -1,0 +1,47 @@
+on:
+  push
+  # pull_request:
+  #   types:
+  #     - closed
+
+name: 🚀 Deploy website on PR merge
+run-name: Deploy by ${{ github.actor }} on PR #${{ github.event.pull_request.number }}
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy on Hostinger
+    runs-on: ubuntu-latest
+    # if: github.event.pull_request.merged == true
+    steps:
+      - name: Connect & deploy via SSH
+        uses: fifsky/ssh-action@master
+        with:
+          host: ${{ vars.HOST }}
+          user: ${{ vars.USER_NAME }}
+          port: 65002
+          key: ${{ secrets.KEY_PRIVATE }}
+          pass: ${{ secrets.PASSWORD }}
+          args: -tt
+          command: |
+            cd ~/domains/pxsa.org || exit 1
+            if [ -d "E-learning/.git" ]; then
+              echo "🔄 Folder exists, pulling latest changes..."
+              cd E-learning && git pull origin master
+            else
+              echo "📦 Cloning the repo..."
+              git clone https://github.com/mostafahossam168/E-learning.git
+              cd E-learning
+
+              echo "🔑 Generating app key"
+              php ~/composer.phar install --no-interaction --prefer-dist
+              cp .env.example .env
+              php artisan key:generate
+            fi
+
+            echo "🧼 Clearing cache && Run Database"
+            php artisan migrate
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+
+#Most2025#
