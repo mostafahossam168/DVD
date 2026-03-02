@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\SettingSeeder;
 use Database\Seeders\SubjectSeeder;
 use Database\Seeders\StageSeeder;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
             StageSeeder::class,
             SubjectSeeder::class,
             SettingSeeder::class,
+            PaymentMethodSeeder::class,
             // PermissionTableSeeder::class,
         ]);
     }

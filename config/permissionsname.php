@@ -19,6 +19,10 @@ return [
         'subscriptions' => $map,
         'teacher_subscriptions' => $map,
         'coupons' => $map,
+        'lectuers' => $map,
+        'contacts' => $map,
+        'quiz_results' => ['read'],
         'statistics_home' => ['read'],
+        'payment_methods' =>  $map,
     ],
 ];

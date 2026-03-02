@@ -158,7 +158,7 @@
                                         </div>
                                     </div>
                                 @endcan
-                                {{-- @can('read_contacts')
+                                @can('read_contacts')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic purple">
                                             <div class="right-side">
@@ -176,7 +176,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endcan --}}
+                                @endcan
                                 @can('read_settings')
                                     <div class="col-12 col-md-6">
                                         <div class="box-statistic blue">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Lecture;
 use App\Models\Material;
+use App\Models\Stage;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -25,7 +26,7 @@ class MaterialController extends Controller
         $search = request('search');
         $lecture_id = request('lecture_id');
 
-        $query = Material::with(['lecture.subject']);
+        $query = Material::with(['lecture.subject.grade']);
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الملفات للدروس الخاصة بالمواد الخاصة به
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
@@ -62,7 +63,9 @@ class MaterialController extends Controller
             $lectuers = Lecture::get();
         }
 
-        return view('dashboard.materials.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'lectuers'));
+        $stages = Stage::active()->orderBy('name')->get();
+
+        return view('dashboard.materials.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'lectuers', 'stages'));
     }
 
     /**

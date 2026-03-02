@@ -13,9 +13,9 @@ class SubscriptionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:read_subscriptions|create_subscriptions|update_subscriptions|delete_subscriptions', ['only' => ['index', 'store']]);
+        $this->middleware('permission:read_subscriptions|create_subscriptions|update_subscriptions|delete_subscriptions', ['only' => ['index', 'store', 'pending', 'approve', 'reject']]);
         $this->middleware('permission:create_subscriptions', ['only' => ['create', 'store']]);
-        $this->middleware('permission:update_subscriptions', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:update_subscriptions', ['only' => ['edit', 'update', 'approve', 'reject']]);
         $this->middleware('permission:delete_subscriptions', ['only' => ['destroy']]);
     }
 
@@ -64,6 +64,45 @@ class SubscriptionController extends Controller
     }
 
     /**
+     * طلبات الاشتراك المعلقة (بانتظار الموافقة على الدفع).
+     */
+    public function pending()
+    {
+        $items = Subscription::with(['user', 'subject'])
+            ->where('payment_status', 'pending')
+            ->latest()
+            ->paginate(20);
+        return view('dashboard.subscriptions.pending', compact('items'));
+    }
+
+    /**
+     * الموافقة على طلب اشتراك وتفعيله.
+     */
+    public function approve(Subscription $subscription)
+    {
+        if ($subscription->payment_status !== 'pending') {
+            return redirect()->route('dashboard.subscriptions-pending')->with('error', 'هذا الطلب غير معلق.');
+        }
+        $subscription->update([
+            'status' => true,
+            'payment_status' => 'paid',
+        ]);
+        return redirect()->route('dashboard.subscriptions-pending')->with('success', 'تمت الموافقة على الاشتراك وتفعيله.');
+    }
+
+    /**
+     * رفض طلب اشتراك.
+     */
+    public function reject(Subscription $subscription)
+    {
+        if ($subscription->payment_status !== 'pending') {
+            return redirect()->route('dashboard.subscriptions-pending')->with('error', 'هذا الطلب غير معلق.');
+        }
+        $subscription->update(['payment_status' => 'rejected']);
+        return redirect()->route('dashboard.subscriptions-pending')->with('success', 'تم رفض طلب الاشتراك.');
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -82,6 +121,10 @@ class SubscriptionController extends Controller
             'user_id' => 'required|exists:users,id',
             'subject_id' => 'required|exists:subjects,id',
             'status' => 'required|boolean',
+            'period_type' => 'required|in:term,month',
+            'term_number' => 'required_if:period_type,term|nullable|integer|min:1|max:3',
+            'start_date' => 'required_if:period_type,month|nullable|date',
+            'end_date' => 'required_if:period_type,month|nullable|date|after_or_equal:start_date',
         ]);
 
         // التحقق من أن المستخدم طالب
@@ -90,10 +133,20 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'يجب اختيار طالب صحيح');
         }
 
-        // التحقق من عدم وجود اشتراك مكرر
-        $existing = Subscription::where('user_id', $data['user_id'])
+        // التحقق من عدم وجود اشتراك مكرر لنفس الفترة
+        $existingQuery = Subscription::where('user_id', $data['user_id'])
             ->where('subject_id', $data['subject_id'])
-            ->first();
+            ->where('period_type', $data['period_type']);
+
+        if ($data['period_type'] === 'term') {
+            $existingQuery->where('term_number', $data['term_number']);
+        } else {
+            $existingQuery
+                ->whereDate('start_date', $data['start_date'])
+                ->whereDate('end_date', $data['end_date']);
+        }
+
+        $existing = $existingQuery->first();
 
         if ($existing) {
             return redirect()->back()->with('error', 'الطالب مشترك بالفعل في هذا المادة');
@@ -132,6 +185,10 @@ class SubscriptionController extends Controller
             'user_id' => 'required|exists:users,id',
             'subject_id' => 'required|exists:subjects,id',
             'status' => 'required|boolean',
+            'period_type' => 'required|in:term,month',
+            'term_number' => 'required_if:period_type,term|nullable|integer|min:1|max:3',
+            'start_date' => 'required_if:period_type,month|nullable|date',
+            'end_date' => 'required_if:period_type,month|nullable|date|after_or_equal:start_date',
         ]);
 
         // التحقق من أن المستخدم طالب
@@ -140,11 +197,21 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'يجب اختيار طالب صحيح');
         }
 
-        // التحقق من عدم وجود اشتراك مكرر (عدا الاشتراك الحالي)
-        $existing = Subscription::where('user_id', $data['user_id'])
+        // التحقق من عدم وجود اشتراك مكرر لنفس الفترة (عدا الاشتراك الحالي)
+        $existingQuery = Subscription::where('user_id', $data['user_id'])
             ->where('subject_id', $data['subject_id'])
-            ->where('id', '!=', $id)
-            ->first();
+            ->where('period_type', $data['period_type'])
+            ->where('id', '!=', $id);
+
+        if ($data['period_type'] === 'term') {
+            $existingQuery->where('term_number', $data['term_number']);
+        } else {
+            $existingQuery
+                ->whereDate('start_date', $data['start_date'])
+                ->whereDate('end_date', $data['end_date']);
+        }
+
+        $existing = $existingQuery->first();
 
         if ($existing) {
             return redirect()->back()->with('error', 'الطالب مشترك بالفعل في هذا المادة');

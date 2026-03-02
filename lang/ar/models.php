@@ -17,5 +17,8 @@ return [
     'subscriptions' => 'اشتراكات الطلاب',
     'teacher_subscriptions' => 'اشتراكات المدرسين',
     'coupons' => 'الكوبونات',
+    'quiz_results' => 'نتائح الاختبارات',
     'statistics_home' => 'إحصائيات الرئيسية',
+    'payment_methods' => 'طرق الدفع',
+    'contacts' => 'تواصل معنا ',
 ];

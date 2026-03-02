@@ -14,13 +14,38 @@
                             <input type="text" name="title" id="" class="form-control">
                         </div>
                     </div>
+                    @if(isset($stages) && $stages->count() > 0)
+                    <div class="col-12">
+                        <label for="">المرحلة الدراسية</label>
+                        <select name="stage_id" class="form-select select-setting material-stage-select">
+                            <option value="">-- اختر --</option>
+                            @foreach ($stages as $stage)
+                                <option value="{{ $stage->id }}">{{ $stage->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="">الصف الدراسي</label>
+                        <select name="grade_id" class="form-select select-setting material-grade-select">
+                            <option value="">-- اختر --</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="">المادة</label>
+                        <select name="subject_id" class="form-select select-setting material-subject-select">
+                            <option value="">-- اختر --</option>
+                        </select>
+                    </div>
+                    @endif
                     <div class="col-12">
                         <label for="">الدرس</label>
-                        <select name="lecture_id" id="tax" class="form-select select-setting">
-                            <option value="">-- اختر --</option>
-                            @foreach ($lectuers as $lectuer)
-                                <option value="{{ $lectuer->id }}">{{ $lectuer->title }}</option>
-                            @endforeach
+                        <select name="lecture_id" class="form-select select-setting material-lecture-select" required>
+                            <option value="">-- اختر المرحلة والصف والمادة أولاً --</option>
+                            @if(!isset($stages) || $stages->isEmpty())
+                                @foreach ($lectuers ?? [] as $lectuer)
+                                    <option value="{{ $lectuer->id }}">{{ $lectuer->title }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="col-12">

@@ -237,5 +237,9 @@
     "stages": "المراحل الدراسيه",
     "grades" : "الصفوف الدراسيه",
     "subjects" : "المواد الدراسيه",
+    "quiz_results" : "نتائح الاختبارات",
+    "statistics_home" : "إحصائيات الرئيسية",
+    "payment_methods" : "طرق الدفع",
+    "contacts" : "تواصل معنا ",
     "You are receiving this email because we received a password reset request for your account.": "لقد استلمت هذا الإيميل لأننا استقبلنا طلباً لاستعادة كلمة مرور حسابك."
 }

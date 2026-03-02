@@ -67,6 +67,8 @@
                         <th>#</th>
                         <th>الطالب</th>
                         <th>المادة</th>
+                        <th>نوع الاشتراك</th>
+                        <th>الفترة</th>
                         <th>الحالة</th>
                         <th>تاريخ الاشتراك</th>
                         <th>العمليات</th>
@@ -78,6 +80,29 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->user->fullname }}</td>
                             <td>{{ $item->subject->name }}</td>
+                            <td>
+                                @if ($item->period_type === 'month')
+                                    شهري
+                                @else
+                                    ترم
+                                @endif
+                            </td>
+                            <td>
+                                @if ($item->period_type === 'term')
+                                    @if ($item->term_number)
+                                        ترم {{ $item->term_number }}
+                                    @else
+                                        -
+                                    @endif
+                                @else
+                                    @if ($item->start_date && $item->end_date)
+                                        من {{ \Carbon\Carbon::parse($item->start_date)->format('Y-m-d') }}
+                                        إلى {{ \Carbon\Carbon::parse($item->end_date)->format('Y-m-d') }}
+                                    @else
+                                        -
+                                    @endif
+                                @endif
+                            </td>
                             <td>
                                 @if ($item->status)
                                     <span class="badge bg-success">مفعل</span>

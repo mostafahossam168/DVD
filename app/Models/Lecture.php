@@ -20,6 +20,11 @@ class Lecture extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
+
     public function scopeActive($q)
     {
         return $q->where('status', true);

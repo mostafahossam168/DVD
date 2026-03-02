@@ -104,4 +104,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function onlineMeetings()
+    {
+        return $this->hasMany(OnlineMeeting::class, 'teacher_id');
+    }
 }

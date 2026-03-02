@@ -123,17 +123,101 @@
     @if(isset($lectuers) && $lectuers->count() > 0)
     <script>
         function filterMaterials() {
-            const lectureId = document.querySelector('select[name="lecture_id"]').value;
+            const el = document.querySelector('.bar-options select[name="lecture_id"]');
+            if (!el) return;
+            const lectureId = el.value;
             const url = new URL(window.location.href);
-            
-            if (lectureId) {
-                url.searchParams.set('lecture_id', lectureId);
-            } else {
-                url.searchParams.delete('lecture_id');
-            }
-            
+            if (lectureId) url.searchParams.set('lecture_id', lectureId);
+            else url.searchParams.delete('lecture_id');
             window.location.href = url.toString();
         }
     </script>
+    @endif
+
+    @if(isset($stages) && $stages->count() > 0)
+    @push('scripts')
+    <script>
+        $(function() {
+            // المرحلة -> الصف -> المادة -> الدرس
+            $(document).on('change', '.material-stage-select', function() {
+                var $form = $(this).closest('form');
+                var stage_id = $(this).val();
+                $form.find('.material-grade-select').empty().append('<option value="">-- اختر --</option>');
+                $form.find('.material-subject-select').empty().append('<option value="">-- اختر --</option>');
+                $form.find('.material-lecture-select').empty().append('<option value="">-- اختر المرحلة والصف والمادة أولاً --</option>');
+                if (!stage_id) return;
+                var url = "{{ route('dashboard.getgrade', ':id') }}".replace(':id', stage_id);
+                $.get(url, function(data) {
+                    var items = typeof data === 'string' ? JSON.parse(data) : data;
+                    $.each(items, function(name, id) {
+                        $form.find('.material-grade-select').append('<option value="' + id + '">' + name + '</option>');
+                    });
+                });
+            });
+            $(document).on('change', '.material-grade-select', function() {
+                var $form = $(this).closest('form');
+                var grade_id = $(this).val();
+                $form.find('.material-subject-select').empty().append('<option value="">-- اختر --</option>');
+                $form.find('.material-lecture-select').empty().append('<option value="">-- اختر المرحلة والصف والمادة أولاً --</option>');
+                if (!grade_id) return;
+                var url = "{{ route('dashboard.getsubjects', ':id') }}".replace(':id', grade_id);
+                $.get(url, function(data) {
+                    var items = typeof data === 'string' ? JSON.parse(data) : data;
+                    $.each(items, function(name, id) {
+                        $form.find('.material-subject-select').append('<option value="' + id + '">' + name + '</option>');
+                    });
+                });
+            });
+            $(document).on('change', '.material-subject-select', function() {
+                var $form = $(this).closest('form');
+                var subject_id = $(this).val();
+                $form.find('.material-lecture-select').empty().append('<option value="">-- اختر --</option>');
+                if (!subject_id) return;
+                var url = "{{ route('dashboard.getlectures', ':id') }}".replace(':id', subject_id);
+                $.get(url, function(data) {
+                    var items = typeof data === 'string' ? JSON.parse(data) : data;
+                    $.each(items, function(title, id) {
+                        $form.find('.material-lecture-select').append('<option value="' + id + '">' + title + '</option>');
+                    });
+                });
+            });
+            // تعبئة بيانات التعديل عند فتح المودال
+            $('.modal[id^="edit"]').on('shown.bs.modal', function() {
+                var $modal = $(this);
+                var stageId = $modal.data('stage-id');
+                var gradeId = $modal.data('grade-id');
+                var subjectId = $modal.data('subject-id');
+                var lectureId = $modal.data('lecture-id');
+                if (!stageId) return;
+                var $form = $modal.find('form');
+                $form.find('select[name="stage_id"]').val(stageId);
+                var url = "{{ route('dashboard.getgrade', ':id') }}".replace(':id', stageId);
+                $.get(url, function(data) {
+                    var items = typeof data === 'string' ? JSON.parse(data) : data;
+                    $form.find('.material-grade-select').empty().append('<option value="">-- اختر --</option>');
+                    $.each(items, function(name, id) {
+                        $form.find('.material-grade-select').append('<option value="' + id + '"' + (id == gradeId ? ' selected' : '') + '>' + name + '</option>');
+                    });
+                    url = "{{ route('dashboard.getsubjects', ':id') }}".replace(':id', gradeId);
+                    $.get(url, function(data2) {
+                        var items2 = typeof data2 === 'string' ? JSON.parse(data2) : data2;
+                        $form.find('.material-subject-select').empty().append('<option value="">-- اختر --</option>');
+                        $.each(items2, function(name, id) {
+                            $form.find('.material-subject-select').append('<option value="' + id + '"' + (id == subjectId ? ' selected' : '') + '>' + name + '</option>');
+                        });
+                        url = "{{ route('dashboard.getlectures', ':id') }}".replace(':id', subjectId);
+                        $.get(url, function(data3) {
+                            var items3 = typeof data3 === 'string' ? JSON.parse(data3) : data3;
+                            $form.find('.material-lecture-select').empty().append('<option value="">-- اختر --</option>');
+                            $.each(items3, function(title, id) {
+                                $form.find('.material-lecture-select').append('<option value="' + id + '"' + (id == lectureId ? ' selected' : '') + '>' + title + '</option>');
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+    @endpush
     @endif
 @endsection

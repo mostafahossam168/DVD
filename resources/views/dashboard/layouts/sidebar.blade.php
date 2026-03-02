@@ -12,14 +12,93 @@
             </a>
         </li>
         @can('read_settings')
-            <li class="list-item {{ request()->routeIs('dashboard.settings') ? 'active' : '' }}">
-                <a href="{{ route('dashboard.settings') }}">
+            @php
+                $settingsActive =
+                    request()->routeIs('dashboard.settings') || request()->routeIs('dashboard.pages.*');
+                $currentStaticPage = request()->route('page');
+            @endphp
+            <li class="list-item {{ $settingsActive ? 'active' : '' }}">
+                <a data-bs-toggle="collapse" href="#collapse-settings" aria-expanded="{{ $settingsActive ? 'true' : 'false' }}">
                     <div>
                         <i class="fa-solid fa-gear icon"></i>
                         الإعدادات
                     </div>
+                    <i class="fa-solid fa-angle-right arrow"></i>
                 </a>
             </li>
+            <div id="collapse-settings" class="collapse item-collapse {{ $settingsActive ? 'show' : '' }}">
+                <li class="list-item {{ request()->routeIs('dashboard.settings') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.settings') }}">
+                        <div>
+                            <i class="fa-solid fa-sliders"></i>
+                            الإعدادات العامة
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'about' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'about') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            عن المنصة
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'vision' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'vision') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            رؤيتنا
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'team' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'team') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            فريق العمل
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'faq' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'faq') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            الأسئلة الشائعة
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'privacy' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'privacy') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            سياسة الخصوصية
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'terms' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'terms') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            الشروط والأحكام
+                        </div>
+                    </a>
+                </li>
+                <li
+                    class="list-item {{ request()->routeIs('dashboard.pages.edit') && $currentStaticPage === 'usage' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.pages.edit', 'usage') }}">
+                        <div>
+                            <i class="fa-solid fa-circle-dot"></i>
+                            سياسة الاستخدام
+                        </div>
+                    </a>
+                </li>
+            </div>
         @endcan
         @can('read_admins')
             <li class="list-item {{ request()->routeIs('dashboard.admins.*') ? 'active' : '' }} ">
@@ -120,6 +199,44 @@
                     </div>
                 </a>
             </li>
+            <li class="list-item {{ request()->routeIs('dashboard.subscriptions-pending') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.subscriptions-pending') }}">
+                    <div>
+                        <i class="fa-solid fa-clock"></i>
+                        طلبات الاشتراك (معلقة)
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_payment_methods')
+            <li class="list-item {{ request()->routeIs('dashboard.payment-methods.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.payment-methods.index') }}">
+                    <div>
+                        <i class="fa-solid fa-credit-card"></i>
+                        طرق الدفع
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_quiz_results')
+            <li class="list-item {{ request()->routeIs('dashboard.quiz-results.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.quiz-results.index') }}">
+                    <div>
+                        <i class="fa-solid fa-list-check"></i>
+                        نتائج الاختبارات
+                    </div>
+                </a>
+            </li>
+        @endcan
+        @can('read_contacts')
+            <li class="list-item {{ request()->routeIs('dashboard.contacts.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.contacts.index') }}">
+                    <div>
+                        <i class="fa-solid fa-comments"></i>
+                        تواصل معنا
+                    </div>
+                </a>
+            </li>
         @endcan
         @can('read_coupons')
             <li class="list-item {{ request()->routeIs('dashboard.coupons.*') ? 'active' : '' }} ">
@@ -140,6 +257,16 @@
                     </div>
                 </a>
             </li>
+        @endcan
+        @can('read_lectuers')
+        <li class="list-item {{ request()->routeIs('dashboard.online-meetings.*') ? 'active' : '' }} ">
+            <a href="{{ route('dashboard.online-meetings.index') }}">
+                <div>
+                    <i class="fa-solid fa-desktop"></i>
+                    المحاضرات الأونلاين
+                </div>
+            </a>
+        </li>
         @endcan
         @can('read_materials')
             <li class="list-item {{ request()->routeIs('dashboard.materials.*') ? 'active' : '' }} ">
