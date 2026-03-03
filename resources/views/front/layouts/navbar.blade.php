@@ -29,7 +29,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         @foreach ($navbarStages ?? [] as $stage)
-                            <li><a class="dropdown-item" href="{{ route('front.stages.index') }}#stage-{{ $stage->id }}">{{ $stage->name }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('front.stages.show', $stage) }}">{{ $stage->name }}</a></li>
                         @endforeach
                         @if (($navbarStagesCount ?? 0) > 5)
                             <li><hr class="dropdown-divider"></li>
@@ -93,9 +93,11 @@
                                 <li>
                                     <a class="dropdown-item" href="{{ route('front.quizzes.history') }}">اختباراتي</a>
                                 </li>
+                                @if ($student->type === 'student')
                                 <li>
-                                    <a class="dropdown-item" href="javascript:void(0)">المفضلة</a>
+                                    <a class="dropdown-item" href="{{ route('front.favorites.index') }}">المفضلة</a>
                                 </li>
+                                @endif
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

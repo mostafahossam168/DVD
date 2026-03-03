@@ -16,6 +16,11 @@ class Subject extends Model
     {
         return $this->belongsTo(Grade::class);
     }
+    public function onlineMeetings()
+    {
+        return $this->hasMany(\App\Models\OnlineMeeting::class);
+    }
+
     public function scopeActive($q)
     {
         return $q->where('status', true);

@@ -230,91 +230,37 @@
             </p>
 
             <div class="row g-3">
-
-                <!-- كارد 1 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="bg-white p-3 rounded h-100">
-                        <div class="d-flex align-items-start gap-3 text-start">
-
-                            <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&h=200&fit=crop"
-                                class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="طالب">
-
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong>أحمد محمد</strong>
-                                    <div class="d-flex align-items-center gap-1">
-                                        <span class="fw-bold">4.6</span>
-                                        <span style="color:#FFA500;">★</span>
+                @forelse ($reviews ?? [] as $review)
+                    <div class="col-lg-4 col-md-6">
+                        <div class="bg-white p-3 rounded h-100">
+                            <div class="d-flex align-items-start gap-3 text-start">
+                                @if($review->image)
+                                    <img src="{{ display_file($review->image) }}" class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="{{ $review->name }}">
+                                @else
+                                    <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&h=200&fit=crop"
+                                        class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="{{ $review->name }}">
+                                @endif
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <strong>{{ $review->name }}</strong>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <span class="fw-bold">{{ $review->rating }}</span>
+                                            <span style="color:#FFA500;">★</span>
+                                        </div>
                                     </div>
+                                    @if($review->subject_field || $review->subject)
+                                        <p class="mb-1">{{ $review->subject_field ?? $review->subject?->name }}</p>
+                                    @endif
+                                    <p class="mb-2">{{ $review->review_text }}</p>
                                 </div>
-
-                                <p class="mb-1">فيزياء</p>
-                                <p class="mb-2">
-                                    المنصة فرقت معايا جدًا، الشرح بسيط ومفهوم
-                                    وحسيت بتقدم حقيقي.
-                                </p>
                             </div>
-
                         </div>
                     </div>
-                </div>
-
-                <!-- كارد 2 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="bg-white p-3 rounded h-100">
-                        <div class="d-flex align-items-start gap-3 text-start">
-
-                            <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&h=200&fit=crop"
-                                class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="طالب">
-
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong>مريم علي</strong>
-                                    <div class="d-flex align-items-center gap-1">
-                                        <span class="fw-bold">4.8</span>
-                                        <span style="color:#FFA500;">★</span>
-                                    </div>
-                                </div>
-
-                                <p class="mb-1">رياضيات</p>
-                                <p class="mb-2">
-                                    المتابعة ممتازة والشرح منظم،
-                                    حسيت إن مستوايا اتحسن فعلًا.
-                                </p>
-                            </div>
-
-                        </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-white text-center">لا توجد تقييمات حالياً</p>
                     </div>
-                </div>
-
-                <!-- كارد 3 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="bg-white p-3 rounded h-100">
-                        <div class="d-flex align-items-start gap-3 text-start">
-
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop"
-                                class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="طالب">
-
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <strong>يوسف خالد</strong>
-                                    <div class="d-flex align-items-center gap-1">
-                                        <span class="fw-bold">4.7</span>
-                                        <span style="color:#FFA500;">★</span>
-                                    </div>
-                                </div>
-
-                                <p class="mb-1">كيمياء</p>
-                                <p class="mb-2">
-                                    أول مرة أفهم المادة بالطريقة دي،
-                                    تجربة مختلفة فعلًا.
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
+                @endforelse
             </div>
 
         </div>

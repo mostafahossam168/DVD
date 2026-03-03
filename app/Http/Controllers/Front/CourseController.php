@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\CourseReview;
 use App\Models\Lecture;
 use App\Models\PaymentMethod;
 use App\Models\Quize;
@@ -26,18 +27,21 @@ class CourseController extends Controller
             ->get();
 
         $student = Auth::check() && Auth::user()->type === 'student' ? Auth::user() : null;
-        $subscriptions = collect();
+        $subscribedSubjectIds = [];
+        $favoriteSubjectIds = [];
 
         if ($student) {
-            $subscriptions = $student->courseSubscriptions()
+            $subscribedSubjectIds = $student->courseSubscriptions()
                 ->active()
                 ->pluck('subject_id')
-                ->toArray();
+                ->all();
+            $favoriteSubjectIds = $student->favorites()->pluck('subject_id')->all();
         }
 
         return view('front.courses.index', [
             'stages' => $stages,
-            'subscribedSubjectIds' => $subscriptions,
+            'subscribedSubjectIds' => $subscribedSubjectIds,
+            'favoriteSubjectIds' => $favoriteSubjectIds,
         ]);
     }
 
@@ -49,8 +53,21 @@ class CourseController extends Controller
 
         $lectures = Lecture::active()
             ->where('subject_id', $subject->id)
+            ->withCount(['materials' => fn ($q) => $q->active()])
+            ->with('subject')
             ->orderBy('title')
             ->get();
+
+        $lectureIds = $lectures->pluck('id')->toArray();
+        $quizzesByLecture = \App\Models\Quize::active()
+            ->whereIn('lecture_id', $lectureIds)
+            ->pluck('id', 'lecture_id');
+        $lectures = $lectures->map(function ($lecture) use ($quizzesByLecture) {
+            $lecture->has_quiz = isset($quizzesByLecture[$lecture->id]);
+            $lecture->quiz_id = $quizzesByLecture[$lecture->id] ?? null;
+            return $lecture;
+        });
+        $firstLectureWithQuiz = $lectures->first(fn ($l) => $l->has_quiz);
 
         $student = Auth::check() && Auth::user()->type === 'student' ? Auth::user() : null;
 
@@ -65,12 +82,44 @@ class CourseController extends Controller
 
         $paymentMethods = PaymentMethod::active()->orderBy('name')->get();
 
+        $reviews = CourseReview::active()
+            ->where('subject_id', $subject->id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->limit(12)
+            ->get();
+
+        $hasRated = false;
+        $canRate = false;
+        $isFavorite = false;
+        if ($student && $hasActiveSubscription) {
+            $hasRated = CourseReview::where('user_id', $student->id)
+                ->where('subject_id', $subject->id)
+                ->exists();
+            $canRate = ! $hasRated;
+        }
+        if ($student) {
+            $isFavorite = \App\Models\Favorite::where('user_id', $student->id)
+                ->where('subject_id', $subject->id)
+                ->exists();
+        }
+
+        $onlineMeetings = \App\Models\OnlineMeeting::where('subject_id', $subject->id)
+            ->orderBy('start_time')
+            ->get();
+
         return view('front.courses.subject', [
             'subject' => $subject,
             'lectures' => $lectures,
+            'firstLectureWithQuiz' => $firstLectureWithQuiz,
+            'reviews' => $reviews,
             'student' => $student,
             'hasActiveSubscription' => $hasActiveSubscription,
             'paymentMethods' => $paymentMethods,
+            'hasRated' => $hasRated,
+            'canRate' => $canRate,
+            'isFavorite' => $isFavorite,
+            'onlineMeetings' => $onlineMeetings,
         ]);
     }
 
@@ -88,8 +137,11 @@ class CourseController extends Controller
             ->latest()
             ->get();
 
+        $favoriteSubjectIds = $user->favorites()->pluck('subject_id')->all();
+
         return view('front.courses.my', [
             'subscriptions' => $subscriptions,
+            'favoriteSubjectIds' => $favoriteSubjectIds,
         ]);
     }
 
@@ -177,6 +229,57 @@ class CourseController extends Controller
         return redirect()
             ->route('front.courses.subject', $subject)
             ->with('success', 'تم إرسال طلب الاشتراك. سيتم مراجعته من الإدارة.');
+    }
+
+    public function rate(Request $request, Subject $subject)
+    {
+        $user = Auth::user();
+
+        if (! $user || $user->type !== 'student') {
+            return redirect()->route('front.login')->with('error', 'من فضلك سجّل دخولك كطالب أولاً.');
+        }
+
+        abort_unless($subject->status, 404);
+
+        $hasActiveSubscription = Subscription::active()
+            ->where('user_id', $user->id)
+            ->where('subject_id', $subject->id)
+            ->exists();
+
+        if (! $hasActiveSubscription) {
+            return redirect()
+                ->route('front.courses.subject', $subject)
+                ->with('error', 'يجب الاشتراك في الكورس أولاً لتقييمه.');
+        }
+
+        $existing = CourseReview::where('user_id', $user->id)
+            ->where('subject_id', $subject->id)
+            ->first();
+
+        if ($existing) {
+            return redirect()
+                ->route('front.courses.subject', $subject)
+                ->with('error', 'لقد قيّمت هذا الكورس مسبقاً.');
+        }
+
+        $data = $request->validate([
+            'rating' => 'required|numeric|min:0|max:5',
+            'review_text' => 'required|string|min:10',
+        ]);
+
+        CourseReview::create([
+            'user_id' => $user->id,
+            'subject_id' => $subject->id,
+            'name' => trim($user->f_name . ' ' . $user->l_name),
+            'subject_field' => $subject->name,
+            'rating' => $data['rating'],
+            'review_text' => $data['review_text'],
+            'status' => true,
+        ]);
+
+        return redirect()
+            ->route('front.courses.subject', $subject)
+            ->with('success', 'شكراً لتقييمك! تم حفظ تقييمك بنجاح.');
     }
 
     public function showLesson(Subject $subject, Lecture $lecture)

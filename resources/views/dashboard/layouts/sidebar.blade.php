@@ -230,6 +230,16 @@
                 </a>
             </li>
         @endcan
+        @can('read_course_reviews')
+            <li class="list-item {{ request()->routeIs('dashboard.course-reviews.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.course-reviews.index') }}">
+                    <div>
+                        <i class="fa-solid fa-star"></i>
+                        تقييمات الكورسات
+                    </div>
+                </a>
+            </li>
+        @endcan
         @can('read_contacts')
             <li class="list-item {{ request()->routeIs('dashboard.contacts.*') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.contacts.index') }}">

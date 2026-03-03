@@ -8,6 +8,8 @@ use App\Http\Controllers\Front\PageController as FrontPageController;
 use App\Http\Controllers\Front\CourseController as FrontCourseController;
 use App\Http\Controllers\Front\QuizController as FrontQuizController;
 use App\Http\Controllers\Front\ProfileController as FrontProfileController;
+use App\Http\Controllers\Front\StageController as FrontStageController;
+use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 
 // Front site
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
@@ -20,10 +22,12 @@ Route::post('/register', [FrontAuthController::class, 'register'])->name('front.
 
 Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.logout');
 
-// Student profile
+// Student profile & favorites
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [FrontProfileController::class, 'show'])->name('front.profile.show');
     Route::post('/profile', [FrontProfileController::class, 'update'])->name('front.profile.update');
+    Route::get('/my-favorites', [FrontFavoriteController::class, 'index'])->name('front.favorites.index');
+    Route::post('/courses/{subject}/favorite', [FrontFavoriteController::class, 'toggle'])->name('front.favorites.toggle');
 });
 
 Route::get('/contact', function () {
@@ -32,14 +36,17 @@ Route::get('/contact', function () {
 
 Route::post('/contact', [FrontContactController::class, 'store'])->name('front.contact.store');
 
-Route::get('/stages', function () {
-    $stages = \App\Models\Stage::active()->orderBy('name')->get();
-    return view('front.stages', compact('stages'));
-})->name('front.stages.index');
+Route::get('/stages', [FrontStageController::class, 'index'])->name('front.stages.index');
+Route::get('/stages/{stage}', [FrontStageController::class, 'show'])->name('front.stages.show');
+Route::get('/grades/{grade}', [FrontStageController::class, 'showGrade'])->name('front.grades.show');
 
 Route::get('/subjects', function () {
     $subjects = \App\Models\Subject::active()->with('grade')->orderBy('name')->get();
-    return view('front.subjects', compact('subjects'));
+    $favoriteSubjectIds = [];
+    if (auth()->check() && auth()->user()->type === 'student') {
+        $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
+    }
+    return view('front.subjects', compact('subjects', 'favoriteSubjectIds'));
 })->name('front.subjects.index');
 
 // الصفحات الثابتة
@@ -62,6 +69,7 @@ Route::get('/my-courses', [FrontCourseController::class, 'myCourses'])->name('fr
 Route::get('/courses/{subject}', [FrontCourseController::class, 'showSubject'])->name('front.courses.subject');
 Route::post('/courses/{subject}/subscribe', [FrontCourseController::class, 'subscribe'])->name('front.courses.subscribe');
 Route::get('/courses/{subject}/lessons/{lecture}', [FrontCourseController::class, 'showLesson'])->name('front.courses.lesson');
+Route::post('/courses/{subject}/rate', [FrontCourseController::class, 'rate'])->name('front.courses.rate');
 
 // Quizzes
 Route::get('/quizzes/{quiz}', [FrontQuizController::class, 'show'])->name('front.quizzes.show');

@@ -105,6 +105,17 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
+    // المفضلة
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteSubjects()
+    {
+        return $this->belongsToMany(Subject::class, 'student_favorites', 'user_id', 'subject_id');
+    }
+
     public function onlineMeetings()
     {
         return $this->hasMany(OnlineMeeting::class, 'teacher_id');

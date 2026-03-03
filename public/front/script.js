@@ -1,5 +1,38 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    // Favorite toggle (AJAX)
+    document.querySelectorAll('.favorite-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const url = this.dataset.favoriteUrl;
+            if (!url) return;
+            const icon = this.querySelector('.favorite-icon');
+            const wasFavorited = this.classList.contains('favorited');
+            var token = document.querySelector('meta[name="csrf-token"]');
+            token = token ? token.getAttribute('content') : (document.querySelector('input[name="_token"]') && document.querySelector('input[name="_token"]').value);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(function (data) {
+                if (data.success) {
+                    this.classList.toggle('favorited', data.favorited);
+                    icon.classList.toggle('fa-solid', data.favorited);
+                    icon.classList.toggle('fa-regular', !data.favorited);
+                }
+            }.bind(this))
+            .catch(function () {
+                window.location.href = url.replace(/\/favorite.*$/, '').replace(/courses\//, 'courses/') + '?favorite=1';
+            });
+        });
+    });
+
     const subscribeBtn = document.querySelector('.subscribe-btn');
 
     if (subscribeBtn) {

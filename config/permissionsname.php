@@ -24,5 +24,6 @@ return [
         'quiz_results' => ['read'],
         'statistics_home' => ['read'],
         'payment_methods' =>  $map,
+        'course_reviews' =>  $map,
     ],
 ];

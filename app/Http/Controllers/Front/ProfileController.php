@@ -34,6 +34,7 @@ class ProfileController extends Controller
             'l_name' => 'required|string|min:2|max:255',
             'phone' => 'required|string|unique:users,phone,' . $user->id,
             'password' => 'nullable|string|min:6',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $user->f_name = $data['f_name'];
@@ -42,6 +43,13 @@ class ProfileController extends Controller
 
         if (! empty($data['password'])) {
             $user->password = $data['password'];
+        }
+
+        if ($request->hasFile('image')) {
+            if ($user->image) {
+                delete_file($user->image);
+            }
+            $user->image = store_file($request->file('image'), 'profile');
         }
 
         $user->save();

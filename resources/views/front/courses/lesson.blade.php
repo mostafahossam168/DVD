@@ -56,7 +56,7 @@
 
                 <div class="col-lg-4">
                     @if ($quiz)
-                        <div class="card shadow-sm mb-3">
+                        <div id="quiz" class="card shadow-sm mb-3">
                             <div class="card-body">
                                 <h5 class="card-title mb-2">اختبار هذه الحصة</h5>
                                 <p class="small text-muted mb-2">

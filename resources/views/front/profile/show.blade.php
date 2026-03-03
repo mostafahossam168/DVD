@@ -19,8 +19,25 @@
                 <div class="col-lg-6">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('front.profile.update') }}">
+                            <form method="POST" action="{{ route('front.profile.update') }}" enctype="multipart/form-data">
                                 @csrf
+
+                                <div class="mb-3">
+                                    <label class="form-label">الصورة الشخصية</label>
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        @if ($user->image)
+                                            <img src="{{ display_file($user->image) }}" alt="صورتك الحالية" class="rounded-circle profile-current-avatar">
+                                        @else
+                                            <div class="profile-avatar-placeholder rounded-circle d-flex align-items-center justify-content-center">
+                                                <i class="fa-solid fa-user text-muted fa-2x"></i>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <input type="file" name="image" class="form-control form-control-sm" accept="image/*">
+                                            <small class="text-muted">اختياري - JPG, PNG, GIF أو WebP (حد أقصى 2 ميجا)</small>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">الاسم الأول</label>
@@ -58,6 +75,15 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="mb-3">معلومات الحساب</h5>
+                            <div class="mb-3">
+                                @if ($user->image)
+                                    <img src="{{ display_file($user->image) }}" alt="صورتك" class="rounded-circle profile-current-avatar">
+                                @else
+                                    <div class="profile-avatar-placeholder rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="fa-solid fa-user text-muted fa-2x"></i>
+                                    </div>
+                                @endif
+                            </div>
                             <p class="mb-1"><strong>الاسم:</strong> {{ $user->full_name }}</p>
                             <p class="mb-1"><strong>الإيميل:</strong> {{ $user->email }}</p>
                             <p class="mb-1"><strong>الهاتف:</strong> {{ $user->phone }}</p>

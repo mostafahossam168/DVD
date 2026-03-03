@@ -444,6 +444,580 @@ footer a:hover {
     font-size: 0.85rem;
 }
 
+/* ===== Subject Page (Course Detail) ===== */
+.subject-page {
+    background-color: #f8f9fa;
+}
+
+.subject-breadcrumb .breadcrumb-item a {
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.subject-breadcrumb .breadcrumb-item a:hover {
+    color: #3B81B7;
+}
+
+.subject-breadcrumb .breadcrumb-item.active {
+    color: #374151;
+}
+
+.subject-header-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+}
+
+.subject-header-img-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.subject-header-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Subject reviews section */
+.subject-reviews-section .subject-review-avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.subject-review-avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    background: #f3f4f6;
+    font-size: 1.1rem;
+}
+
+.subject-review-card .card-body {
+    padding: 1rem;
+}
+
+/* Profile avatar */
+.profile-current-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    background: #f3f4f6;
+}
+
+/* Favorite button */
+.favorite-btn {
+    font-size: 1.4rem;
+    line-height: 1;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.15);
+}
+
+.favorite-btn .favorite-icon {
+    color: #9ca3af;
+}
+
+.favorite-btn.favorited .favorite-icon {
+    color: #dc2626;
+}
+
+.favorite-btn:hover .favorite-icon {
+    color: #dc2626;
+}
+
+.favorite-btn-wrap {
+    z-index: 5;
+}
+
+/* Subject bottom cards spacing */
+.subject-bottom-card {
+    padding: 1.25rem !important;
+}
+
+.subject-exam-card .btn-exam {
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+/* Online meetings section */
+.subject-online-meetings-section {
+    border-top: 1px solid #e5e7eb;
+}
+
+.subject-online-meetings-section .section-heading {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.online-meeting-item {
+    font-size: 0.9rem;
+    padding: 1rem 1.25rem;
+}
+
+.online-meeting-item .fw-semibold {
+    font-size: 0.9rem;
+}
+
+.online-meeting-item .text-muted {
+    margin-top: 0.25rem;
+}
+
+.subject-header-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.subject-header-subtitle {
+    font-size: 0.95rem;
+}
+
+.lesson-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+    border: 1px solid #e5e7eb;
+}
+
+.lesson-card:hover:not(.lesson-card-locked) {
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    transform: translateY(-2px);
+}
+
+.lesson-card-locked {
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.lesson-card-title {
+    font-weight: 600;
+    color: #374151;
+    font-size: 1rem;
+}
+
+.lesson-card-desc {
+    font-size: 0.85rem;
+}
+
+.lesson-card-meta {
+    font-size: 0.8rem;
+}
+
+.lesson-resource-icon {
+    font-size: 1rem;
+}
+
+.subject-bottom-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e5e7eb;
+}
+
+.subject-exam-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%);
+    display: block;
+    color: inherit;
+    transition: box-shadow 0.2s;
+}
+
+.subject-exam-card:hover {
+    color: inherit;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+}
+
+.subject-exam-card h6,
+.subject-summary-card h6 {
+    font-weight: 600;
+    color: #374151;
+}
+
+.subject-summary-card {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.btn-exam {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #92400e;
+}
+
+/* ===== Stage Show Page - Hero + Grades + Benefits ===== */
+.stage-hero-banner {
+    background: #1A2B4C;
+    position: relative;
+    overflow: hidden;
+}
+
+.stage-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 40%),
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.02) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.stage-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.stage-hero-title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stage-hero-desc {
+    font-size: 1.05rem;
+    opacity: 0.95;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-stage-cta {
+    background: #3B81B7;
+    color: #fff !important;
+    padding: 0.6rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-stage-cta:hover {
+    background: #2d6a9a;
+    color: #fff !important;
+    transform: translateY(-1px);
+}
+
+.stage-grades-section {
+    background: #f5f5f5;
+}
+
+.stage-section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.grade-card-modern {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    color: inherit;
+}
+
+.grade-card-modern:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+    color: inherit;
+}
+
+.grade-card-ghost {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
+
+.grade-card-modern .card-body {
+    padding: 2rem 1.5rem;
+    position: relative;
+}
+
+.grade-card-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    background: #e8e8e8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.grade-card-modern .grade-card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+}
+
+.btn-grade-detail {
+    display: inline-block;
+    background: #3B81B7;
+    color: #fff !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.grade-card-modern:hover .btn-grade-detail {
+    color: #fff !important;
+}
+
+/* Benefits section */
+.stage-benefits-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.stage-benefits-subtitle {
+    font-size: 1rem;
+}
+
+.benefit-card {
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.benefit-card-orange {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.benefit-card-blue {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.benefit-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    color: #374151;
+}
+
+.benefit-card-orange .benefit-icon {
+    color: #c2410c;
+}
+
+.benefit-card-blue .benefit-icon {
+    color: #1d4ed8;
+}
+
+.benefit-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.btn-benefits-cta {
+    background: #3B81B7;
+    color: #fff !important;
+    padding: 0.65rem 2.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+}
+
+.btn-benefits-cta:hover {
+    background: #2d6a9a;
+    color: #fff !important;
+}
+
+/* ===== Stages & Grades Pages ===== */
+.stages-page .breadcrumb-item a,
+.grades-page .breadcrumb-item a {
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.stages-page .breadcrumb-item a:hover,
+.grades-page .breadcrumb-item a:hover {
+    color: #3B81B7;
+}
+
+.stage-card,
+.grade-card,
+.subject-list-card {
+    color: inherit;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.stage-card:hover,
+.grade-card:hover,
+.subject-list-card:hover {
+    color: inherit;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    transform: translateY(-2px);
+}
+
+.subject-list-card .card-body {
+    padding: 1.25rem;
+}
+
+/* Subject card image (grades page) */
+.subject-card-img-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.subject-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.subject-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* ===== Courses Index Page ===== */
+.courses-page-hero {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.courses-page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.courses-page-subtitle {
+    font-size: 0.95rem;
+}
+
+.courses-page-content {
+    background: #f5f5f5;
+}
+
+.courses-stage-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.courses-stage-title a:hover {
+    color: #3B81B7;
+}
+
+.courses-grade-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.courses-grade-title a:hover {
+    color: #3B81B7 !important;
+}
+
+.courses-index-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+.courses-index-meta {
+    font-size: 0.85rem;
+}
+
+.courses-index-desc {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.courses-page-content .course-card-with-img {
+    background: #fff;
+}
+
+.courses-page-content .course-index-title {
+    background: none;
+}
+
+/* Course cards on index - more compact */
+.courses-page-content .course-card-img-wrap {
+    height: 120px;
+}
+
+.courses-page-content .course-card-body {
+    padding: 1rem 1.25rem;
+}
+
+/* Course card with image (index, subjects, my courses) */
+.course-card-with-img {
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.course-card-with-img:hover {
+    color: inherit;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+}
+
+.course-card-img-wrap {
+    height: 160px;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.course-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.course-card-with-img:hover .course-card-img {
+    transform: scale(1.05);
+}
+
+.course-card-with-img .course-card-body {
+    flex-grow: 1;
+}
+
 /* ===== Responsive Design ===== */
 @media (max-width: 991px) {
     .hero-title {

@@ -20,5 +20,6 @@ return [
     'quiz_results' => 'نتائح الاختبارات',
     'statistics_home' => 'إحصائيات الرئيسية',
     'payment_methods' => 'طرق الدفع',
+    'course_reviews' => 'تقييمات الكورسات',
     'contacts' => 'تواصل معنا ',
 ];

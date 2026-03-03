@@ -22,8 +22,16 @@
                     @foreach ($subscriptions as $subscription)
                         @php($subject = $subscription->subject)
                         @continue(!$subject)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="course-card h-100">
+                        <div class="col-md-6 col-lg-4 position-relative">
+                            <a href="{{ route('front.courses.subject', $subject) }}" class="course-card course-card-with-img card shadow-sm h-100 text-decoration-none overflow-hidden">
+                                <div class="favorite-btn-wrap position-absolute top-0 end-0 m-2">
+                                    @include('front.components.favorite-btn', ['subject' => $subject, 'isFavorite' => in_array($subject->id, $favoriteSubjectIds ?? [])])
+                                </div>
+                                @if ($subject->image)
+                                    <div class="course-card-img-wrap">
+                                        <img src="{{ display_file($subject->image) }}" alt="{{ $subject->name }}" class="course-card-img">
+                                    </div>
+                                @endif
                                 <div class="course-card-body">
                                     <h5 class="course-title mb-1">{{ $subject->name }}</h5>
                                     <p class="course-meta small text-muted mb-2">
@@ -41,12 +49,9 @@
                                             إلى {{ optional($subscription->end_date)->format('Y-m-d') }}
                                         @endif
                                     </p>
-                                    <a href="{{ route('front.courses.subject', $subject) }}"
-                                        class="btn btn-primary btn-sm w-100">
-                                        دخول الكورس
-                                    </a>
+                                    <span class="btn btn-primary btn-sm w-100">دخول الكورس</span>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>

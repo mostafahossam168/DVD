@@ -28,6 +28,7 @@ use App\Http\Controllers\Dashboard\ContactController;
 use App\Http\Controllers\Dashboard\PageContentController;
 use App\Http\Controllers\Dashboard\QuizResultController;
 use App\Http\Controllers\Dashboard\PaymentMethodController;
+use App\Http\Controllers\Dashboard\CourseReviewController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'submitLogin'])->name('login-submit');
@@ -63,6 +64,7 @@ Route::group(['middleware' => ['auth', 'dashboard.access']], function () {
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('quiz-results', QuizResultController::class)->only(['index', 'show']);
     Route::resource('payment-methods', PaymentMethodController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+    Route::resource('course-reviews', CourseReviewController::class);
 
     Route::get('get-grades/{id}', function ($id) {
         $classes = Grade::where('stage_id', $id)->get()->pluck('id', 'name');
