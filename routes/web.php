@@ -71,9 +71,10 @@ Route::post('/courses/{subject}/subscribe', [FrontCourseController::class, 'subs
 Route::get('/courses/{subject}/lessons/{lecture}', [FrontCourseController::class, 'showLesson'])->name('front.courses.lesson');
 Route::post('/courses/{subject}/rate', [FrontCourseController::class, 'rate'])->name('front.courses.rate');
 
+
 // Quizzes
 Route::get('/quizzes/{quiz}', [FrontQuizController::class, 'show'])->name('front.quizzes.show');
+// Route::get('/quizzes/{quiz}', [FrontQuizController::class, 'show'])->name('front.quizzes.show');
 Route::post('/quizzes/{quiz}', [FrontQuizController::class, 'submit'])->name('front.quizzes.submit');
 Route::get('/my-quizzes', [FrontQuizController::class, 'history'])->name('front.quizzes.history');
 Route::get('/quizzes/{quiz}/review', [FrontQuizController::class, 'review'])->name('front.quizzes.review');
-
