@@ -12,8 +12,8 @@ use App\Http\Controllers\Front\StageController as FrontStageController;
 use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 
 // Front site
-Route::get('/', [HomeController::class, 'index'])->name('front.home');
 
+Route::get('/', [HomeController::class, 'index'])->name('front.home');
 Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
 
