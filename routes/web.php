@@ -16,12 +16,9 @@ use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
 Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
-
 Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('front.register');
 Route::post('/register', [FrontAuthController::class, 'register'])->name('front.register.submit');
-
 Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.logout');
-
 // Student profile & favorites
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [FrontProfileController::class, 'show'])->name('front.profile.show');
