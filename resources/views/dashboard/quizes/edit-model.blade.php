@@ -32,16 +32,8 @@
 
                     <div class="col-12">
                         <div class="form-group mb-1">
-                            <label for="">من</label>
-                            <input type="datetime-local" name="start_time" value="{{ $item->start_time }}"
-                                id="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group mb-1">
-                            <label for="">الي</label>
-                            <input type="datetime-local" name="end_time" value="{{ $item->end_time }}" id=""
-                                class="form-control">
+                            <label for="">المدة (دقيقة)</label>
+                            <input type="number" name="duration_minutes" id="" class="form-control" min="1" max="300" value="{{ $item->duration_minutes ?? 60 }}" placeholder="مثال: 60">
                         </div>
                     </div>
                     <div class="col-12">

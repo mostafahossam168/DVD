@@ -11,13 +11,13 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">العنوان</label>
-                            <input type="text" name="title" id="" class="form-control">
+                            <input type="text" name="title" id="" class="form-control-ds">
                         </div>
                     </div>
                     @if(isset($stages) && $stages->count() > 0)
                     <div class="col-12">
                         <label for="">المرحلة الدراسية</label>
-                        <select name="stage_id" class="form-select select-setting material-stage-select">
+                        <select name="stage_id" class="form-control-ds material-stage-select">
                             <option value="">-- اختر --</option>
                             @foreach ($stages as $stage)
                                 <option value="{{ $stage->id }}">{{ $stage->name }}</option>
@@ -26,20 +26,20 @@
                     </div>
                     <div class="col-12">
                         <label for="">الصف الدراسي</label>
-                        <select name="grade_id" class="form-select select-setting material-grade-select">
+                        <select name="grade_id" class="form-control-ds material-grade-select">
                             <option value="">-- اختر --</option>
                         </select>
                     </div>
                     <div class="col-12">
                         <label for="">المادة</label>
-                        <select name="subject_id" class="form-select select-setting material-subject-select">
+                        <select name="subject_id" class="form-control-ds material-subject-select">
                             <option value="">-- اختر --</option>
                         </select>
                     </div>
                     @endif
                     <div class="col-12">
                         <label for="">الدرس</label>
-                        <select name="lecture_id" class="form-select select-setting material-lecture-select" required>
+                        <select name="lecture_id" class="form-control-ds material-lecture-select" required>
                             <option value="">-- اختر المرحلة والصف والمادة أولاً --</option>
                             @if(!isset($stages) || $stages->isEmpty())
                                 @foreach ($lectuers ?? [] as $lectuer)
@@ -52,13 +52,13 @@
                         <div class="form-group mb-3">
                             <label for="">الملف</label>
                             <input type="file" min="1" value="" name="file" id=""
-                                class="form-control">
+                                class="form-control-ds">
                         </div>
                     </div>
 
                     <div class="col-12">
                         <label for="">الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="">-- اختر --</option>
                             <option value="1">مفعل</option>
                             <option value="0">غير مفعل</option>

@@ -2,41 +2,41 @@
     'title' => 'اضافة صلاحيه',
 ])
 @section('contant')
-    <div class="main-side">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="main-title">
-                <div class="small">الرئيسية</div>/
-                <div class="small">الصلاحيات</div>/
-                <div class="large">اضافة صلاحيه</div>
-            </div>
-            <div class="btn-holder">
-                <a class="main-btn btn-main-color fs-13px" href="{{ route('dashboard.roles.index') }}">رجوع <i
-                        class="fa-solid fa-arrow-left fs-13px"></i>
-                </a>
-            </div>
-        </div>
-        <div class="row w-100 mx-0 p-3 mb-5 mt-5  bg-white">
-            <x-alert-component></x-alert-component>
-            <form action="{{ route('dashboard.roles.store') }}" method="POST">
-                @csrf
-
-                <div class="col-md-12 mb-2">
-                    <div class="form-group ">
-                        <label for="" class="mb-2">الاسم</label>
-                        <div class="d-flex">
-                            <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-                        </div>
-                        @error('name')
-                            <p class="text-danger" style="font-size: 12px">{{ $message }}</p>
-                        @enderror
-                    </div>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <a href="{{ route('dashboard.roles.index') }}">الصلاحيات</a>
+        <span class="sep">/</span>
+        <span class="current">إضافة صلاحية</span>
+    </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>إضافة صلاحية</h1>
+    </div>
+    <a href="{{ route('dashboard.roles.index') }}" class="btn-back-ds fade-up-ds">رجوع</a>
+    <x-alert-component></x-alert-component>
+    <form action="{{ route('dashboard.roles.store') }}" method="POST" class="fade-up-ds delay-1-ds">
+        @csrf
+        <div class="form-card-ds">
+            <div class="form-card-header-ds">
+                <div class="fch-icon-ds" style="background:#f1f5f9">🔐</div>
+                <div>
+                    <h2>الصلاحيات</h2>
+                    <p>إنشاء صلاحية جديدة وتحديد الصلاحيات الفرعية.</p>
                 </div>
-                <br>
-                <div class="col-12">
-                    <input type="checkbox" name="" id="select-all">
-                    <label for="select-all">تحديد الكل </label>
+            </div>
+            <div class="form-card-body-ds">
+                <div class="form-group-ds mb-4">
+                    <label class="form-label-ds">الاسم <span class="required-ds">*</span></label>
+                    <input type="text" class="form-control-ds" name="name" value="{{ old('name') }}" required>
+                    @error('name')<span class="form-error-ds" style="font-size:.76rem;color:#dc2626">{{ $message }}</span>@enderror
                 </div>
-                <br>
+                <div class="form-group-ds mb-3">
+                    <label class="form-label-ds" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">
+                        <input type="checkbox" name="" id="select-all" class="form-control-ds" style="width:18px;height:18px">
+                        تحديد الكل
+                    </label>
+                </div>
                 <div class="table-responsive">
                     <table class="table-role table table-bordered">
                         @foreach ($permissions as $name => $model_permissions)
@@ -60,13 +60,16 @@
                         @endforeach
                     </table>
                 </div>
-                <div class="btn-holder mt-3 d-flex justify-content-end ">
-                    <button type="submit" class="btn btn-primary">حفظ</button>
-                </div>
-            </form>
+            </div>
+            <div class="form-card-footer-ds">
+                <button type="submit" class="btn-ds btn-success-ds">حفظ</button>
+                <a href="{{ route('dashboard.roles.index') }}" class="btn-ds btn-secondary-ds">إلغاء</a>
+            </div>
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </form>
+</div>
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $("#select-all").click(function() {
@@ -74,4 +77,5 @@
             });
         });
     </script>
+@endpush
 @endsection

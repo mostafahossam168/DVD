@@ -1,201 +1,117 @@
 @extends('dashboard.layouts.backend', ['title' => 'الاعدادات'])
 @section('contant')
-    <div class="main-side">
-        <form action="{{ route('dashboard.update-settings') }}" enctype="multipart/form-data" method="post">
-            @csrf
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="main-title">
-                    <div class="small">
-                        الإعدادات
-                    </div>
-                    <div class="large">
-                        الإعدادات العامة
-                    </div>
-                </div>
-                <div class=" d-flex align-items-center justify-content-center">
-                    <button type="submit" class="main-btn btn-main-color">حفظ التعديلات</button>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <span class="current">الإعدادات</span>
+    </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>الإعدادات العامة</h1>
+    </div>
+
+    <form action="{{ route('dashboard.update-settings') }}" enctype="multipart/form-data" method="post" class="fade-up-ds delay-1-ds">
+        @csrf
+        <div class="form-card-ds">
+            <div class="form-card-header-ds">
+                <div class="fch-icon-ds" style="background:#e0e7ff">⚙️</div>
+                <div>
+                    <h2>بيانات الموقع والتواصل</h2>
+                    <p>الاسم، الرابط، العنوان ووسائل التواصل.</p>
                 </div>
             </div>
-
-
-            <div class="row g-4">
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>إسم الموقع</span>
-                            <div class="box-input">
-                                <input type="text" name="website_name" value="{{ setting('website_name') }}"
-                                    id="">
-                                <img src="img/icons/world.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+            <div class="form-card-body-ds">
+                <div class="form-grid-ds">
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">إسم الموقع</label>
+                        <input type="text" name="website_name" class="form-control-ds" value="{{ setting('website_name') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>رابط الموقع</span>
-                            <div class="box-input">
-                                <input type="url" name="website_url" value="{{ setting('website_url') }}"
-                                    id="">
-                                <img src="img/icons/link.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رابط الموقع</label>
+                        <input type="url" name="website_url" class="form-control-ds" value="{{ setting('website_url') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>الرقم الضريبي</span>
-                            <div class="box-input">
-                                <input type="number" name="tax_number" value="{{ setting('tax_number') }}" id="">
-                                <img src="img/icons/tax.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">الرقم الضريبي</label>
+                        <input type="number" name="tax_number" class="form-control-ds" value="{{ setting('tax_number') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>العنوان</span>
-                            <div class="box-input">
-                                <input type="text" name="address" value="{{ setting('address') }}" id="">
-                                <img src="img/icons/location.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">العنوان</label>
+                        <input type="text" name="address" class="form-control-ds" value="{{ setting('address') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>رقم المبنى</span>
-                            <div class="box-input">
-                                <input type="number" name="building_number" value="{{ setting('building_number') }}"
-                                    id="">
-                                <img src="img/icons/house.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رقم المبنى</label>
+                        <input type="number" name="building_number" class="form-control-ds" value="{{ setting('building_number') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>الشارع</span>
-                            <div class="box-input">
-                                <input type="text" name="street_number" value="{{ setting('street_number') }}"
-                                    id="">
-                                <img src="img/icons/location.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">الشارع</label>
+                        <input type="text" name="street_number" class="form-control-ds" value="{{ setting('street_number') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>رقم الجوال</span>
-                            <div class="box-input">
-                                <input type="tel" name="phone" value="{{ setting('phone') }}" id="">
-                                <img src="img/icons/call.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رقم الجوال</label>
+                        <input type="tel" name="phone" class="form-control-ds" value="{{ setting('phone') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span> فيسبوك</span>
-                            <div class="box-input">
-                                <input type="tel" name="facebook" value="{{ setting('facebook') }}" id="">
-                                <img src="img/icons/call.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">فيسبوك</label>
+                        <input type="text" name="facebook" class="form-control-ds" value="{{ setting('facebook') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>انستجرام</span>
-                            <div class="box-input">
-                                <input type="tel" name="instagram" value="{{ setting('instagram') }}"
-                                    id="">
-                                <img src="img/icons/call.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">انستجرام</label>
+                        <input type="text" name="instagram" class="form-control-ds" value="{{ setting('instagram') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>رقم الحساب (الايبان)</span>
-                            <div class="box-input">
-                                <input type="number" name="iban" value="{{ setting('iban') }}" id="">
-                                <img src="img/icons/lock.png" alt="icon" class="icon">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رقم الحساب (الايبان)</label>
+                        <input type="text" name="iban" class="form-control-ds" value="{{ setting('iban') }}">
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-label" for="tax">تفعيل الضريبة</label>
-                        <select name="is_tax" id="tax" class="form-select select-setting">
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">تفعيل الضريبة</label>
+                        <select name="is_tax" id="tax" class="form-control-ds">
+                            <option value="1" @selected(setting('is_tax') == 1)>مفعل</option>
+                            <option value="0" @selected(setting('is_tax') == 0)>غير مفعل</option>
+                        </select>
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">تفعيل ارسال البريد الالكتروني</label>
+                        <select name="email_status" id="emailStatus" class="form-control-ds">
+                            <option value="">-- اختر --</option>
                             <option value="1">مفعل</option>
                             <option value="0">غير مفعل</option>
                         </select>
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-label" for="emailStatus">تفعيل ارسال البريد الالكتروني</label>
-                        <select name="" id="emailStatus" class="form-select select-setting">
-                            <option value="">-- اختر -- </option>
-                            <option value="1">مفعل</option>
-                            <option value="0">غير مفعل</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-label" for="siteStatus">حالة الموقع</label>
-                        <select name="website_status" id="siteStatus" class="form-select select-setting">
-                            <option value="">-- اختر -- </option>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">حالة الموقع</label>
+                        <select name="website_status" id="siteStatus" class="form-control-ds">
+                            <option value="">-- اختر --</option>
                             <option value="1" @selected(setting('website_status') == 1)>مفعل</option>
                             <option value="0" @selected(setting('website_status') == 0)>غير مفعل</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-12 col-md-12">
-                    <hr style="opacity: .1;">
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>صورة الشعار</span>
-                            <div class="box-input pe-0 border-0">
-                                <input type="file" name="logo" id="siteLogo" class="form-control">
-                            </div>
-                        </label>
+                <div class="form-divider-ds">الشعار والأيقونة</div>
+                <div class="form-grid-ds">
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">صورة الشعار</label>
+                        <input type="file" name="logo" id="siteLogo" class="form-control-ds" accept="image/*">
+                        @if(setting('logo'))
+                            <div class="mt-2"><img src="{{ display_file(setting('logo')) }}" alt="" style="width:70px;height:70px;object-fit:contain;"></div>
+                        @endif
                     </div>
-                    <img style="width: 70px; height:70px" src="{{ display_file(setting('logo')) }}" alt=""
-                        srcset="">
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="inp-holder">
-                        <label class="special-input">
-                            <span>صورة أيقونة المتصفح</span>
-                            <div class="box-input pe-0 border-0">
-                                <input type="file" name="fav" id="siteLogo" class="form-control">
-                            </div>
-                        </label>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">صورة أيقونة المتصفح</label>
+                        <input type="file" name="fav" class="form-control-ds" accept="image/*">
+                        @if(setting('fav'))
+                            <div class="mt-2"><img src="{{ display_file(setting('fav')) }}" alt="" style="width:70px;height:70px;object-fit:contain;"></div>
+                        @endif
                     </div>
-                    <img style="width: 70px; height:70px" src="{{ display_file(setting('fav')) }}" alt=""
-                        srcset="">
                 </div>
-                <div class="col-12 col-md-8">
-                    <label class="special-label" for="siteLogo">رسالة تعطيل الموقع</label>
-                    <textarea name="maintainance_message" id="" value="" rows="5" class="form-control"
-                        placeholder="نعتذر الموقع مغلق للصيانة ...">{{ setting('maintainance_message') }}</textarea>
+                <div class="form-group-ds">
+                    <label class="form-label-ds">رسالة تعطيل الموقع</label>
+                    <textarea name="maintainance_message" class="form-control-ds" rows="4" placeholder="نعتذر الموقع مغلق للصيانة ...">{{ setting('maintainance_message') }}</textarea>
                 </div>
             </div>
-        </form>
-    </div>
+            <div class="form-card-footer-ds">
+                <button type="submit" class="btn-ds btn-success-ds">حفظ التعديلات</button>
+            </div>
+        </div>
+    </form>
+</div>
 @endsection

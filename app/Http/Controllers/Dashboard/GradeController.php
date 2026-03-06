@@ -52,7 +52,7 @@ class GradeController extends Controller
     public function store(Request $request)
     {
         $data =  $request->validate([
-            'name' => 'required|string|unique:grades,name',
+            'name' => 'required|string',
             'status' => 'required|boolean',
             'stage_id' => 'required|exists:stages,id'
         ]);
@@ -83,7 +83,7 @@ class GradeController extends Controller
     {
         $grade = Grade::findOrFail($id);
         $data =  $request->validate([
-            'name' => 'required|string|unique:grades,name,' . $grade->id,
+            'name' => 'required|string',
             'status' => 'required|boolean',
             'stage_id' => 'required|exists:stages,id'
         ]);

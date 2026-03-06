@@ -40,4 +40,9 @@ class PageController extends Controller
     {
         return view('front.pages.faq', ['title' => 'الأسئلة الشائعة']);
     }
+
+    public function support()
+    {
+        return view('front.pages.support', ['title' => 'الدعم الفني']);
+    }
 }

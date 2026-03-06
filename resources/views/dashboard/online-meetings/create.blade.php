@@ -1,18 +1,23 @@
 @extends('dashboard.layouts.backend', ['title' => 'إضافة محاضرة أونلاين'])
 
 @section('contant')
-    <div class="main-side">
-        <div class="main-title">
-            <div class="small">الرئيسية</div>/
-            <div class="large">إضافة محاضرة أونلاين</div>
-        </div>
-
-        <x-alert-component></x-alert-component>
-
-        <form action="{{ route('dashboard.online-meetings.store') }}" method="POST">
-            @include('dashboard.online-meetings.form')
-        </form>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <a href="{{ route('dashboard.online-meetings.index') }}">المحاضرات الأونلاين</a>
+        <span class="sep">/</span>
+        <span class="current">إضافة محاضرة أونلاين</span>
     </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>إضافة محاضرة أونلاين</h1>
+    </div>
+    <a href="{{ route('dashboard.online-meetings.index') }}" class="btn-back-ds fade-up-ds">رجوع</a>
+    <x-alert-component></x-alert-component>
+    <form action="{{ route('dashboard.online-meetings.store') }}" method="POST" class="fade-up-ds delay-1-ds">
+        @include('dashboard.online-meetings.form')
+    </form>
+</div>
 @endsection
 
 @push('scripts')

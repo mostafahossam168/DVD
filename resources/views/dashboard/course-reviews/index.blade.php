@@ -1,84 +1,116 @@
 @extends('dashboard.layouts.backend', ['title' => 'تقييمات الكورسات'])
 
 @section('contant')
-    <div class="main-side">
-        <div class="main-title">
-            <div class="small">الرئيسية</div>/
-            <div class="large">تقييمات الكورسات</div>
-        </div>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <span class="current">تقييمات الكورسات</span>
+    </div>
 
-        <div class="bar-obtions d-flex align-items-end justify-content-between flex-wrap gap-3 mb-4">
-            <div class="d-flex align-items-center gap-2 mt-2">
-                @can('create_course_reviews')
-                    <a href="{{ route('dashboard.course-reviews.create') }}" class="main-btn"><i class="fas fa-plus"></i> إضافة</a>
-                @endcan
-                <a href="{{ route('dashboard.course-reviews.index') }}" class="main-btn btn-main-color">الكل: {{ $count_all }}</a>
-                <a href="{{ route('dashboard.course-reviews.index', ['status' => 'yes']) }}" class="main-btn btn-sm bg-success">مفعلة: {{ $count_active }}</a>
-                <a href="{{ route('dashboard.course-reviews.index', ['status' => 'no']) }}" class="main-btn btn-sm bg-danger">غير مفعلة: {{ $count_inactive }}</a>
-            </div>
-            <div class="box-search">
-                <form action="">
-                    <img src="{{ asset('dashboard/img/icons/search.png') }}" alt="icon">
-                    <input type="search" value="{{ request('search') }}" name="search" placeholder="@lang('Search')">
-                </form>
-            </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>تقييمات الكورسات</h1>
+        <div class="page-header-actions">
+            @can('create_course_reviews')
+                <a href="{{ route('dashboard.course-reviews.create') }}" class="btn-add-ds">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    إضافة
+                </a>
+            @endcan
         </div>
+    </div>
 
-        <x-alert-component></x-alert-component>
-        <div class="table-responsive">
-            <table class="main-table">
-                <thead>
+    <div class="filters-bar-ds fade-up-ds delay-1-ds">
+        <div class="filters-right-ds">
+            <a href="{{ route('dashboard.course-reviews.index') }}" class="filter-badge-ds {{ !request('status') ? 'active-ds' : '' }}">
+                الكل <span class="badge-count-ds">{{ $count_all }}</span>
+            </a>
+            <a href="{{ route('dashboard.course-reviews.index', ['status' => 'yes']) }}" class="filter-badge-ds enabled-ds {{ request('status') === 'yes' ? 'active-ds' : '' }}">
+                مفعلة <span class="badge-count-ds">{{ $count_active }}</span>
+            </a>
+            <a href="{{ route('dashboard.course-reviews.index', ['status' => 'no']) }}" class="filter-badge-ds disabled-ds {{ request('status') === 'no' ? 'active-ds' : '' }}">
+                غير مفعلة <span class="badge-count-ds">{{ $count_inactive }}</span>
+            </a>
+        </div>
+        <div class="filters-left-ds">
+            <form action="{{ route('dashboard.course-reviews.index') }}" method="get" class="search-wrap-ds">
+                @if(request('status'))<input type="hidden" name="status" value="{{ request('status') }}">@endif
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="بحث...">
+            </form>
+        </div>
+    </div>
+
+    <div class="table-wrap-ds fade-up-ds delay-2-ds">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>المادة</th>
+                    <th>التقييم</th>
+                    <th>نص التقييم</th>
+                    <th>الحالة</th>
+                    <th>العمليات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($items as $item)
                     <tr>
-                        <th>#</th>
-                        <th>الاسم</th>
-                        <th>المادة</th>
-                        <th>التقييم</th>
-                        <th>نص التقييم</th>
-                        <th>الحالة</th>
-                        <th>العمليات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($items as $item)
-                        <tr>
-                            <td>{{ $loop->iteration + ($items->currentPage() - 1) * $items->perPage() }}</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    @if($item->image)
-                                        <img src="{{ display_file($item->image) }}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:50%;">
-                                    @endif
-                                    {{ $item->name }}
-                                </div>
-                            </td>
-                            <td>{{ $item->subject_field ?? $item->subject?->name ?? '-' }}</td>
-                            <td><span class="text-warning">★</span> {{ $item->rating }}</td>
-                            <td>{{ \Illuminate\Support\Str::limit($item->review_text, 50) }}</td>
-                            <td>
-                                @if($item->status)
-                                    <span class="badge bg-success">مفعلة</span>
+                        <td class="td-num-ds">{{ $loop->iteration + ($items->currentPage() - 1) * $items->perPage() }}</td>
+                        <td>
+                            <div class="td-avatar-ds">
+                                @if($item->image && file_exists(public_path('uploads/' . $item->image)))
+                                    <img src="{{ display_file($item->image) }}" alt="" class="row-avatar-ds">
                                 @else
-                                    <span class="badge bg-danger">غير مفعلة</span>
+                                    <div class="row-avatar-ph-ds">{{ mb_substr($item->name ?? '—', 0, 1) }}</div>
                                 @endif
-                            </td>
-                            <td>
+                                <span style="font-weight:800">{{ $item->name }}</span>
+                            </div>
+                        </td>
+                        <td style="font-size:.9rem">{{ $item->subject_field ?? $item->subject?->name ?? '—' }}</td>
+                        <td><span style="color:#f59e0b;font-weight:800">★</span> {{ $item->rating }}</td>
+                        <td style="font-size:.85rem;max-width:220px">{{ \Illuminate\Support\Str::limit($item->review_text, 50) }}</td>
+                        <td>
+                            @if($item->status)
+                                <span class="status-badge-ds enabled-ds">مفعلة</span>
+                            @else
+                                <span class="status-badge-ds disabled-ds">غير مفعلة</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="actions-cell-ds">
                                 @can('update_course_reviews')
-                                    <a href="{{ route('dashboard.course-reviews.edit', $item) }}" class="btn btn-primary btn-sm text-white"><i class="fa-solid fa-pen"></i></a>
+                                    <a href="{{ route('dashboard.course-reviews.edit', $item) }}" class="action-btn-ds edit-ds" title="تعديل">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
                                 @endcan
                                 @can('delete_course_reviews')
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete{{ $item->id }}"><i class="fa-solid fa-trash"></i></button>
+                                    <button type="button" class="action-btn-ds delete-ds" data-bs-toggle="modal" data-bs-target="#delete{{ $item->id }}" title="حذف">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                    </button>
                                 @endcan
-                                @include('dashboard.course-reviews.delete-model', ['item' => $item])
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-muted">لا توجد تقييمات</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <br>
-        {{ $items->links() }}
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد تقييمات</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        @if($items->hasPages())
+            <div style="padding:1rem 1.5rem;border-top:1px solid var(--border)">{{ $items->withQueryString()->links() }}</div>
+        @endif
     </div>
+</div>
 @endsection
+
+@push('modals')
+    @foreach($items as $item)
+        @can('delete_course_reviews')
+            @include('dashboard.course-reviews.delete-model', ['item' => $item])
+        @endcan
+    @endforeach
+@endpush

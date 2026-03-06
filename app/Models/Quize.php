@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quize extends Model
 {
-    protected $fillable = ['title', 'lecture_id', 'start_time', 'end_time', 'status'];
+    protected $fillable = ['title', 'lecture_id', 'duration_minutes', 'status'];
 
 
     public function lecture()

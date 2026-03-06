@@ -1,144 +1,147 @@
 @extends('dashboard.layouts.backend', ['title' => 'الدروس'])
 
 @section('contant')
-    <div class="main-side">
-        <div class="main-title">
-            <div class="small">الرئيسية</div>/
-            <div class="large">الدروس</div>
-        </div>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <span class="current">الدروس</span>
+    </div>
 
-        <div class="bar-obtions d-flex align-items-end justify-content-between flex-wrap gap-3 mb-4">
-            <div class="row flex-fill g-3">
-                <div class="d-flex align-items-center gap-2 mt-2">
-                    @can('create_lectuers')
-                        <a href="{{ route('dashboard.lectuers.create') }}" class="main-btn "><i class="fas fa-plus"></i> اضافة
-                        </a>
-                    @endcan
-                    <a href="{{ route('dashboard.lectuers.index') }}" class="main-btn btn-main-color">الكل :
-                        {{ $count_all }}</a>
-                    <a href="{{ route('dashboard.lectuers.index', ['status' => 'yes']) }}"
-                        class="main-btn btn-sm bg-success">مفعلين :
-                        {{ $count_active }}</a>
-                    <a href="{{ route('dashboard.lectuers.index', ['status' => 'no']) }}"
-                        class="main-btn btn-sm  bg-danger">غير مفعلين :{{ $count_inactive }}</a>
-                    {{-- <a href="{{ route('dashboard.lectuers.export', [
-                        'status' => request('status'),
-                        'search' => request('search'),
-                    ]) }}"
-                        class="main-btn btn-sm  bg-warning ">
-                        <i class="fa-solid fa-file-excel fs-5"></i>تصدير Excel</a> --}}
-                </div>
-            </div>
-            <div class="box-search">
-                <form action="">
-                    <img src="{{ asset('dashboard/img/icons/search.png') }}" alt="icon" />
-                    <input type="search" id="" value="{{ request('search') }}" name="search"
-                        placeholder="@lang('Search')" />
-                </form>
-            </div>
-
+    <div class="page-header-ds fade-up-ds">
+        <h1>الدروس</h1>
+        <div class="page-header-actions">
+            @can('create_lectuers')
+                <a href="{{ route('dashboard.lectuers.create') }}" class="btn-add-ds">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    إضافة
+                </a>
+            @endcan
         </div>
-        
-        @if(isset($subjects) && $subjects->count() > 0)
-        <div class="row g-3 mb-3">
-            <div class="col-12 col-md-3">
-                <select name="subject_id" class="form-select" onchange="filterLectures()">
+    </div>
+
+    <div class="filters-bar-ds fade-up-ds delay-1-ds">
+        <div class="filters-right-ds">
+            <a href="{{ route('dashboard.lectuers.index') }}" class="filter-badge-ds {{ !request('status') ? 'active-ds' : '' }}">
+                الكل <span class="badge-count-ds">{{ $count_all }}</span>
+            </a>
+            <a href="{{ route('dashboard.lectuers.index', array_filter(['status' => 'yes', 'subject_id' => request('subject_id')])) }}" class="filter-badge-ds enabled-ds {{ request('status') === 'yes' ? 'active-ds' : '' }}">
+                مفعلين <span class="badge-count-ds">{{ $count_active }}</span>
+            </a>
+            <a href="{{ route('dashboard.lectuers.index', array_filter(['status' => 'no', 'subject_id' => request('subject_id')])) }}" class="filter-badge-ds disabled-ds {{ request('status') === 'no' ? 'active-ds' : '' }}">
+                غير مفعلين <span class="badge-count-ds">{{ $count_inactive }}</span>
+            </a>
+            @if(isset($subjects) && $subjects->count() > 0)
+                <select id="filter_subject_id" class="form-control form-control-sm filter-select-ds" style="width:auto;min-width:160px;margin-inline-start:10px" onchange="filterLectures()">
                     <option value="">جميع المواد</option>
                     @foreach($subjects as $subject)
-                        <option value="{{ $subject->id }}" @selected(request('subject_id') == $subject->id)>
-                            {{ $subject->name }}
-                        </option>
+                        <option value="{{ $subject->id }}" @selected(request('subject_id') == $subject->id)>{{ $subject->name }}</option>
                     @endforeach
                 </select>
-            </div>
+            @endif
         </div>
-        @endif
-        
-        <x-alert-component></x-alert-component>
-        <div class="table-responsive">
-            <table class="main-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>العنوان</th>
-                        <th>المرحله الدراسيه</th>
-                        <th>الصف الدراسى</th>
-                        <th>الماده</th>
-                        <th>الوصف</th>
-                        <th>اللينك</th>
-                        <th>الحالة</th>
-                        <th>العمليات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($items as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td> {{ $item->title }}</td>
-                            <td> {{ $item->subject->grade->stage->name }}</td>
-                            <td> {{ $item->subject->grade->name }}</td>
-                            <td> {{ $item->subject->name }}</td>
-                            <td>
-                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#showDes{{ $item->id }}">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
-                                @include('dashboard.lectuers.show-description-model', ['item' => $item])
-                            </td>
-                            <td><a target="_blank" href=" {{ $item->link }}" class="btn btn-sm btn-info"> <i
-                                        class="fa-solid fa-eye"></i></a>
-                            </td>
-                            <td>
-                                @if ($item->status)
-                                    <span class="badge bg-success">مفعل</span>
-                                @else
-                                    <span class="badge bg-danger">غير مفعل</span>
-                                @endif
-                            </td>
-                            {{-- <td><a href="{{ route('dashboard.courses.index', ['teacher_id' => $item->id]) }}"
-                                    class="btn btn-sm btn-info">{{ $item->teacherCourses()->count() }}</a>
-                            </td> --}}
-                            <td>
-                                <div class="btn-holder d-flex align-items-center gap-3">
-                                    @can('update_lectuers')
-                                        <a href="{{ route('dashboard.lectuers.edit', $item->id) }}"
-                                            class="btn btn-primary btn-sm text-white mx-1">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                    @endcan
-                                    @can('delete_lectuers')
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#delete{{ $item->id }}">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    @endcan
-                                </div>
-                                @include('dashboard.lectuers.delete-model', ['item' => $item])
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="filters-left-ds">
+            <form action="{{ route('dashboard.lectuers.index') }}" method="get" class="search-wrap-ds">
+                @if(request('status'))<input type="hidden" name="status" value="{{ request('status') }}">@endif
+                @if(request('subject_id'))<input type="hidden" name="subject_id" value="{{ request('subject_id') }}">@endif
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="بحث...">
+            </form>
         </div>
-        <br>
-        {{ $items->links() }}
-
     </div>
-    
-    @if(isset($subjects) && $subjects->count() > 0)
-    <script>
-        function filterLectures() {
-            const subjectId = document.querySelector('select[name="subject_id"]').value;
-            const url = new URL(window.location.href);
-            
-            if (subjectId) {
-                url.searchParams.set('subject_id', subjectId);
-            } else {
-                url.searchParams.delete('subject_id');
-            }
-            
-            window.location.href = url.toString();
-        }
-    </script>
-    @endif
+
+    <div class="table-wrap-ds fade-up-ds delay-2-ds">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>العنوان</th>
+                    <th>المرحلة</th>
+                    <th>الصف</th>
+                    <th>المادة</th>
+                    <th>الوصف</th>
+                    <th>الرابط</th>
+                    <th>الحالة</th>
+                    <th>العمليات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($items as $item)
+                    <tr>
+                        <td class="td-num-ds">{{ $loop->iteration }}</td>
+                        <td><span style="font-weight:800">{{ $item->title }}</span></td>
+                        <td style="font-size:.85rem">{{ $item->subject->grade->stage->name ?? '—' }}</td>
+                        <td style="font-size:.85rem">{{ $item->subject->grade->name ?? '—' }}</td>
+                        <td style="font-size:.85rem">{{ $item->subject->name ?? '—' }}</td>
+                        <td>
+                            <button type="button" class="action-btn-ds edit-ds" data-bs-toggle="modal" data-bs-target="#showDes{{ $item->id }}" title="عرض الوصف">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </td>
+                        <td>
+                            @if($item->link)
+                                <a target="_blank" href="{{ $item->link }}" class="action-btn-ds edit-ds" title="فتح الرابط">🔗</a>
+                            @else
+                                —
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->status)
+                                <span class="status-badge-ds enabled-ds">مفعل</span>
+                            @else
+                                <span class="status-badge-ds disabled-ds">غير مفعل</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="actions-cell-ds">
+                                @can('update_lectuers')
+                                    <a href="{{ route('dashboard.lectuers.edit', $item->id) }}" class="action-btn-ds edit-ds" title="تعديل">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
+                                @endcan
+                                @can('delete_lectuers')
+                                    <button type="button" class="action-btn-ds delete-ds" data-bs-toggle="modal" data-bs-target="#delete{{ $item->id }}" title="حذف">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                    </button>
+                                @endcan
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="9" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد دروس</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        @if($items->hasPages())
+            <div style="padding:1rem 1.5rem;border-top:1px solid var(--border)">{{ $items->withQueryString()->links() }}</div>
+        @endif
+    </div>
+</div>
 @endsection
+
+@push('modals')
+    @foreach($items as $item)
+        @include('dashboard.lectuers.show-description-model', ['item' => $item])
+        @can('delete_lectuers')
+            @include('dashboard.lectuers.delete-model', ['item' => $item])
+        @endcan
+    @endforeach
+@endpush
+
+@if(isset($subjects) && $subjects->count() > 0)
+@push('scripts')
+<script>
+function filterLectures() {
+    var el = document.getElementById('filter_subject_id');
+    if (!el) return;
+    var subjectId = el.value;
+    var url = new URL(window.location.href);
+    if (subjectId) url.searchParams.set('subject_id', subjectId);
+    else url.searchParams.delete('subject_id');
+    window.location.href = url.toString();
+}
+</script>
+@endpush
+@endif

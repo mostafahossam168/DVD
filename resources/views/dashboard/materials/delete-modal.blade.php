@@ -1,19 +1,24 @@
-<div class="modal fade" id="delete{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="delete{{ $item->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">حذف ملف</h5>
+                <h5 class="modal-title">
+                    <span class="modal-icon" style="background:#fef2f2">🗑️</span>
+                    حذف ملف
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('dashboard.materials.destroy', $item->id) }}" method="POST">
-                <div class="modal-body">
-                    @csrf
-                    @method('DELETE')
-                    هل أنت متأكد من حذف ملف ؟
+                @csrf
+                @method('DELETE')
+                <div class="confirm-body-ds">
+                    <div class="confirm-icon-ds danger-ds">⚠️</div>
+                    <h3>هل أنت متأكد من الحذف؟</h3>
+                    <p>سيتم حذف الملف «{{ $item->title }}» ولا يمكن التراجع.</p>
                 </div>
                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">نعم، احذف</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">نعم</button>
                 </div>
             </form>
         </div>

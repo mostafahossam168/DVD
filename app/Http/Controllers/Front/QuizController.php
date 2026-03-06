@@ -113,7 +113,7 @@ class QuizController extends Controller
                 $selectedIndex = isset($answersMcq[$question->id]) ? (int) $answersMcq[$question->id] : null;
                 $answers = is_array($question->answers)
                     ? $question->answers
-                    : (json_decode($question->answers, true) ?: []);
+                    : (json_decode($question->answers ?? '[]', true) ?: []);
 
                 $isCorrect = false;
                 if ($selectedIndex !== null && isset($answers[$selectedIndex])) {
@@ -163,12 +163,7 @@ class QuizController extends Controller
             'details' => $details,
         ]);
 
-        return back()->with([
-            'quiz_result' => [
-                'score' => $score,
-                'max' => $maxScore,
-            ],
-        ]);
+        return redirect()->route('front.quizzes.review', $quiz)->with('success', 'تم تسليم الاختبار بنجاح.');
     }
 
     public function review(Quize $quiz)
@@ -223,7 +218,24 @@ class QuizController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('front.quizzes.history', compact('results'));
+        $allForStats = QuizResult::where('user_id', $user->id)->get();
+        $totalQuizzes = $allForStats->count();
+        $passedCount = $allForStats->filter(fn ($r) => $r->max_score > 0 && ($r->score / $r->max_score) >= 0.5)->count();
+        $zeroCount = $allForStats->filter(fn ($r) => $r->score == 0)->count();
+        $failedCount = $allForStats->filter(fn ($r) => $r->max_score > 0 && ($r->score / $r->max_score) < 0.5 && $r->score > 0)->count();
+        $totalMax = $allForStats->sum('max_score');
+        $totalScore = $allForStats->sum('score');
+        $avgPct = $totalMax > 0 ? round($totalScore / $totalMax * 100) : 0;
+
+        $stats = [
+            'total' => $totalQuizzes,
+            'passed' => $passedCount,
+            'failed' => $failedCount,
+            'zero' => $zeroCount,
+            'avg_pct' => $avgPct,
+        ];
+
+        return view('front.quizzes.history', compact('results', 'stats'));
     }
 }
 

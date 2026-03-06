@@ -1,138 +1,112 @@
 @extends('dashboard.layouts.backend', ['title' => 'تعديل اشتراك'])
 
 @section('contant')
-    <div class="main-side">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="main-title">
-                <div class="small">الرئيسية</div>/
-                <div class="small">الاشتراكات</div>/
-                <div class="large">تعديل اشتراك</div>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <a href="{{ route('dashboard.subscriptions.index') }}">الاشتراكات</a>
+        <span class="sep">/</span>
+        <span class="current">تعديل اشتراك</span>
+    </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>تعديل اشتراك</h1>
+    </div>
+    <a href="{{ route('dashboard.subscriptions.index') }}" class="btn-back-ds fade-up-ds">رجوع</a>
+    <x-alert-component></x-alert-component>
+    <form action="{{ route('dashboard.subscriptions.update', $item->id) }}" method="post" class="fade-up-ds delay-1-ds">
+        @csrf
+        @method('PUT')
+        <div class="form-card-ds">
+            <div class="form-card-header-ds">
+                <div class="fch-icon-ds" style="background:#dcfce7">📋</div>
+                <div>
+                    <h2>تعديل الاشتراك</h2>
+                    <p>تعديل الطالب، المادة، الحالة أو الفترة.</p>
+                </div>
             </div>
-            <div class="btn-holder">
-                <a class="main-btn btn-main-color fs-13px" href="{{ route('dashboard.subscriptions.index') }}">رجوع <i
-                        class="fa-solid fa-arrow-left fs-13px"></i>
-                </a>
+            <div class="form-card-body-ds">
+                <div class="form-grid-ds">
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">الطالب <span class="required-ds">*</span></label>
+                        <select name="user_id" id="user_id" class="form-control-ds" required>
+                            <option value="">-- اختر الطالب --</option>
+                            @foreach($students as $student)
+                                <option value="{{ $student->id }}" @selected($item->user_id == $student->id || old('user_id') == $student->id)>{{ $student->fullname }} - {{ $student->email }}</option>
+                            @endforeach
+                        </select>
+                        @error('user_id')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">المادة <span class="required-ds">*</span></label>
+                        <select name="subject_id" id="subject_id" class="form-control-ds" required>
+                            <option value="">-- اختر المادة --</option>
+                            @foreach($subjects as $subject)
+                                <option value="{{ $subject->id }}" @selected($item->subject_id == $subject->id || old('subject_id') == $subject->id)>{{ $subject->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('subject_id')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">الحالة <span class="required-ds">*</span></label>
+                        <select name="status" id="status" class="form-control-ds" required>
+                            <option value="1" @selected($item->status == 1 || old('status') == '1')>مفعل</option>
+                            <option value="0" @selected($item->status == 0 || old('status') == '0')>غير مفعل</option>
+                        </select>
+                        @error('status')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">نوع الاشتراك <span class="required-ds">*</span></label>
+                        <select name="period_type" id="period_type" class="form-control-ds" required>
+                            <option value="term" @selected(old('period_type', $item->period_type ?? 'term') == 'term')>بالترم</option>
+                            <option value="month" @selected(old('period_type', $item->period_type ?? 'term') == 'month')>شهري</option>
+                        </select>
+                        @error('period_type')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds period-term-fields d-none">
+                        <label class="form-label-ds">الترم</label>
+                        <select name="term_number" id="term_number" class="form-control-ds">
+                            <option value="">-- اختر --</option>
+                            <option value="1" @selected(old('term_number', $item->term_number) == 1)>الترم الأول</option>
+                            <option value="2" @selected(old('term_number', $item->term_number) == 2)>الترم الثاني</option>
+                            <option value="3" @selected(old('term_number', $item->term_number) == 3)>الترم الثالث</option>
+                        </select>
+                        @error('term_number')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds period-month-fields d-none">
+                        <label class="form-label-ds">فترة الاشتراك الشهري</label>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <input type="date" name="start_date" class="form-control-ds flex-grow-1" value="{{ old('start_date', optional($item->start_date)->format('Y-m-d')) }}" placeholder="تاريخ البداية">
+                            <input type="date" name="end_date" class="form-control-ds flex-grow-1" value="{{ old('end_date', optional($item->end_date)->format('Y-m-d')) }}" placeholder="تاريخ النهاية">
+                        </div>
+                        @error('start_date')<span class="form-error-ds">{{ $message }}</span>@enderror
+                        @error('end_date')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+            </div>
+            <div class="form-card-footer-ds">
+                <button type="submit" class="btn-ds btn-success-ds">حفظ</button>
+                <a href="{{ route('dashboard.subscriptions.index') }}" class="btn-ds btn-secondary-ds">إلغاء</a>
             </div>
         </div>
-        <x-alert-component></x-alert-component>
-        <form action="{{ route('dashboard.subscriptions.update', $item->id) }}" method="post">
-            @csrf
-            @method('PUT')
-            <div class="row g-4">
-                <div class="col-12 col-md-6">
-                    <label class="special-label" for="user_id">
-                        الطالب</label>
-                    <select name="user_id" id="user_id" class="form-select select-setting" required>
-                        <option value="">-- اختر الطالب --</option>
-                        @foreach($students as $student)
-                            <option value="{{ $student->id }}" @selected($item->user_id == $student->id || old('user_id') == $student->id)>
-                                {{ $student->fullname }} - {{ $student->email }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('user_id')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="special-label" for="subject_id">
-                        المادة</label>
-                    <select name="subject_id" id="subject_id" class="form-select select-setting" required>
-                        <option value="">-- اختر المادة --</option>
-                        @foreach($subjects as $subject)
-                            <option value="{{ $subject->id }}" @selected($item->subject_id == $subject->id || old('subject_id') == $subject->id)>
-                                {{ $subject->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('subject_id')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="special-label" for="status">
-                        الحالة</label>
-                    <select name="status" id="status" class="form-select select-setting" required>
-                        <option value="1" @selected($item->status == 1 || old('status') == '1')>مفعل</option>
-                        <option value="0" @selected($item->status == 0 || old('status') == '0')>غير مفعل</option>
-                    </select>
-                    @error('status')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="special-label" for="period_type">
-                        نوع الاشتراك</label>
-                    <select name="period_type" id="period_type" class="form-select select-setting" required>
-                        <option value="term" @selected(old('period_type', $item->period_type ?? 'term') == 'term')>بالترم</option>
-                        <option value="month" @selected(old('period_type', $item->period_type ?? 'term') == 'month')>شهري</option>
-                    </select>
-                    @error('period_type')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="col-12 col-md-4 period-term-fields d-none">
-                    <label class="special-label" for="term_number">
-                        الترم</label>
-                    <select name="term_number" id="term_number" class="form-select select-setting">
-                        <option value="">-- اختر --</option>
-                        <option value="1" @selected(old('term_number', $item->term_number) == 1)>الترم الأول</option>
-                        <option value="2" @selected(old('term_number', $item->term_number) == 2)>الترم الثاني</option>
-                        <option value="3" @selected(old('term_number', $item->term_number) == 3)>الترم الثالث</option>
-                    </select>
-                    @error('term_number')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="col-12 col-md-4 period-month-fields d-none">
-                    <label class="special-label d-block">
-                        فترة الاشتراك الشهري
-                    </label>
-                    <div class="d-flex gap-2">
-                        <div class="flex-fill">
-                            <input type="date" name="start_date" class="form-control"
-                                value="{{ old('start_date', optional($item->start_date)->format('Y-m-d')) }}"
-                                placeholder="تاريخ البداية">
-                        </div>
-                        <div class="flex-fill">
-                            <input type="date" name="end_date" class="form-control"
-                                value="{{ old('end_date', optional($item->end_date)->format('Y-m-d')) }}"
-                                placeholder="تاريخ النهاية">
-                        </div>
-                    </div>
-                    @error('start_date')
-                        <span class="text-danger d-block">{{ $message }}</span>
-                    @enderror
-                    @error('end_date')
-                        <span class="text-danger d-block">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <button class="d-flex justify-content-center mt-4 mx-auto" type="submit"> <a class="main-btn"> حفظ
-                </a></button>
-        </form>
-    </div>
+    </form>
+</div>
 @endsection
 
 @push('scripts')
-    <script>
-        function togglePeriodFields() {
-            const type = document.getElementById('period_type').value;
-            const termFields = document.querySelector('.period-term-fields');
-            const monthFields = document.querySelector('.period-month-fields');
-
-            termFields.classList.add('d-none');
-            monthFields.classList.add('d-none');
-
-            if (type === 'term') {
-                termFields.classList.remove('d-none');
-            } else if (type === 'month') {
-                monthFields.classList.remove('d-none');
-            }
-        }
-
-        document.getElementById('period_type').addEventListener('change', togglePeriodFields);
-        // initial
-        togglePeriodFields();
-    </script>
+<script>
+function togglePeriodFields() {
+    var type = document.getElementById('period_type') && document.getElementById('period_type').value;
+    var termFields = document.querySelector('.period-term-fields');
+    var monthFields = document.querySelector('.period-month-fields');
+    if (!termFields || !monthFields) return;
+    termFields.classList.add('d-none');
+    monthFields.classList.add('d-none');
+    if (type === 'term') termFields.classList.remove('d-none');
+    else if (type === 'month') monthFields.classList.remove('d-none');
+}
+var el = document.getElementById('period_type');
+if (el) el.addEventListener('change', togglePeriodFields);
+togglePeriodFields();
+</script>
 @endpush

@@ -11,13 +11,13 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الاسم</label>
-                            <input type="text" name="name" id="" class="form-control">
+                            <input type="text" name="name" id="" class="form-control-ds">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for=""> المرحله الدراسيه</label>
-                            <select name="stage_id" id="" class="form-control">
+                            <select name="stage_id" id="" class="form-control-ds">
                                 <option value="">-- اختر --</option>
                                 @foreach ($stages as $item)
                                     <option value="{{ $item->id }}">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-12">
                         <label for="">الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="">-- اختر --</option>
                             <option value="1">مفعل</option>
                             <option value="0">غير مفعل</option>

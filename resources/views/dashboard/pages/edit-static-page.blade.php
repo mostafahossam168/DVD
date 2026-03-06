@@ -1,42 +1,47 @@
 @extends('dashboard.layouts.backend', ['title' => $page['title'] ?? 'صفحة ثابتة'])
 
 @section('css')
-    {{-- محرر نص من نوع Summernote --}}
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" />
 @endsection
 
 @section('contant')
-    <div class="main-side">
-        <form action="{{ route('dashboard.pages.update', $page['slug']) }}" method="post">
-            @csrf
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="main-title">
-                    <div class="small">
-                        الرئيسية / الإعدادات / صفحات الموقع
-                    </div>
-                    <div class="large">
-                        {{ $page['title'] }}
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-center">
-                    <button type="submit" class="main-btn btn-main-color">حفظ التعديلات</button>
-                </div>
-            </div>
-
-            <x-alert-component></x-alert-component>
-
-            <div class="row g-4">
-                <div class="col-12">
-                    <label class="special-label" for="pageContent">محتوى الصفحة</label>
-                    <textarea name="content" id="pageContent" rows="12" class="form-control">{{ old('content', $content) }}</textarea>
-                    <p class="text-muted mt-2" style="font-size: 13px;">
-                        يمكنك تنسيق النص (عناوين، ألوان، روابط، صور ...) وسيتم عرضه في واجهة الموقع كما هو.
-                    </p>
-                </div>
-            </div>
-        </form>
+<div class="dash-page">
+    <div class="page-breadcrumb fade-up-ds">
+        <a href="{{ route('dashboard.home') }}">الرئيسية</a>
+        <span class="sep">/</span>
+        <a href="{{ route('dashboard.home') }}">الإعدادات</a>
+        <span class="sep">/</span>
+        <span class="current">{{ $page['title'] ?? 'تعديل' }}</span>
     </div>
+    <div class="page-header-ds fade-up-ds">
+        <h1>{{ $page['title'] ?? 'صفحة ثابتة' }}</h1>
+    </div>
+    <a href="{{ route('dashboard.home') }}" class="btn-back-ds fade-up-ds">رجوع</a>
+    <x-alert-component></x-alert-component>
+
+    <form action="{{ route('dashboard.pages.update', $page['slug']) }}" method="post" class="fade-up-ds delay-1-ds">
+        @csrf
+        <div class="form-card-ds">
+            <div class="form-card-header-ds">
+                <div class="fch-icon-ds" style="background:#e0e7ff">📄</div>
+                <div>
+                    <h2>محتوى الصفحة</h2>
+                    <p>يمكنك تنسيق النص (عناوين، ألوان، روابط، صور ...) وسيتم عرضه في واجهة الموقع كما هو.</p>
+                </div>
+            </div>
+            <div class="form-card-body-ds">
+                <div class="form-group-ds">
+                    <label class="form-label-ds" for="pageContent">محتوى الصفحة</label>
+                    <textarea name="content" id="pageContent" rows="12" class="form-control-ds">{{ old('content', $content) }}</textarea>
+                </div>
+            </div>
+            <div class="form-card-footer-ds">
+                <button type="submit" class="btn-ds btn-success-ds">حفظ التعديلات</button>
+                <a href="{{ route('dashboard.home') }}" class="btn-ds btn-secondary-ds">إلغاء</a>
+            </div>
+        </div>
+    </form>
+</div>
 @endsection
 
 @push('scripts')
@@ -46,7 +51,6 @@
             $('#pageContent').summernote({
                 height: 350,
                 toolbar: [
-                    // [groupName, [list of button]]
                     ['style', ['style']],
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['font2', ['strikethrough', 'superscript', 'subscript']],
@@ -61,5 +65,3 @@
         });
     </script>
 @endpush
-
-

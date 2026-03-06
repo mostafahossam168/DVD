@@ -1,67 +1,100 @@
-@extends('front.layouts.front', ['title' => $quiz->title])
+@extends('front.layouts.front', ['title' => 'فاهم — مراجعة: ' . $quiz->title])
 
 @section('content')
-    <section class="py-5">
-        <div class="container">
-            <h1 class="mb-2">{{ $quiz->title }}</h1>
-            <p class="text-muted mb-1">
-                {{ $subject->name }} - {{ $subject->grade?->name }} - {{ $subject->grade?->stage?->name }}
-            </p>
-            <p class="text-muted small mb-3">
-                درجتك: {{ $result->score }} من {{ $result->max_score }}
-            </p>
+@php
+    $subject = $quiz->lecture?->subject;
+    $grade = $subject?->grade;
+    $stage = $grade?->stage;
+    $totalQ = $questions->count();
+    $passed = $result->max_score > 0 && (round($result->score / $result->max_score * 100) >= 50);
+@endphp
 
-            @foreach ($questions as $index => $question)
-                @php
-                    $detail = $detailsByQuestion->get($question->id, []);
-                @endphp
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title mb-2">
-                            سؤال {{ $index + 1 }} (الدرجة: {{ $question->grade }})
-                        </h5>
-                        <p class="mb-3">{{ $question->question }}</p>
+<div class="quiz-page-wrap">
+    {{-- Score banner --}}
+    <div class="score-banner {{ $passed ? 'pass' : 'fail' }}">
+        <div class="score-icon">{{ $passed ? '🎉' : '📝' }}</div>
+        <div class="score-info">
+            <div class="score-title">{{ $passed ? 'أحسنت! لقد اجتزت الاختبار' : 'حاول مرة أخرى' }}</div>
+            <div class="score-sub">درجتك: {{ $result->score }} من {{ $result->max_score }} ({{ $result->max_score > 0 ? round($result->score / $result->max_score * 100) : 0 }}٪)</div>
+        </div>
+        <div class="score-num">
+            <div class="score-big">{{ $result->score }}</div>
+            <div class="score-out">من {{ $result->max_score }}</div>
+        </div>
+    </div>
 
-                        @if ($question->type === 'mcq')
-                            @php
-                                $answersArray = is_array($question->answers)
-                                    ? $question->answers
-                                    : (json_decode($question->answers ?? '[]', true) ?: []);
-                                $selectedIndex = $detail['selected_index'] ?? null;
-                            @endphp
-                            @foreach ($answersArray as $aIndex => $answer)
-                                @php
-                                    $isStudentChoice = $selectedIndex === $aIndex;
-                                @endphp
-                                <div class="form-check mb-1">
-                                    <input class="form-check-input" type="radio" disabled
-                                        {{ $isStudentChoice ? 'checked' : '' }}>
-                                    <label class="form-check-label">
-                                        {{ $answer['answer'] ?? '' }}
-                                        @if (!empty($answer['is_correct']))
-                                            <span class="badge bg-success ms-1">إجابة صحيحة</span>
-                                        @endif
-                                        @if ($isStudentChoice && empty($answer['is_correct']))
-                                            <span class="badge bg-danger ms-1">إجابتك</span>
-                                        @elseif($isStudentChoice)
-                                            <span class="badge bg-primary ms-1">إجابتك</span>
-                                        @endif
-                                    </label>
-                                </div>
-                            @endforeach
-                        @else
-                            @php($studentAnswer = $detail['answer'] ?? '')
-                            <p class="mb-1"><strong>إجابتك:</strong></p>
-                            <p class="border rounded p-2 bg-light">{{ $studentAnswer ?: 'لم تقم بالإجابة' }}</p>
-                            @if ($question->correct_answer)
-                                <p class="mb-0 small text-muted"><strong>الإجابة النموذجية:</strong>
-                                    {{ $question->correct_answer }}</p>
-                            @endif
-                        @endif
+    {{-- Quiz header (compact) --}}
+    <div class="quiz-header" style="margin-bottom:20px">
+        <div class="quiz-eyebrow">📝 مراجعة الاختبار</div>
+        <h1 class="quiz-title">{{ $quiz->title }}</h1>
+        <div class="quiz-meta">{{ $subject?->name ?? '' }} — {{ $grade?->name ?? '' }} — {{ $stage?->name ?? '' }}</div>
+    </div>
+
+    @foreach($questions as $index => $question)
+        @php
+            $detail = $detailsByQuestion->get($question->id, []);
+            $qNum = $index + 1;
+            $isCorrect = (bool) ($detail['is_correct'] ?? false);
+            $earned = $isCorrect ? $question->grade : 0;
+            $answersArray = is_array($question->answers) ? $question->answers : (json_decode($question->answers ?? '[]', true) ?: []);
+            $selectedIndex = $detail['selected_index'] ?? null;
+        @endphp
+        <div class="question-card">
+            <div class="q-card-header">
+                <div class="q-num-badge {{ $isCorrect ? 'badge-correct' : 'badge-wrong' }}">{{ $qNum }}</div>
+                <div class="q-header-text">
+                    <div class="q-title">سؤال {{ $qNum }}</div>
+                    <div class="q-points-row">
+                        <span class="q-points {{ $isCorrect ? 'points-correct' : 'points-wrong' }}">{{ $earned }} / {{ $question->grade }} درجة</span>
+                        <span class="q-status-chip {{ $isCorrect ? 'chip-correct' : 'chip-wrong' }}">{{ $isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة' }}</span>
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </section>
-@endsection
+            </div>
+            <div class="q-card-body">
+                <div class="q-text">{{ $question->question }}</div>
 
+                @if($question->type === 'mcq')
+                    <div class="q-options">
+                        @foreach($answersArray as $aIndex => $answer)
+                            @php
+                                $isCorrectOpt = !empty($answer['is_correct']);
+                                $isStudentChoice = $selectedIndex === $aIndex;
+                                $optClass = 'q-option disabled';
+                                if ($isCorrectOpt) $optClass .= ' correct';
+                                elseif ($isStudentChoice) $optClass .= ' wrong';
+                            @endphp
+                            <div class="{{ $optClass }}">
+                                <div class="q-opt-indicator">{{ $isCorrectOpt ? '✓' : ($isStudentChoice ? '✗' : '') }}</div>
+                                <span class="q-opt-label">{{ $answer['answer'] ?? '' }}</span>
+                                @if($isCorrectOpt)<span class="q-opt-tag tag-correct">الإجابة الصحيحة</span>@endif
+                                @if($isStudentChoice && !$isCorrectOpt)<span class="q-opt-tag tag-wrong">إجابتك</span>@endif
+                                @if($isStudentChoice && $isCorrectOpt)<span class="q-opt-tag tag-your">إجابتك</span>@endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    @php($studentAnswer = $detail['answer'] ?? '')
+                    <div class="text-answer-wrap">
+                        @if($studentAnswer)
+                            <div class="text-answer-box submitted" style="margin-bottom:10px">{{ $studentAnswer }}</div>
+                        @endif
+                        @if($question->correct_answer)
+                            <div class="model-answer">
+                                <span class="model-answer-label">✅ الإجابة النموذجية:</span>
+                                <span class="model-answer-text">{{ $question->correct_answer }}</span>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endforeach
+
+    <div class="submit-section">
+        <div class="submit-title">تمت المراجعة</div>
+        <div class="submit-sub">يمكنك العودة للدرس أو لاختباراتك.</div>
+        <a href="{{ route('front.courses.lesson', [$subject, $quiz->lecture]) }}" class="btn-submit-quiz" style="text-decoration:none; margin-left:8px">العودة للدرس</a>
+        <a href="{{ route('front.quizzes.history') }}" class="btn-submit-quiz btn-modal-cancel" style="text-decoration:none">اختباراتي</a>
+    </div>
+</div>
+@endsection

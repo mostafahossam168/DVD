@@ -11,13 +11,13 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الاسم</label>
-                            <input type="text" name="name" id="" class="form-control">
+                            <input type="text" name="name" id="" class="form-control-ds">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">المرحلة الدراسية</label>
-                            <select name="stage_id" id="stage_id_subject" class="form-control">
+                            <select name="stage_id" id="stage_id_subject" class="form-control-ds">
                                 <option value="">-- اختر المرحلة --</option>
                                 @foreach ($stages as $stage)
                                     <option value="{{ $stage->id }}">
@@ -30,7 +30,7 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الصف الدراسي</label>
-                            <select name="grade_id" id="grade_id_subject" class="form-control">
+                            <select name="grade_id" id="grade_id_subject" class="form-control-ds">
                                 <option value="">-- اختر المرحلة أولاً --</option>
                             </select>
                         </div>
@@ -39,7 +39,7 @@
                         <div class="form-group mb-3">
                             <label for="teacher_id">المعلمين</label>
 
-                            <select name="teacher_id[]" id="teacher_id" class="form-control" multiple size="6"
+                            <select name="teacher_id[]" id="teacher_id" class="form-control-ds" multiple size="6"
                                 style="min-height: 150px;">
                                 @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-12">
                         <label for="">الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="">-- اختر --</option>
                             <option value="1">مفعل</option>
                             <option value="0">غير مفعل</option>
@@ -61,7 +61,7 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الصوره</label>
-                            <input type="file" name="image" id="" class="form-control">
+                            <input type="file" name="image" id="" class="form-control-ds">
                         </div>
                     </div>
                 </div>

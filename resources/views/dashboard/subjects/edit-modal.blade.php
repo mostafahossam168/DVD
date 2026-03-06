@@ -14,13 +14,13 @@
                         <div class="form-group mb-3">
                             <label for="">الاسم</label>
                             <input type="text" name="name" value="{{ $item->name }}" id=""
-                                class="form-control">
+                                class="form-control-ds">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">المرحلة الدراسية</label>
-                            <select name="stage_id" id="stage_id_subject_edit{{ $item->id }}" class="form-control">
+                            <select name="stage_id" id="stage_id_subject_edit{{ $item->id }}" class="form-control-ds">
                                 <option value="">-- اختر المرحلة --</option>
                                 @foreach ($stages as $stage)
                                     <option value="{{ $stage->id }}" @selected($stage->id == $item->grade->stage_id)>
@@ -33,7 +33,7 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الصف الدراسي</label>
-                            <select name="grade_id" id="grade_id_subject_edit{{ $item->id }}" class="form-control">
+                            <select name="grade_id" id="grade_id_subject_edit{{ $item->id }}" class="form-control-ds">
                                 <option value="">-- اختر المرحلة أولاً --</option>
                                 @foreach ($grades as $grade)
                                     @if($grade->stage_id == $item->grade->stage_id)
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-12">
                         <label for="">الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="1" @selected($item->status == 1)>مفعل</option>
                             <option value="0" @selected($item->status == 0)>غير مفعل</option>
                         </select>
@@ -55,7 +55,7 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="">الصوره</label>
-                            <input type="file" name="image" id="" class="form-control">
+                            <input type="file" name="image" id="" class="form-control-ds">
                         </div>
                     </div>
                 </div>

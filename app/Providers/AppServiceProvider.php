@@ -22,9 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('front.layouts.navbar', function ($view) {
+        View::composer(['front.layouts.navbar', 'front.layouts.footer'], function ($view) {
             $view->with([
-                'navbarStages' => Stage::active()->orderBy('name')->take(5)->get(),
+                'navbarStages' => Stage::active()->orderBy('name')->take(6)->get(),
                 'navbarStagesCount' => Stage::active()->count(),
                 'navbarSubjects' => Subject::active()->with('grade')->orderBy('name')->take(5)->get(),
                 'navbarSubjectsCount' => Subject::active()->count(),

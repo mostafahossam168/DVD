@@ -13,12 +13,12 @@
                         <div class="form-group mb-3">
                             <label for="">الاسم</label>
                             <input type="text" name="name" value="{{ $item->name }}" id=""
-                                class="form-control">
+                                class="form-control-ds">
                         </div>
                     </div>
                     <div class="col-12">
                         <label for="">الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="1" @selected($item->status == 1)>مفعل</option>
                             <option value="0" @selected($item->status == 0)>غير مفعل</option>
                         </select>

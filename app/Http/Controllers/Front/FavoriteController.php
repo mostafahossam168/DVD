@@ -24,7 +24,10 @@ class FavoriteController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('front.favorites.index', compact('subjects'));
+        $stagesCount = $subjects->map(fn ($s) => $s->grade?->stage_id)->filter()->unique()->count();
+        $subjectNamesForFilter = $subjects->pluck('name')->unique()->values()->all();
+
+        return view('front.favorites.index', compact('subjects', 'stagesCount', 'subjectNamesForFilter'));
     }
 
     public function toggle(Subject $subject)

@@ -1,19 +1,24 @@
-<div class="modal fade" id="delete{{ $item->id }}" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="delete{{ $item->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">حذف الاشتراك</h5>
+                <h5 class="modal-title">
+                    <span class="modal-icon" style="background:#fef2f2">🗑️</span>
+                    حذف الاشتراك
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('dashboard.subscriptions.destroy', $item->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <div class="modal-body">
-                    هل أنت متأكد من حذف الاشتراك للطالب {{ $item->user->fullname }} في المادة {{ $item->subject->name }}؟
+                <div class="confirm-body-ds">
+                    <div class="confirm-icon-ds danger-ds">⚠️</div>
+                    <h3>هل أنت متأكد من الحذف؟</h3>
+                    <p>سيتم حذف الاشتراك للطالب «{{ $item->user->full_name ?? $item->user->fullname ?? $item->user->email }}» في المادة «{{ $item->subject->name }}» ولا يمكن التراجع.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary btn-sm px-3" data-bs-dismiss="modal">نعم</button>
+                    <button type="submit" class="btn btn-danger">نعم، احذف</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
                 </div>
             </form>
         </div>

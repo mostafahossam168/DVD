@@ -1,91 +1,143 @@
-@extends('front.layouts.front', ['title' => 'تواصل معنا'])
+@extends('front.layouts.front', ['title' => 'فاهم — تواصل معنا'])
+
 @section('content')
-    <section class="py-5">
-        <div class="container">
-            <div class="row g-4">
+@php
+    $contactEmail = setting('contact_email') ?? setting('website_url');
+    if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
+        $contactEmail = 'support@fahem.com';
+    }
+    $phone = setting('phone') ?? '';
+    $whatsapp = setting('whatsapp') ?? $phone;
+    $whatsappLink = $whatsapp ? 'https://wa.me/2' . preg_replace('/\D/', '', $whatsapp) : '#';
+    $facebook = setting('facebook') ?? '#';
+    $instagram = setting('instagram') ?? '#';
+@endphp
 
-                <!-- معلومات التواصل -->
-                <div class="col-lg-4">
-                    <h2 class="mb-3">تواصل معنا</h2>
-                    <p class="text-muted mb-4">
-                        يمكنك التواصل معنا في أي وقت من خلال بيانات الاتصال التالية أو من خلال نموذج التواصل.
-                    </p>
+{{-- Hero --}}
+<div class="hero-band">
+    <div class="hero-inner">
+        <div class="hero-eyebrow">💬 تواصل معنا</div>
+        <h1>نحن هنا <em>لمساعدتك</em></h1>
+        <p>يمكنك التواصل معنا في أي وقت من خلال بيانات الاتصال التالية أو من خلال نموذج التواصل.</p>
+    </div>
+</div>
 
-                    <div class="mb-3 d-flex align-items-center gap-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                            style="width:40px;height:40px;">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div>
-                            <div class="fw-semibold">البريد الإلكتروني</div>
-                            <a href="mailto:support@fahem.com">support@fahem.com</a>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 d-flex align-items-center gap-3">
-                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
-                            style="width:40px;height:40px;">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
-                        <div>
-                            <div class="fw-semibold">رقم الهاتف</div>
-                            <a href="tel:+201000000000">+20 100 000 0000</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- فورم التواصل -->
-                <div class="col-lg-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h4 class="mb-3">أرسل لنا رسالة</h4>
-
-                            @if (session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    {{ $errors->first() }}
-                                </div>
-                            @endif
-
-                            <form id="contactForm" method="POST" action="{{ route('front.contact.store') }}">
-                                @csrf
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="name" class="form-label">الاسم الكامل</label>
-                                        <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="phone" class="form-label">رقم التليفون</label>
-                                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
-                                            class="form-control">
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="email" class="form-label">البريد الإلكتروني</label>
-                                        <input type="email" id="email" name="email" value="{{ old('email') }}"
-                                            class="form-control">
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="message" class="form-label">الرسالة</label>
-                                        <textarea id="message" name="message" rows="4" class="form-control" required>{{ old('message') }}</textarea>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary custom-btn">
-                                            إرسال الرسالة
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
+{{-- Contact Section --}}
+<div class="contact-section">
+    {{-- Info Panel --}}
+    <div class="info-panel">
+        <div>
+            <div class="info-headline">كيف يمكننا<br/>مساعدتك؟</div>
+            <div class="info-sub">فريقنا متاح للإجابة على أسئلتك ومساعدتك في أي شيء يتعلق بالمنصة أو الكورسات.</div>
+            <div class="response-badge">
+                <div class="dot-live"></div>
+                نرد عادةً خلال ساعة
             </div>
         </div>
-    </section>
+
+        <div class="contact-cards">
+            <a href="mailto:{{ $contactEmail }}" class="contact-card">
+                <div class="contact-card-icon icon-email">✉️</div>
+                <div class="contact-card-text">
+                    <div class="contact-card-label">البريد الإلكتروني</div>
+                    <div class="contact-card-value link">{{ $contactEmail }}</div>
+                </div>
+            </a>
+
+            @if($phone)
+            <a href="tel:{{ $phone }}" class="contact-card">
+                <div class="contact-card-icon icon-phone">📞</div>
+                <div class="contact-card-text">
+                    <div class="contact-card-label">رقم الهاتف</div>
+                    <div class="contact-card-value">{{ $phone }}</div>
+                </div>
+            </a>
+            @endif
+
+            @if($whatsapp)
+            <a href="{{ $whatsappLink }}" target="_blank" rel="noopener" class="contact-card">
+                <div class="contact-card-icon icon-whatsapp">💬</div>
+                <div class="contact-card-text">
+                    <div class="contact-card-label">واتساب</div>
+                    <div class="contact-card-value link">تحدث معنا على واتساب</div>
+                </div>
+            </a>
+            @endif
+
+            @if($facebook)
+            <a href="{{ $facebook }}" target="_blank" rel="noopener" class="contact-card">
+                <div class="contact-card-icon icon-facebook">📘</div>
+                <div class="contact-card-text">
+                    <div class="contact-card-label">فيسبوك</div>
+                    <div class="contact-card-value link">facebook.com/fahem</div>
+                </div>
+            </a>
+            @endif
+
+            @if($instagram)
+            <a href="{{ $instagram }}" target="_blank" rel="noopener" class="contact-card">
+                <div class="contact-card-icon icon-instagram">📸</div>
+                <div class="contact-card-text">
+                    <div class="contact-card-label">إنستاجرام</div>
+                    <div class="contact-card-value link">@fahem.eg</div>
+                </div>
+            </a>
+            @endif
+        </div>
+    </div>
+
+    {{-- Form Panel --}}
+    <div class="form-panel">
+        @if(session('success'))
+            <div class="success-msg show" id="successMsg">
+                <div class="success-icon">✅</div>
+                <div class="success-title">تم إرسال رسالتك بنجاح!</div>
+                <div class="success-text">{{ session('success') }}</div>
+                <a href="{{ route('front.contact') }}" class="btn-primary" style="margin:24px auto 0; display:inline-block; padding:10px 28px; text-decoration:none;">إرسال رسالة أخرى</a>
+            </div>
+        @else
+            <div id="formContent">
+                <div class="form-panel-title">✍️ أرسل لنا رسالة</div>
+                <div class="form-panel-sub">املأ النموذج التالي وسيتواصل معك فريقنا في أقرب وقت ممكن.</div>
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <div class="form-divider"></div>
+
+                <form method="POST" action="{{ route('front.contact.store') }}">
+                    @csrf
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="contact-name">الاسم الكامل <span>*</span></label>
+                            <input type="text" id="contact-name" name="name" class="form-input" placeholder="مثال: أحمد محمد" value="{{ old('name') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="contact-phone">رقم التليفون</label>
+                            <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="01XXXXXXXXX" value="{{ old('phone') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact-email">البريد الإلكتروني</label>
+                        <input type="email" id="contact-email" name="email" class="form-input" placeholder="example@email.com" value="{{ old('email') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact-message">الرسالة <span>*</span></label>
+                        <textarea id="contact-message" name="message" class="form-input form-textarea" placeholder="اكتب رسالتك هنا..." required>{{ old('message') }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <span>إرسال الرسالة</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </form>
+            </div>
+        @endif
+    </div>
+</div>
 @endsection

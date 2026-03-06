@@ -11,13 +11,13 @@
                     <div class="col-12">
                         <div class="form-group mb-1">
                             <label for="">العنوان</label>
-                            <input type="text" name="title" id="" class="form-control">
+                            <input type="text" name="title" id="" class="form-control-ds">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-2">
                             <label for="">الدرس</label>
-                            <select name="lecture_id" id="" class="form-control">
+                            <select name="lecture_id" id="" class="form-control-ds">
                                 <option value="">-- اختر --</option>
                                 @foreach ($lectuers as $lectuer)
                                     <option value="{{ $lectuer->id }}">
@@ -30,20 +30,13 @@
 
                     <div class="col-12">
                         <div class="form-group mb-1">
-                            <label for="">من</label>
-                            <input type="datetime-local" name="start_time" id="" class="form-control">
+                            <label for="">المدة (دقيقة)</label>
+                            <input type="number" name="duration_minutes" id="" class="form-control-ds" min="1" max="300" value="60" placeholder="مثال: 60">
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-group mb-1">
-                            <label for="">الي</label>
-                            <input type="datetime-local" name="end_time" id="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <label class="special-label" for="tax">
-                            الحالة</label>
-                        <select name="status" id="tax" class="form-select select-setting">
+                        <label for="tax">الحالة</label>
+                        <select name="status" id="tax" class="form-control-ds">
                             <option value="">-- اختر --</option>
                             <option value="1">مفعل</option>
                             <option value="0">غير مفعل</option>

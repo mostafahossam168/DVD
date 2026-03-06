@@ -41,7 +41,7 @@ Route::get('/stages/{stage}', [FrontStageController::class, 'show'])->name('fron
 Route::get('/grades/{grade}', [FrontStageController::class, 'showGrade'])->name('front.grades.show');
 
 Route::get('/subjects', function () {
-    $subjects = \App\Models\Subject::active()->with('grade')->orderBy('name')->get();
+    $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->get();
     $favoriteSubjectIds = [];
     if (auth()->check() && auth()->user()->type === 'student') {
         $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
@@ -57,6 +57,7 @@ Route::get('/about', [FrontPageController::class, 'about'])->name('front.page.ab
 Route::get('/vision', [FrontPageController::class, 'vision'])->name('front.page.vision');
 Route::get('/team', [FrontPageController::class, 'team'])->name('front.page.team');
 Route::get('/faq', [FrontPageController::class, 'faq'])->name('front.page.faq');
+Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
 
 // Vodafone Cash info page
 Route::get('/vodafone-cash', function () {

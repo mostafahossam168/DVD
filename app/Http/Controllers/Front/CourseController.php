@@ -108,11 +108,34 @@ class CourseController extends Controller
             ->orderBy('start_time')
             ->get();
 
+        $firstQuiz = $firstLectureWithQuiz ? \App\Models\Quize::find($firstLectureWithQuiz->quiz_id) : null;
+
+        $ratingCount = CourseReview::active()->where('subject_id', $subject->id)->count();
+        $ratingAvg = $ratingCount > 0
+            ? round(CourseReview::active()->where('subject_id', $subject->id)->avg('rating'), 1)
+            : 0;
+        $ratingBars = [];
+        for ($star = 5; $star >= 1; $star--) {
+            $count = CourseReview::active()
+                ->where('subject_id', $subject->id)
+                ->whereRaw('FLOOR(rating + 0.5) = ?', [$star])
+                ->count();
+            $ratingBars[] = [
+                'star' => $star,
+                'count' => $count,
+                'pct' => $ratingCount > 0 ? round($count / $ratingCount * 100) : 0,
+            ];
+        }
+
         return view('front.courses.subject', [
             'subject' => $subject,
             'lectures' => $lectures,
             'firstLectureWithQuiz' => $firstLectureWithQuiz,
+            'firstQuiz' => $firstQuiz,
             'reviews' => $reviews,
+            'ratingAvg' => $ratingAvg,
+            'ratingCount' => $ratingCount,
+            'ratingBars' => $ratingBars,
             'student' => $student,
             'hasActiveSubscription' => $hasActiveSubscription,
             'paymentMethods' => $paymentMethods,
@@ -326,6 +349,21 @@ class CourseController extends Controller
             ->orderBy('title')
             ->get();
 
+        $lectures = \App\Models\Lecture::active()
+            ->where('subject_id', $subject->id)
+            ->withCount(['materials' => fn ($q) => $q->where('status', true)])
+            ->orderBy('title')
+            ->get();
+
+        $currentIndex = $lectures->search(fn ($l) => $l->id === $lecture->id);
+        if ($currentIndex === false) {
+            $currentIndex = 0;
+        }
+        $totalLectures = $lectures->count();
+        $progressPct = $totalLectures > 0 ? round((($currentIndex + 1) / $totalLectures) * 100) : 0;
+        $prevLecture = $currentIndex > 0 ? $lectures[$currentIndex - 1] : null;
+        $nextLecture = $currentIndex < $totalLectures - 1 && isset($lectures[$currentIndex + 1]) ? $lectures[$currentIndex + 1] : null;
+
         return view('front.courses.lesson', [
             'subject' => $subject->load(['grade.stage']),
             'lecture' => $lecture,
@@ -333,6 +371,13 @@ class CourseController extends Controller
             'quiz' => $quiz,
             'hasQuizResult' => $hasQuizResult,
             'materials' => $materials,
+            'lectures' => $lectures,
+            'prevLecture' => $prevLecture,
+            'nextLecture' => $nextLecture,
+            'currentIndex' => $currentIndex,
+            'totalLectures' => $totalLectures,
+            'progressPct' => $progressPct,
+            'title' => 'فاهم — ' . $lecture->title,
         ]);
     }
 

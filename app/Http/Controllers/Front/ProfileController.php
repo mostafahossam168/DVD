@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\CourseReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -16,8 +19,14 @@ class ProfileController extends Controller
             return redirect()->route('front.login');
         }
 
+        $coursesCount = $user->courseSubscriptions()->active()->count();
+        $ratingAvg = CourseReview::where('user_id', $user->id)->avg('rating');
+        $ratingAvg = $ratingAvg !== null ? round((float) $ratingAvg, 1) : null;
+
         return view('front.profile.show', [
             'user' => $user,
+            'coursesCount' => $coursesCount,
+            'ratingAvg' => $ratingAvg,
         ]);
     }
 
@@ -29,13 +38,24 @@ class ProfileController extends Controller
             return redirect()->route('front.login');
         }
 
-        $data = $request->validate([
+        $rules = [
             'f_name' => 'required|string|min:2|max:255',
             'l_name' => 'required|string|min:2|max:255',
             'phone' => 'required|string|unique:users,phone,' . $user->id,
-            'password' => 'nullable|string|min:6',
+            'password' => ['nullable', 'string', Password::min(6)],
+            'password_confirmation' => 'nullable|same:password',
+            'current_password' => 'nullable|required_with:password',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+        ];
+
+        $data = $request->validate($rules);
+
+        if (! empty($data['password'])) {
+            if (! Hash::check($data['current_password'], $user->password)) {
+                return redirect()->back()->withInput($request->except('password', 'password_confirmation', 'current_password'))
+                    ->withErrors(['current_password' => 'كلمة المرور الحالية غير صحيحة.']);
+            }
+        }
 
         $user->f_name = $data['f_name'];
         $user->l_name = $data['l_name'];

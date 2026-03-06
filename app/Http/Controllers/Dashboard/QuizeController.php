@@ -26,7 +26,7 @@ class QuizeController extends Controller
         $search = request('search');
         $lecture_id = request('lecture_id');
 
-        $query = Quize::with(['lecture.subject']);
+        $query = Quize::with(['lecture.subject', 'questions']);
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الاختبارات للدروس الخاصة بالمواد الخاصة به
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
@@ -81,9 +81,8 @@ class QuizeController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'lecture_id' => 'required|exists:lectures,id',
+            'duration_minutes' => 'required|integer|min:1|max:300',
             'status' => 'required|boolean',
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
         ]);
 
         // التحقق من أن المدرس يضيف اختبار لدرس لمادة خاصة به فقط
@@ -131,9 +130,8 @@ class QuizeController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'lecture_id' => 'required|exists:lectures,id',
+            'duration_minutes' => 'required|integer|min:1|max:300',
             'status' => 'required|boolean',
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
         ]);
 
         // التحقق من أن المدرس يضيف اختبار لدرس لمادة خاصة به فقط

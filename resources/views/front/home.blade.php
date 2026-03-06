@@ -1,324 +1,191 @@
-@extends('front.layouts.front', ['title' => 'الرئيسيه'])
+@extends('front.layouts.front', ['title' => 'فاهم — منصة التعليم الذكي'])
 @section('content')
-    <section class="hero-section py-5">
-        <div class="container">
-            <div class="row g-4 align-items-center">
-
-                <!-- Left Side - Text Content -->
-                <div class="col-lg-5 order-1 order-lg-1">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            من أول خطوة...
-                            <br>
-                            طريق <span class="highlight">نجاحك</span> الدراسي
-                            <br>
-                            يبدأ معانا
-                        </h1>
-                        <p class="hero-description">
-                            منصة تعليمية متكاملة لطلاب الإعدادي والثانوي،<br>
-                            كورسات منظمة، مدرسين متخصصين،<br>
-                            وحصص مباشرة
-                        </p>
-                        <div class="hero-buttons mt-3">
-                            <a href="{{ route('front.courses.index') }}"
-                                class="btn-hero btn-primary-hero text-decoration-none d-inline-flex align-items-center justify-content-center">
-                                استكشف الكورسات
-                            </a>
-                            <a href="{{ route('front.register') }}"
-                                class="btn-hero btn-secondary-hero text-decoration-none d-inline-flex align-items-center justify-content-center">
-                                ابدأ الانضمام
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Middle Side - Info Card -->
-                <div class="col-lg-3 order-lg-3">
-                    <div class="info-card p-3 shadow-sm rounded">
-                        <div class="info-icon mb-2" style="font-size: 2rem;">🎓</div>
-                        <h3 class="info-title mb-2">انضم لـ 5000+ طالب</h3>
-                        <p class="info-description mb-2">
-                            يدوروا لنفسهم بكرة،<br>
-                            متين حدود مداخيلو، في رحلة<br>
-                            للاكتشاف، مواهبته وتحدياته<br>
-                            الي دكتى
-                        </p>
-                        <div class="info-tags mb-2">
-                            <span class="tag badge  me-1">طبيعي</span>
-                            <span class="tag badge  me-1">يومية</span>
-                            <span class="tag badge ">انجل</span>
-                        </div>
-                        <p class="info-footer text-muted small">
-                            لو بتكتشف بين المداخيلو والمهاراته، عندنا الشوز!
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Right Side - Image -->
-                <div class="col-lg-4 order-2 order-lg-2 text-center">
-                    <div class="hero-image">
-                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=416&h=600&fit=crop"
-                            alt="Students Learning" class="img-fluid rounded">
-                    </div>
-                </div>
-
+<div class="home-page">
+  <!-- HERO -->
+  <section class="hp-hero">
+    <div class="hp-orb hp-orb1"></div>
+    <div class="hp-orb hp-orb2"></div>
+    <div class="hp-hero-content">
+      <div>
+        <div class="h-eyebrow"><span class="e-dot"></span>منصة التعليم الأولى في مصر</div>
+        <h1 class="h-headline">
+          <span class="h-line-small">من أول خطوة...</span>
+          طريق <span class="h-accent">نجاحك</span> الدراسي<br/>يبدأ معنا
+        </h1>
+        <p class="h-desc">منصة تعليمية متكاملة لطلاب <strong>الإعدادي والثانوي</strong>، كورسات منظمة، مدرسين متخصصين، وحصص مباشرة.</p>
+        <div class="h-ctas">
+          <a href="{{ route('front.register') }}" class="btn-hp">ابدأ التعلم مجاناً</a>
+          <a href="{{ route('front.courses.index') }}" class="btn-hs">استكشف الكورسات</a>
+        </div>
+        <div class="trust-row">
+          <div class="t-avs">
+            <div class="t-av">أ</div><div class="t-av">م</div><div class="t-av">ك</div><div class="t-av">س</div>
+            <div class="t-av" style="background:linear-gradient(135deg,#F59E0B,#D97706);font-size:0.57rem">+</div>
+          </div>
+          <div class="t-info"><strong>+٥٠٠٠ طالب انضموا</strong>انضم إليهم الآن مجاناً</div>
+        </div>
+      </div>
+      <div class="hp-visual">
+        <div class="hvc">
+          <div class="hp-cp">
+            <div class="hp-cph">
+              <div class="hp-cphi">✍️</div>
+              <div>
+                <div class="hp-cphn">لغة عربية — إعدادي أول</div>
+                <div class="hp-cphp">١٢ درس</div>
+              </div>
             </div>
-        </div>
-    </section>
-    <section class="paths-section">
-        <div class="container">
-            <h2 class="section-title">حدد مسارك التعليمي !</h2>
-
-            <div class="row g-3 justify-content-center">
-
-                <!-- الاعدادية -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="path-card">
-                        <div class="path-image">
-                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&h=350&fit=crop">
-                            <div class="path-overlay">
-                                <h3 class="path-title">المرحلة الإعدادية</h3>
-                                <p class="path-subtitle">عربي / لغات</p>
-                                <button class="btn-path">
-                                    <i class="fa-solid fa-book"></i>
-                                    احجز مكانك دلوقتي
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الثانوية -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="path-card">
-                        <div class="path-image">
-                            <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500&h=350&fit=crop">
-                            <div class="path-overlay">
-                                <h3 class="path-title">المرحلة الثانوية</h3>
-                                <p class="path-subtitle">عربي / لغات</p>
-                                <button class="btn-path">
-                                    <i class="fa-solid fa-book"></i>
-                                    احجز مكانك دلوقتي
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- البكالوريا (مميزة) -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="path-card bak-card">
-
-                        <div class="path-image">
-                            <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?w=500&h=350&fit=crop">
-                            <div class="path-overlay">
-                                <h3 class="path-title">البكالوريا</h3>
-                                <p class="path-subtitle">عربي / لغات</p>
-                                <button class="btn-path">
-                                    <i class="fa-solid fa-book"></i>
-                                    احجز مكانك دلوقتي
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="hp-cpp">
+              <div class="hp-cpp-row"><span class="hp-cpp-l">تقدمك</span><span class="hp-cpp-v">٦٨٪</span></div>
+              <div class="hp-cpp-track"><div class="hp-cpp-fill"></div></div>
             </div>
-        </div>
-    </section>
-
-    <!-- ===== Experts Section ===== -->
-    <section class="experts-section py-5 bg-light">
-        <div class="container">
-
-            <!-- العنوان -->
-            <h2 class="text-center mb-2" style="font-size:36px; font-weight:700;">
-                تعرف على خبرائنا
-            </h2>
-            <p class="text-center mb-5" style="font-size:16px; color:#555;">
-                كل مدرب متخصص في مجاله، مع خبرة حقيقية وتطبيق عملي لكل درس.
-            </p>
-
-            <div class="row g-3 justify-content-center">
-
-                <!-- كارد 1 -->
-                <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
-                    <div class="card text-center" style="width:250px; height:250px; padding:15px;">
-                        <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200&h=200&fit=crop"
-                            class="rounded-circle mx-auto" style="width:80px; height:80px; object-fit:cover;"
-                            alt="خبير">
-                        <div class="card-body p-2">
-                            <h5 class="mb-1">د. أحمد علي</h5>
-                            <p class="mb-1" style="font-size:14px;">مدرس رياضيات</p>
-                            <p class="mb-0" style="font-size:12px; color:#555;">خبرة أكثر من 10 سنين</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- كارد 2 -->
-                <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
-                    <div class="card text-center" style="width:250px; height:250px; padding:15px;">
-                        <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200&h=200&fit=crop"
-                            class="rounded-circle mx-auto" style="width:80px; height:80px; object-fit:cover;"
-                            alt="خبير">
-                        <div class="card-body p-2">
-                            <h5 class="mb-1">د. سارة محمود</h5>
-                            <p class="mb-1" style="font-size:14px;">علوم</p>
-                            <p class="mb-0" style="font-size:12px; color:#555;">خبرة في التعليم التفاعلي</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- كارد 3 -->
-                <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
-                    <div class="card text-center" style="width:250px; height:250px; padding:15px;">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop"
-                            class="rounded-circle mx-auto" style="width:80px; height:80px; object-fit:cover;"
-                            alt="خبير">
-                        <div class="card-body p-2">
-                            <h5 class="mb-1">د. منى خالد</h5>
-                            <p class="mb-1" style="font-size:14px;">لغة عربية</p>
-                            <p class="mb-0" style="font-size:12px; color:#555;">خبرة طويلة في التدريس</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- كارد 4 -->
-                <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
-                    <div class="card text-center" style="width:250px; height:250px; padding:15px;">
-                        <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=200&h=200&fit=crop"
-                            class="rounded-circle mx-auto" style="width:80px; height:80px; object-fit:cover;"
-                            alt="خبير">
-                        <div class="card-body p-2">
-                            <h5 class="mb-1">محمود قاسم</h5>
-                            <p class="mb-1" style="font-size:14px;">مدرس رياضيات</p>
-                            <p class="mb-0" style="font-size:12px; color:#555;">خبرة أكثر من 10 سنين</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- كارد 5 -->
-                <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
-                    <div class="card text-center" style="width:250px; height:250px; padding:15px;">
-                        <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&h=200&fit=crop"
-                            class="rounded-circle mx-auto" style="width:80px; height:80px; object-fit:cover;"
-                            alt="خبير">
-                        <div class="card-body p-2">
-                            <h5 class="mb-1">يوسف خالد</h5>
-                            <p class="mb-1" style="font-size:14px;">فيزياء</p>
-                            <p class="mb-0" style="font-size:12px; color:#555;">شرح مبسط وتطبيقي</p>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="hp-cpl">
+              <div class="hp-cpli"><div class="hp-cpli-ico ig">✓</div><span class="hp-cpli-t">الدرس الأول — مقدمة النحو</span><span class="hp-cpli-b bd">مكتمل</span></div>
+              <div class="hp-cpli active"><div class="hp-cpli-ico ib">▶</div><span class="hp-cpli-t">الدرس الثاني — الفعل والفاعل</span><span class="hp-cpli-b bn">الآن</span></div>
+              <div class="hp-cpli" style="opacity:0.45"><div class="hp-cpli-ico il">🔒</div><span class="hp-cpli-t">الدرس الثالث — المبتدأ والخبر</span></div>
             </div>
+          </div>
         </div>
-    </section>
+        <div class="hp-fc hp-fc1"><div class="hp-fc-val">+٥K <span class="hp-fc-tr">↑١٢٪</span></div><div class="hp-fc-lbl">طالب مسجل</div></div>
+        <div class="hp-fc hp-fc2"><div class="hp-fc-val">٤.٩</div><div class="hp-fc-lbl">متوسط التقييم</div></div>
+        <div class="hp-fc hp-fc3"><div class="hp-fc-val" style="font-size:0.88rem">لايف الآن</div><div class="hp-fc-lbl">حصة — رياضيات</div></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- ===== Testimonials Section ===== -->
-    <section class="py-5" style="background-color:#3B81B7;">
-        <div class="container">
+  <!-- STATS (ثابتة) -->
+  <section class="stats-band">
+    <div class="stats-grid reveal">
+      <div class="stat-box"><span class="stat-ico">👨‍🎓</span><div class="stat-num">+<span>٥</span>K</div><div class="stat-lbl">طالب مسجل</div></div>
+      <div class="stat-box"><span class="stat-ico">📚</span><div class="stat-num"><span>١٢٠</span>+</div><div class="stat-lbl">كورس متاح</div></div>
+      <div class="stat-box"><span class="stat-ico">👨‍🏫</span><div class="stat-num"><span>٣٠</span>+</div><div class="stat-lbl">مدرس متخصص</div></div>
+      <div class="stat-box"><span class="stat-ico">⭐</span><div class="stat-num"><span>٤.٩</span></div><div class="stat-lbl">متوسط التقييم</div></div>
+    </div>
+  </section>
 
-            <!-- العنوان -->
-            <h2 class="text-center text-white mb-2">
-                ماذا يقول طلابنا!
-            </h2>
+  <!-- STAGES -->
+  @php
+    $stageCards = [
+      ['n' => 'المرحلة ١', 'ico' => '📘', 'name' => 'الإعدادية عربي', 'desc' => 'مواد المنهج المصري للصفوف الإعدادية الأول والثاني والثالث', 'cnt' => '٣٦ كورس', 'sc' => '#BFDBFE', 'sg' => 'linear-gradient(90deg, var(--blue), #7C3AED)'],
+      ['n' => 'المرحلة ٢', 'ico' => '🌐', 'name' => 'الإعدادية لغات', 'desc' => 'المنهج بنظام اللغات للصفوف الإعدادية مع شرح احترافي', 'cnt' => '٢٤ كورس', 'sc' => '#BBF7D0', 'sg' => 'linear-gradient(90deg, #10B981, #059669)'],
+      ['n' => 'المرحلة ٣', 'ico' => '📗', 'name' => 'الثانوية عربي', 'desc' => 'كورسات الثانوية العامة كاملة مع مراجعات وامتحانات تجريبية', 'cnt' => '٤٢ كورس', 'sc' => '#FDE68A', 'sg' => 'linear-gradient(90deg, #F59E0B, #D97706)'],
+      ['n' => 'المرحلة ٤', 'ico' => '🌍', 'name' => 'الثانوية لغات', 'desc' => 'المنهج الثانوي بنظام اللغات — شرح باللغتين', 'cnt' => '٣٠ كورس', 'sc' => '#DDD6FE', 'sg' => 'linear-gradient(90deg, #8B5CF6, #7C3AED)'],
+      ['n' => 'المرحلة ٥', 'ico' => '🎓', 'name' => 'الثانوية بكالوريا عربي', 'desc' => 'نظام البكالوريا الدولية مع تحضير متكامل للامتحانات', 'cnt' => '١٨ كورس', 'sc' => '#FECACA', 'sg' => 'linear-gradient(90deg, #EF4444, #DC2626)'],
+      ['n' => 'المرحلة ٦', 'ico' => '🏆', 'name' => 'الثانوية بكالوريا لغات', 'desc' => 'بكالوريا دولية بنظام اللغات مع مدرسين معتمدين', 'cnt' => '١٢ كورس', 'sc' => '#99F6E4', 'sg' => 'linear-gradient(90deg, #14B8A6, #0D9488)'],
+    ];
+  @endphp
+  <section class="stages-section" id="stages">
+    <div class="sec-hd reveal">
+      <div class="s-ey">المراحل الدراسية</div>
+      <h2 class="s-ti">اختر <em>مسارك الدراسي</em></h2>
+      <p class="s-sb">كورسات مخصصة لكل مرحلة — ابدأ رحلتك الآن</p>
+    </div>
+    <div class="stages-grid">
+      @foreach($stageCards as $st)
+        <a class="stg" href="{{ route('front.stages.index') }}" style="--stg-hover:{{ $st['sc'] }};--stg-line:{{ $st['sg'] }}">
+          <div class="stg-n">{{ $st['n'] }}</div>
+          <span class="stg-ico">{{ $st['ico'] }}</span>
+          <div class="stg-name">{{ $st['name'] }}</div>
+          <div class="stg-desc">{{ $st['desc'] }}</div>
+          <div class="stg-cnt">{{ $st['cnt'] }}</div>
+        </a>
+      @endforeach
+    </div>
+  </section>
 
-            <p class="text-center text-white mb-4">
-                آراء طلاب جرّبوا، اتعلموا، وحققوا فرق حقيقي
-            </p>
+  <!-- SUBJECTS -->
+  <section class="subj-sec" id="subjects">
+    <div class="sec-hd reveal"><div class="s-ey">المواد الدراسية</div><h2 class="s-ti">كل المواد في <em>مكان واحد</em></h2></div>
+    <div class="subj-scroll reveal">
+      @forelse($subjects ?? [] as $subj)
+        <a href="{{ route('front.courses.subject', $subj) }}" class="sp">
+          <div class="sp-ic" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE)">📖</div>
+          <div><div class="sp-n">{{ $subj->name }}</div><div class="sp-c">كورس</div></div>
+        </a>
+      @empty
+        @foreach(['لغة عربية' => '٢٤', 'فيزياء' => '١٨', 'رياضيات' => '٣٢', 'علوم وبيولوجيا' => '٢٠', 'لغة إنجليزية' => '١٥', 'جغرافيا' => '١٢', 'تاريخ' => '١٠', 'كيمياء' => '١٤'] as $name => $cnt)
+          <a href="{{ route('front.subjects.index') }}" class="sp"><div class="sp-ic" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE)">📖</div><div><div class="sp-n">{{ $name }}</div><div class="sp-c">{{ $cnt }} كورس</div></div></a>
+        @endforeach
+      @endforelse
+    </div>
+  </section>
 
-            <div class="row g-3">
-                @forelse ($reviews ?? [] as $review)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="bg-white p-3 rounded h-100">
-                            <div class="d-flex align-items-start gap-3 text-start">
-                                @if($review->image)
-                                    <img src="{{ display_file($review->image) }}" class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="{{ $review->name }}">
-                                @else
-                                    <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&h=200&fit=crop"
-                                        class="rounded-circle" style="width:80px; height:80px; object-fit:cover;" alt="{{ $review->name }}">
-                                @endif
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <strong>{{ $review->name }}</strong>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="fw-bold">{{ $review->rating }}</span>
-                                            <span style="color:#FFA500;">★</span>
-                                        </div>
-                                    </div>
-                                    @if($review->subject_field || $review->subject)
-                                        <p class="mb-1">{{ $review->subject_field ?? $review->subject?->name }}</p>
-                                    @endif
-                                    <p class="mb-2">{{ $review->review_text }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <p class="text-white text-center">لا توجد تقييمات حالياً</p>
-                    </div>
-                @endforelse
-            </div>
+  <!-- HOW IT WORKS -->
+  <section class="how-sec">
+    <div class="sec-hd reveal"><div class="s-ey">كيف يعمل</div><h2 class="s-ti">أربع خطوات لـ <em>التفوق</em></h2></div>
+    <div class="steps-grid">
+      <div class="steps-line"></div>
+      <div class="step-card reveal"><div class="step-ico si1">١</div><div class="step-title">سجّل حسابك</div><div class="step-desc">أنشئ حساباً مجانياً في ثوانٍ بدون بطاقة ائتمان</div></div>
+      <div class="step-card reveal rd1"><div class="step-ico si2">٢</div><div class="step-title">اختر مرحلتك</div><div class="step-desc">حدد صفك الدراسي والمواد التي تريد تحسينها</div></div>
+      <div class="step-card reveal rd2"><div class="step-ico si3">٣</div><div class="step-title">اشترك في الكورس</div><div class="step-desc">فيديوهات + اختبارات + ملخصات في مكان واحد</div></div>
+      <div class="step-card reveal rd3"><div class="step-ico si4">٤</div><div class="step-title">تفوّق وانجح</div><div class="step-desc">راجع إجاباتك وحقق أعلى الدرجات</div></div>
+    </div>
+  </section>
 
+  <!-- COURSES PREVIEW -->
+  <section class="courses-prev" id="courses">
+    <div class="sec-hd reveal"><div class="s-ey">أشهر الكورسات</div><h2 class="s-ti">الكورسات الأكثر <em>تميزاً</em></h2></div>
+    <div class="cpg">
+      @forelse($featuredSubjects ?? [] as $subj)
+        <a href="{{ route('front.courses.subject', $subj) }}" class="pc reveal">
+          <div class="pc-thumb" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE)">📚</div>
+          <div class="pc-body">
+            <div class="pc-subj" style="color:var(--blue)">{{ $subj->grade?->name ?? 'كورس' }}</div>
+            <div class="pc-title">{{ $subj->name }}</div>
+            <div class="pc-meta">كورس متاح</div>
+            <div class="pc-foot"><div class="pc-rating">٤.٩</div><div class="pc-stu">طالب</div></div>
+          </div>
+        </a>
+      @empty
+        <a href="{{ route('front.courses.index') }}" class="pc reveal"><div class="pc-thumb" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE)">✍️</div><div class="pc-body"><div class="pc-subj" style="color:var(--blue)">لغة عربية</div><div class="pc-title">لغة عربية — إعدادي أول</div><div class="pc-meta">١٢ درس</div><div class="pc-foot"><div class="pc-rating">٤.٩</div><div class="pc-stu">١٢٠٠</div></div></div></a>
+        <a href="{{ route('front.courses.index') }}" class="pc reveal rd1"><div class="pc-thumb" style="background:linear-gradient(135deg,#F0FDF4,#BBF7D0)">📐</div><div class="pc-body"><div class="pc-subj" style="color:#10B981">رياضيات</div><div class="pc-title">رياضيات — ثانوي ثاني</div><div class="pc-meta">٢٠ درس</div><div class="pc-foot"><div class="pc-rating">٤.٨</div><div class="pc-stu">٩٨٠</div></div></div></a>
+        <a href="{{ route('front.courses.index') }}" class="pc reveal rd2"><div class="pc-thumb" style="background:linear-gradient(135deg,#FFFBEB,#FDE68A)">🌍</div><div class="pc-body"><div class="pc-subj" style="color:#D97706">جغرافيا</div><div class="pc-title">جغرافيا — ثانوي ثاني</div><div class="pc-meta">١٦ درس</div><div class="pc-foot"><div class="pc-rating">٤.٧</div><div class="pc-stu">٧٥٠</div></div></div></a>
+      @endforelse
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi-sec">
+    <div class="sec-hd reveal"><div class="s-ey">آراء الطلاب</div><h2 class="s-ti">بيقولوا <em>إيه عننا؟</em></h2></div>
+    <div class="tg">
+      @forelse($reviews ?? [] as $review)
+        <div class="tc reveal">
+          <div class="tc-stars">★★★★★</div>
+          <div class="tc-text">{{ Str::limit($review->review_text, 120) }}</div>
+          <div class="tc-user">
+            <div class="tc-av">{{ mb_substr($review->name ?? '؟', 0, 1) }}</div>
+            <div><div class="tc-name">{{ $review->name ?? 'طالب' }}</div><div class="tc-grade">{{ $review->subject_field ?? $review->subject?->name ?? '' }}</div></div>
+          </div>
         </div>
-    </section>
+      @empty
+        <div class="tc reveal"><div class="tc-stars">★★★★★</div><div class="tc-text">المنصة دي غيرت طريقة مذاكرتي خالص! الشرح واضح والاختبارات بتساعدني أعرف أنا فاهم إيه.</div><div class="tc-user"><div class="tc-av">أ</div><div><div class="tc-name">أحمد محمد</div><div class="tc-grade">ثانوية ثالث</div></div></div></div>
+        <div class="tc reveal rd1"><div class="tc-stars">★★★★★</div><div class="tc-text">دخلت فاهم وانا مش متوقع حاجة وطلعت مبسوط جداً. الدروس منظمة ومدرسين محترمين.</div><div class="tc-user"><div class="tc-av" style="background:linear-gradient(135deg,#F59E0B,#D97706)">م</div><div><div class="tc-name">مريم خالد</div><div class="tc-grade">إعدادية ثاني</div></div></div></div>
+        <div class="tc reveal rd2"><div class="tc-stars">★★★★★</div><div class="tc-text">الحصص اللايف دي ميزة عظيمة! أقدر أسأل المدرس مباشرة وبتاخد رد في نفس الوقت.</div><div class="tc-user"><div class="tc-av" style="background:linear-gradient(135deg,#10B981,#059669)">ك</div><div><div class="tc-name">كريم سامي</div><div class="tc-grade">ثانوية أول</div></div></div></div>
+      @endforelse
+    </div>
+  </section>
 
-    <!-- ===== Stats Section ===== -->
-    <section class="py-5" style="margin-top:80px; background: linear-gradient(90deg, #3B81B7, #FFD166);">
-        <div class="container">
-
-            <div class="d-flex justify-content-between align-items-center text-center flex-wrap flex-md-nowrap">
-
-                <!-- عنصر 1 -->
-                <div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">طالب</div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">+1000</div>
-                </div>
-
-                <!-- فاصل -->
-                <div style="width:2px; height:100px; background:#fff;"></div>
-
-                <!-- عنصر 2 -->
-                <div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">دورة تدريبية</div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">+1500</div>
-                </div>
-
-                <!-- فاصل -->
-                <div style="width:2px; height:100px; background:#fff;"></div>
-
-                <!-- عنصر 3 -->
-                <div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">تقييمات إيجابية</div>
-                    <div style="font-size:48px; font-weight:400; color:#fff;">+95%</div>
-                </div>
-
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ===== CTA Section ===== -->
-    <section class="py-5 text-center">
-        <div class="container">
-
-            <h2 style="font-size:32px; font-weight:700; margin-bottom:12px;">
-                ابدأ رحلتك التعليمية الآن!
-            </h2>
-
-            <p style="font-size:18px; line-height:1.8; color:#555; margin-bottom:32px;">
-                تعلّم بأسلوب حديث يواكب احتياجات الجيل الجديد<br>
-                ويجمع بين الدراسة الأكاديمية وتنمية المهارات.
-            </p>
-
-            <button
-                style="width:100px; height:48px; background-color:#3B81B7; color:#fff; border:none; border-radius:12px; font-size:18px; font-weight:600; cursor:pointer;">
-                سجل الآن
-            </button>
-
-        </div>
-    </section>
+  <!-- CTA -->
+  <section class="cta-sec">
+    <div class="cta-in reveal">
+      <div class="cta-badge">انضم إلينا اليوم</div>
+      <h2 class="cta-title">جاهز تبدأ رحلة نجاحك الدراسي؟</h2>
+      <p class="cta-sub">أكثر من ٥٠٠٠ طالب بدأوا معنا ووصلوا لأحلامهم. أنت التالي.</p>
+      <div class="cta-btns">
+        <a href="{{ route('front.register') }}" class="btn-cw">إنشاء حساب مجاناً</a>
+        <a href="{{ route('front.courses.index') }}" class="btn-co">تصفح الكورسات</a>
+      </div>
+    </div>
+  </section>
+</div>
+@push('scripts')
+<script>
+(function(){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(x){ if(x.isIntersecting) x.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.home-page .reveal').forEach(function(el){ obs.observe(el); });
+})();
+</script>
+@endpush
 @endsection
