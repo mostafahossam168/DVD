@@ -60,6 +60,7 @@ Route::get('/vision', [FrontPageController::class, 'vision'])->name('front.page.
 Route::get('/team', [FrontPageController::class, 'team'])->name('front.page.team');
 Route::get('/faq', [FrontPageController::class, 'faq'])->name('front.page.faq');
 Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
+// Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
 
 // Vodafone Cash info page
 Route::get('/vodafone-cash', function () {
