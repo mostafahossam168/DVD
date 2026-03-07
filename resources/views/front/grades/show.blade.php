@@ -62,6 +62,9 @@
                 <div class="mini-body">
                     <div class="mini-name">{{ $subject->name }}</div>
                     <div class="mini-sub">{{ $grade->name }}</div>
+                    @if($subject->price !== null)
+                        <div class="mini-price">{{ number_format($subject->price, 0) }} ج.م</div>
+                    @endif
                     <span class="btn-mini">عرض الكورس</span>
                 </div>
             </a>

@@ -56,6 +56,16 @@
                 margin-bottom: 2rem
             }
 
+            .experts-section .row > [class*="col-"] {
+                margin-bottom: 1.5rem;
+                padding-left: 1.25rem !important;
+                padding-right: 1.25rem !important;
+            }
+            .testimonials-section .row > [class*="col-"] {
+                margin-bottom: 1.5rem;
+                padding-left: 1.25rem !important;
+                padding-right: 1.25rem !important;
+            }
             .expert-card {
                 width: 250px;
                 min-height: 250px;
@@ -534,7 +544,7 @@
             <div class="container">
                 <h2 class="experts-section-title">تعرف على خبرائنا</h2>
                 <p class="experts-section-sub">كل مدرب متخصص في مجاله، مع خبرة حقيقية وتطبيق عملي لكل درس.</p>
-                <div class="row g-3 justify-content-center">
+                <div class="row g-5 justify-content-center">
                     <div class="col-lg-2 col-md-4 col-sm-6 d-flex justify-content-center">
                         <div class="expert-card card text-center">
                             <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200&h=200&fit=crop"
@@ -599,7 +609,7 @@
             <div class="container">
                 <h2 class="testimonials-title">ماذا يقول طلابنا!</h2>
                 <p class="testimonials-sub">آراء طلاب جرّبوا، اتعلموا، وحققوا فرق حقيقي</p>
-                <div class="row g-3">
+                <div class="row g-5">
                     <div class="col-lg-4 col-md-6">
                         <div class="testimonial-card bg-white p-3 rounded h-100">
                             <div class="d-flex align-items-start gap-3 text-start">

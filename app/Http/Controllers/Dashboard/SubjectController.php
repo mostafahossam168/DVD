@@ -80,12 +80,14 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge(['price' => $request->input('price') ?: null]);
         $data =  $request->validate([
             'name' => 'required|string',
             'status' => 'required|boolean',
             'image' => 'required|image',
             'grade_id' => 'required|exists:grades,id',
             'teacher_id' => 'nullable|array|exists:users,id',
+            'price' => 'nullable|numeric|min:0',
         ]);
         $data['image'] = store_file($request->image, 'subjects');
         $subject = Subject::create($data);
@@ -117,11 +119,13 @@ class SubjectController extends Controller
     public function update(Request $request, string $id)
     {
         $item =  Subject::findOrFail($id);
+        $request->merge(['price' => $request->input('price') ?: null]);
         $data =  $request->validate([
             'name' => 'required|string',
             'status' => 'required|boolean',
             'image' => 'nullable|image',
-            'grade_id' => 'required|exists:grades,id'
+            'grade_id' => 'required|exists:grades,id',
+            'price' => 'nullable|numeric|min:0',
         ]);
         if ($request->hasFile('image')) {
             delete_file($item->image);

@@ -46,6 +46,12 @@
                         </div>
                     </div>
                     <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="">السعر (جنيه)</label>
+                            <input type="number" name="price" step="0.01" min="0" placeholder="0.00" class="form-control-ds" value="{{ old('price', $item->price ?? '') }}">
+                        </div>
+                    </div>
+                    <div class="col-12">
                         <label for="">الحالة</label>
                         <select name="status" id="tax" class="form-control-ds">
                             <option value="1" @selected($item->status == 1)>مفعل</option>

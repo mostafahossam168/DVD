@@ -70,6 +70,9 @@
                         @endif
                     </div>
                     <div class="subj-desc">كورس كامل منهج المادة مع حصص فيديو واختبارات.</div>
+                    @if($subject->price !== null)
+                        <div class="subj-price">{{ number_format($subject->price, 0) }} ج.م</div>
+                    @endif
                     <div class="subj-stats">
                         <span class="subj-stat">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.845v6.31a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>

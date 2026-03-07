@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    protected $fillable = ['name', 'status', 'image', 'grade_id'];
+    protected $fillable = ['name', 'status', 'image', 'grade_id', 'price'];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+    ];
     public function teachers()
     {
         return $this->belongsToMany(User::class, 'subject_teachers', 'subject_id', 'teacher_id');

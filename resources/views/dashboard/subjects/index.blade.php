@@ -64,6 +64,7 @@
                     <th>#</th>
                     <th>الصورة</th>
                     <th>الاسم</th>
+                    <th>السعر</th>
                     <th>الحالة</th>
                     <th>الصف الدراسي</th>
                     <th>المرحلة الدراسية</th>
@@ -83,6 +84,7 @@
                             @endif
                         </td>
                         <td><span style="font-weight:800">{{ $item->name }}</span></td>
+                        <td>{{ $item->price !== null ? number_format($item->price, 0) . ' ج.م' : '—' }}</td>
                         <td>
                             @if($item->status)
                                 <span class="status-badge-ds enabled-ds">مفعل</span>
@@ -112,7 +114,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد مواد</td>
+                        <td colspan="9" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد مواد</td>
                     </tr>
                 @endforelse
             </tbody>

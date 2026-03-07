@@ -34,6 +34,9 @@
         <div class="course-hero-subject">{{ $subject->name }}</div>
         <div class="course-hero-title">{{ $subject->name }}</div>
         <div class="course-hero-meta">{{ $grade?->name ?? '' }} — {{ $stage?->name ?? '' }}</div>
+        @if($subject->price !== null)
+            <div class="course-hero-price">{{ number_format($subject->price, 0) }} ج.م</div>
+        @endif
         <div class="course-badges">
             <span class="course-badge">📹 فيديو مسجل</span>
             @if(($firstLectureWithQuiz ?? null) || ($lectures->contains(fn($l) => $l->has_quiz ?? false)))

@@ -35,11 +35,11 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-12">
+                    {{-- <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="teacher_id">المعلمين</label>
 
-                            <select name="teacher_id[]" id="teacher_id" class="form-control-ds" multiple size="6"
+                            <select name="teacher_id[]" id="teacher_id" class="form-control-ds" size="6"
                                 style="min-height: 150px;">
                                 @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">
@@ -47,6 +47,26 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div> --}}
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="teacher_id">المعلم</label>
+
+                            <select name="teacher_id[]" id="teacher_id" class="form-control">
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}">
+                                        {{ $teacher->fullname }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="">السعر (جنيه)</label>
+                            <input type="number" name="price" step="0.01" min="0" placeholder="0.00"
+                                class="form-control-ds" value="{{ old('price') }}">
                         </div>
                     </div>
                     <div class="col-12">

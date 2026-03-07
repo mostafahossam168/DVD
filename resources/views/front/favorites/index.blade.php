@@ -91,6 +91,9 @@
                         <div class="card-subject">{{ $subject->name }}</div>
                         <div class="card-title">{{ $subject->name }}</div>
                         <div class="card-meta">{{ $grade?->name ?? '—' }} — {{ $stage?->name ?? '—' }}</div>
+                        @if($subject->price !== null)
+                            <div class="card-price">{{ number_format($subject->price, 0) }} ج.م</div>
+                        @endif
                         <div class="card-tags">
                             <span class="tag">📹 فيديو</span>
                             <span class="tag">✅ اختبارات</span>
