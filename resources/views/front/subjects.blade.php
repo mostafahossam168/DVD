@@ -13,7 +13,7 @@
         return '';
     };
 @endphp
-<div class="subj-hero">
+<div class="subj-hero hero-subjects">
     <div class="subj-hero-inner">
         <div>
             <h1>المواد الدراسية</h1>

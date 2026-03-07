@@ -2845,6 +2845,9 @@ body.nav-mobile-open { overflow: hidden; }
   position: relative;
   overflow: hidden;
 }
+.fahm-wrap .hero-subjects {
+  background: linear-gradient(135deg, rgba(13,27,75,0.88) 0%, rgba(50,112,179,0.9) 100%), url(https://images.unsplash.com/photo-1532012197267-da84d127e765?w=1400&q=85) center/cover no-repeat;
+}
 .fahm-wrap .subj-hero::before {
   content: '';
   position: absolute;
@@ -3037,6 +3040,7 @@ body.nav-mobile-open { overflow: hidden; }
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 14px rgba(62,131,201,0.35);
+  text-align: center;
 }
 .fahm-wrap .subj-card:hover .btn-view { box-shadow: 0 8px 24px rgba(62,131,201,0.45); transform: translateY(-1px); }
 .fahm-wrap .theme-blue .subj-thumb { background: linear-gradient(135deg, #3E83C9, #5a9ad4); }
