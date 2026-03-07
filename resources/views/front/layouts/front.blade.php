@@ -16,9 +16,13 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('front/next.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/fahm.css') }}">
+    <!-- Custom CSS (version query = cache bust after deploy) -->
+    @php
+        $fahmVer = file_exists(public_path('front/fahm.css')) ? filemtime(public_path('front/fahm.css')) : time();
+        $nextVer = file_exists(public_path('front/next.css')) ? filemtime(public_path('front/next.css')) : time();
+    @endphp
+    <link rel="stylesheet" href="{{ asset('front/next.css') }}?v={{ $nextVer }}">
+    <link rel="stylesheet" href="{{ asset('front/fahm.css') }}?v={{ $fahmVer }}">
     @stack('styles')
 </head>
 
