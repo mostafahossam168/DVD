@@ -19,7 +19,7 @@
             <ul class="dropdown-menu dropdown-menu-end">
                 @foreach ($navbarSubjects ?? [] as $sub)
                     <li><a class="dropdown-item"
-                            href="{{ route('front.subjects.index') }}#subject-{{ $sub->id }}">{{ $sub->name }}</a>
+                            href="{{ route('front.courses.subject', $sub->id) }}#subject-{{ $sub->id }}">{{ $sub->name }}</a>
                     </li>
                 @endforeach
                 @if (($navbarSubjectsCount ?? 0) > 5)

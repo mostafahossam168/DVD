@@ -1,0 +1,241 @@
+/* ===== NextLevel Home - صفحات إضافية للصفحة الرئيسية ===== */
+/* override fahm.css للصفحة الرئيسية */
+
+.home-nextlevel .section-title {
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    text-align: center !important;
+    margin-bottom: 48px !important;
+}
+
+/* أزرار Hero كروابط */
+.home-nextlevel .btn-hero {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ----- الخبراء ----- */
+.experts-section-title {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #1e293b;
+}
+
+.experts-section-sub {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.expert-card {
+    width: 250px;
+    min-height: 250px;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.expert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.expert-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.expert-spec {
+    font-size: 14px;
+    color: #333;
+}
+
+.expert-desc {
+    font-size: 12px;
+    color: #555;
+}
+
+/* ----- آراء الطلاب ----- */
+.testimonials-section {
+    background-color: #3E83C9;
+}
+
+.testimonials-title {
+    text-align: center;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.testimonials-sub {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 2rem;
+}
+
+.testimonial-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-3px);
+}
+
+.testimonial-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.testimonial-rating .star {
+    color: #FFA500;
+}
+
+/* ----- الإحصائيات ----- */
+.stats-section {
+    margin-top: 80px;
+    background: linear-gradient(90deg, #3E83C9 0%, #5ba3d4 50%, #FFD166 100%);
+}
+
+.stats-inner {
+    gap: 1rem;
+}
+
+.stat-item {
+    flex: 1;
+    min-width: 120px;
+}
+
+.stat-item .stat-label {
+    font-size: 28px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.stat-item .stat-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-divider {
+    width: 2px;
+    min-height: 80px;
+    background: #fff;
+}
+
+/* ----- CTA ----- */
+.cta-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1e293b;
+}
+
+.cta-sub {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.btn-cta {
+    min-width: 140px;
+    height: 48px;
+    background-color: #3E83C9;
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 0 32px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-cta:hover {
+    background-color: #3270b3 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(62, 131, 201, 0.35);
+}
+
+/* ----- Hero و Paths تحسينات ----- */
+.home-nextlevel .hero-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    padding: 80px 0 60px !important;
+}
+
+.home-nextlevel .hero-title {
+    font-size: 48px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+}
+
+.home-nextlevel .hero-title .highlight {
+    color: #F59E0B !important;
+}
+
+.home-nextlevel .hero-description {
+    font-size: 18px !important;
+    color: #64748b !important;
+}
+
+.home-nextlevel .paths-section {
+    background-color: #fff !important;
+    padding: 40px 0 80px !important;
+}
+
+.home-nextlevel .hero-image img {
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.home-nextlevel .path-card {
+    color: inherit;
+    border-radius: 20px !important;
+    height: 350px !important;
+}
+
+.home-nextlevel .btn-path {
+    background-color: #3E83C9 !important;
+    color: #fff !important;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 991px) {
+    .home-nextlevel .hero-text { text-align: center; padding: 0; }
+    .home-nextlevel .hero-buttons { justify-content: center; }
+    .home-nextlevel .hero-image { padding: 0; margin-top: 24px; text-align: center; }
+    .home-nextlevel .hero-image img { width: 100%; max-width: 416px; height: auto; }
+    .experts-section-title { font-size: 28px; }
+    .stat-item .stat-label { font-size: 22px; }
+    .stat-item .stat-value { font-size: 32px; }
+}
+
+@media (max-width: 768px) {
+    .stats-inner { flex-direction: column; gap: 1.5rem; }
+    .stat-divider { width: 80%; min-height: 2px; }
+    .section-title { font-size: 28px; }
+}
+
+@media (max-width: 576px) {
+    .expert-card { width: 100%; max-width: 280px; }
+    .home-nextlevel .hero-title { font-size: 28px; }
+    .home-nextlevel .hero-buttons { flex-direction: column; }
+    .home-nextlevel .btn-hero { width: 100%; }
+}

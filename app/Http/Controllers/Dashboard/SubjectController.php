@@ -81,9 +81,9 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         $data =  $request->validate([
-            'name' => 'required|string|unique:subjects,name',
+            'name' => 'required|string',
             'status' => 'required|boolean',
-            'image' => 'required|mimes:jpg,png,jpeg',
+            'image' => 'required|image',
             'grade_id' => 'required|exists:grades,id',
             'teacher_id' => 'nullable|array|exists:users,id',
         ]);
@@ -118,9 +118,9 @@ class SubjectController extends Controller
     {
         $item =  Subject::findOrFail($id);
         $data =  $request->validate([
-            'name' => 'required|string|unique:subjects,name,' . $id,
+            'name' => 'required|string',
             'status' => 'required|boolean',
-            'image' => 'nullable|mimes:jpg,png,jpeg',
+            'image' => 'nullable|image',
             'grade_id' => 'required|exists:grades,id'
         ]);
         if ($request->hasFile('image')) {

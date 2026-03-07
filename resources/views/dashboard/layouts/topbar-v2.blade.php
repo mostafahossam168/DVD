@@ -29,7 +29,13 @@
                     <span class="user-name-v2">{{ $userName }}</span>
                     <span class="user-role-v2">{{ $userRole }}</span>
                 </div>
-                <div class="user-avatar-v2">{{ $userInitial }}</div>
+                <div class="user-avatar-v2">
+                @if($user->image)
+                    <img src="{{ display_file($user->image) }}" alt="{{ $userName }}" class="avatar-img-v2">
+                @else
+                    {{ $userInitial }}
+                @endif
+                </div>
                 <div class="user-chevron-v2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
@@ -37,7 +43,13 @@
 
             <div class="user-dropdown-v2" id="userDropdownV2" aria-hidden="true">
                 <div class="dd-header-v2">
-                    <div class="dd-avatar-big-v2">{{ $userInitial }}</div>
+                    <div class="dd-avatar-big-v2">
+                    @if($user->image)
+                        <img src="{{ display_file($user->image) }}" alt="{{ $userName }}" class="avatar-img-v2">
+                    @else
+                        {{ $userInitial }}
+                    @endif
+                </div>
                     <div>
                         <div class="dd-name-v2">{{ $userName }}</div>
                         <div class="dd-email-v2">{{ $user->email ?? '—' }}</div>

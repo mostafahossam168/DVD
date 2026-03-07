@@ -19,6 +19,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('front/next.css') }}">
     <link rel="stylesheet" href="{{ asset('front/fahm.css') }}">
+    @stack('styles')
 </head>
 
 <body class="fahm-wrap">

@@ -19,10 +19,10 @@
             <h1>المواد الدراسية</h1>
             <p class="subj-hero-desc">استعرض جميع المواد المتاحة عبر المراحل الدراسية المختلفة</p>
             <div class="hero-pills">
-                <div class="hero-pill active" data-filter="الكل">الكل</div>
-                <div class="hero-pill" data-filter="اعدادي">اعدادي</div>
-                <div class="hero-pill" data-filter="ثانوي">ثانوي</div>
-                <div class="hero-pill" data-filter="بكالوريا">بكالوريا</div>
+                <div class="hero-pill {{ ($activeStage ?? 'الكل') === 'الكل' ? 'active' : '' }}" data-filter="الكل">الكل</div>
+                <div class="hero-pill {{ ($activeStage ?? 'الكل') === 'اعدادي' ? 'active' : '' }}" data-filter="اعدادي">اعدادي</div>
+                <div class="hero-pill {{ ($activeStage ?? 'الكل') === 'ثانوي' ? 'active' : '' }}" data-filter="ثانوي">ثانوي</div>
+                <div class="hero-pill {{ ($activeStage ?? 'الكل') === 'بكالوريا' ? 'active' : '' }}" data-filter="بكالوريا">بكالوريا</div>
             </div>
         </div>
         <div class="hero-search">
@@ -113,6 +113,7 @@
   }
   pills.forEach(function(p){ p.addEventListener('click', function(){ pills.forEach(function(x){ x.classList.remove('active'); }); p.classList.add('active'); applyFilter(); }); });
   if (searchInput) searchInput.addEventListener('input', applyFilter);
+  applyFilter();
 })();
 </script>
 @endif

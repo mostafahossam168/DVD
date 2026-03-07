@@ -14,6 +14,7 @@ use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 // Front site
 
 Route::get('/', [HomeController::class, 'index'])->name('front.home');
+Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
 Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
 Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('front.register');
@@ -43,7 +44,11 @@ Route::get('/subjects', function () {
     if (auth()->check() && auth()->user()->type === 'student') {
         $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
     }
-    return view('front.subjects', compact('subjects', 'favoriteSubjectIds'));
+    $activeStage = request('stage', 'الكل');
+    if (!in_array($activeStage, ['الكل', 'اعدادي', 'ثانوي', 'بكالوريا'])) {
+        $activeStage = 'الكل';
+    }
+    return view('front.subjects', compact('subjects', 'favoriteSubjectIds', 'activeStage'));
 })->name('front.subjects.index');
 
 // الصفحات الثابتة

@@ -6,11 +6,6 @@
 
     <!-- Visual side -->
     <div class="auth-visual">
-      <p class="auth-headline">
-        أهلاً بيك 👋<br>
-        <span>سجّل دخولك</span> وابدأ التعلّم
-      </p>
-
       <div class="auth-img-card">
         <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="طلاب يتعلمون">
         <div class="auth-img-overlay">

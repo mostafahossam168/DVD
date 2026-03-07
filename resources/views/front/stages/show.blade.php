@@ -7,7 +7,7 @@
   $gradeIcons = ['📖', '📝', '🎯', '📐', '🔬', '📚'];
 @endphp
 
-<div class="stage-detail-hero">
+<div class="stage-detail-hero hero-stage-detail">
   <div class="hero-inner">
     <div class="hero-breadcrumb">
       <a href="{{ route('front.stages.index') }}">المراحل الدراسية</a>

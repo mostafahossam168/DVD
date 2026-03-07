@@ -14,7 +14,7 @@
 @endphp
 
 {{-- Hero --}}
-<div class="hero-band">
+<div class="hero-band hero-contact">
     <div class="hero-inner">
         <div class="hero-eyebrow">💬 تواصل معنا</div>
         <h1>نحن هنا <em>لمساعدتك</em></h1>

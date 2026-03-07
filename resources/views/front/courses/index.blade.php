@@ -2,7 +2,7 @@
 
 @section('content')
 {{-- Hero Band --}}
-<div class="hero-band">
+<div class="hero-band hero-courses">
     <div class="hero-inner">
         <div class="hero-eyebrow">📚 كل الكورسات المتاحة</div>
         <h1>تعلّم بذكاء،<br/><em>اختر مسارك الدراسي</em></h1>

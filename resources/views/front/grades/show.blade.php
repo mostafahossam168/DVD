@@ -4,7 +4,7 @@
 @php
     $gradients = [
         'linear-gradient(135deg,#0891b2,#22d3ee)',
-        'linear-gradient(135deg,#1a56db,#3b82f6)',
+        'linear-gradient(135deg,#3E83C9,#5a9ad4)',
         'linear-gradient(135deg,#7c3aed,#a78bfa)',
         'linear-gradient(135deg,#059669,#34d399)',
         'linear-gradient(135deg,#ea580c,#fb923c)',

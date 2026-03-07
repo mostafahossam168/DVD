@@ -33,6 +33,7 @@
 
 <body class="dashboard-v2">
     @include('dashboard.layouts.sidebar-v2')
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true" onclick="document.getElementById('dashboardSidebar')?.classList.remove('open'); this.classList.remove('show');"></div>
     <div class="main-v2">
         @include('dashboard.layouts.topbar-v2')
         <div class="content-v2">
@@ -76,12 +77,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             var btn = document.getElementById('sidebarToggle');
             var sidebar = document.getElementById('dashboardSidebar');
+            var overlay = document.getElementById('sidebarOverlay');
             if (btn && sidebar) {
-                btn.addEventListener('click', function() { sidebar.classList.toggle('open'); });
+                btn.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    if (overlay) overlay.classList.toggle('show', sidebar.classList.contains('open'));
+                });
             }
             document.addEventListener('click', function(e) {
                 if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !(e.target.closest('#sidebarToggle'))) {
                     sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('show');
                 }
                 var userMenu = document.getElementById('userMenuV2');
                 var userBtn = document.getElementById('userBtnV2');

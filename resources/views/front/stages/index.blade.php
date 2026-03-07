@@ -6,7 +6,7 @@
   $icons = ['🎓', '📚', '🏆', '🌟', '✏️', '🌍'];
 @endphp
 
-<div class="stages-hero">
+<div class="stages-hero hero-stages">
   <h1>المراحل الدراسية</h1>
   <p>اختر مرحلتك الدراسية لعرض الصفوف والمواد المتاحة</p>
 </div>

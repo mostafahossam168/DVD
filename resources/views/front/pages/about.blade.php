@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="info-page">
-  <div class="info-page-hero">
+  <div class="info-page-hero hero-about">
     <div class="hero-inner">
       <div class="hero-tag">👋 تعرّف علينا</div>
       <h1>نحن فاهم —<br>منصة التعليم المختلفة</h1>
@@ -61,7 +61,7 @@
       </div>
       <div class="team-grid">
         <div class="team-card">
-          <div class="team-avatar" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">👨‍💼</div>
+          <div class="team-avatar" style="background:linear-gradient(135deg,#3E83C9,#5a9ad4)">👨‍💼</div>
           <div class="team-name">أحمد محمد</div>
           <div class="team-role">المؤسس والرئيس التنفيذي</div>
         </div>

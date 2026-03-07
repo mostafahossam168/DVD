@@ -224,7 +224,13 @@
 
     <div class="sidebar-footer">
         <a href="{{ route('dashboard.profile') }}" class="admin-card">
-            <div class="admin-avatar">{{ mb_substr(auth()->user()->full_name ?? auth()->user()->f_name ?? 'أ', 0, 1) }}</div>
+            <div class="admin-avatar">
+            @if(auth()->user()->image)
+                <img src="{{ display_file(auth()->user()->image) }}" alt="{{ auth()->user()->full_name ?? auth()->user()->f_name }}" class="avatar-img-v2">
+            @else
+                {{ mb_substr(auth()->user()->full_name ?? auth()->user()->f_name ?? 'أ', 0, 1) }}
+            @endif
+        </div>
             <div class="admin-info">
                 <div class="admin-name">{{ auth()->user()->full_name ?? auth()->user()->f_name ?? 'المشرف' }}</div>
                 <div class="admin-role">{{ auth()->user()->getRoleNames()->first() ?: (auth()->user()->type === 'admin' ? 'Super Admin' : (auth()->user()->type === 'teacher' ? 'مدرّس' : 'مشرف')) }}</div>

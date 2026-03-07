@@ -32,7 +32,7 @@ body {
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-    color: #3B81B7;
+    color: #3E83C9;
     font-weight: 600;
 }
 
@@ -48,7 +48,7 @@ body {
 }
 
 .dropdown-item:hover {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
 }
 
@@ -102,24 +102,24 @@ body {
 /* Register */
 .btn-register {
     background: transparent;
-    color: #3B81B7;
-    border: 1px solid #3B81B7;
+    color: #3E83C9;
+    border: 1px solid #3E83C9;
 }
 
 .btn-register:hover {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
 }
 
 /* Login */
 .btn-login {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
     border: none;
 }
 
 .btn-login:hover {
-    background-color: #2d6a96;
+    background-color: #3270b3;
 }
 
 
@@ -174,24 +174,24 @@ body {
 }
 
 .btn-primary-hero {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
 }
 
 .btn-primary-hero:hover {
-    background-color: #2d6a96;
+    background-color: #3270b3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 129, 183, 0.3);
+    box-shadow: 0 4px 12px rgba(62, 131, 201, 0.3);
 }
 
 .btn-secondary-hero {
     background-color: transparent;
-    color: #3B81B7;
-    border: 1px solid #3B81B7;
+    color: #3E83C9;
+    border: 1px solid #3E83C9;
 }
 
 .btn-secondary-hero:hover {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
 }
 
@@ -324,7 +324,7 @@ body {
 }
 
 .btn-path {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
     border: none;
     padding: 12px 24px;
@@ -339,7 +339,7 @@ body {
 }
 
 .btn-path:hover {
-    background-color: #2d6a96;
+    background-color: #3270b3;
     transform: scale(1.05);
 }
 
@@ -455,7 +455,7 @@ footer a:hover {
 }
 
 .subject-breadcrumb .breadcrumb-item a:hover {
-    color: #3B81B7;
+    color: #3E83C9;
 }
 
 .subject-breadcrumb .breadcrumb-item.active {
@@ -693,7 +693,7 @@ footer a:hover {
 }
 
 .btn-stage-cta {
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff !important;
     padding: 0.6rem 2rem;
     border-radius: 8px;
@@ -703,7 +703,7 @@ footer a:hover {
 }
 
 .btn-stage-cta:hover {
-    background: #2d6a9a;
+    background: #3270b3;
     color: #fff !important;
     transform: translateY(-1px);
 }
@@ -778,7 +778,7 @@ footer a:hover {
 
 .btn-grade-detail {
     display: inline-block;
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff !important;
     padding: 0.5rem 1.25rem;
     border-radius: 8px;
@@ -817,7 +817,7 @@ footer a:hover {
 }
 
 .benefit-card-blue {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background: linear-gradient(135deg, #e3eefb 0%, #c8dff8 100%);
 }
 
 .benefit-icon {
@@ -831,7 +831,7 @@ footer a:hover {
 }
 
 .benefit-card-blue .benefit-icon {
-    color: #1d4ed8;
+    color: #3E83C9;
 }
 
 .benefit-text {
@@ -841,7 +841,7 @@ footer a:hover {
 }
 
 .btn-benefits-cta {
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff !important;
     padding: 0.65rem 2.5rem;
     border-radius: 8px;
@@ -850,7 +850,7 @@ footer a:hover {
 }
 
 .btn-benefits-cta:hover {
-    background: #2d6a9a;
+    background: #3270b3;
     color: #fff !important;
 }
 
@@ -863,7 +863,7 @@ footer a:hover {
 
 .stages-page .breadcrumb-item a:hover,
 .grades-page .breadcrumb-item a:hover {
-    color: #3B81B7;
+    color: #3E83C9;
 }
 
 .stage-card,
@@ -940,7 +940,7 @@ footer a:hover {
 }
 
 .courses-stage-title a:hover {
-    color: #3B81B7;
+    color: #3E83C9;
 }
 
 .courses-grade-title {
@@ -949,7 +949,7 @@ footer a:hover {
 }
 
 .courses-grade-title a:hover {
-    color: #3B81B7 !important;
+    color: #3E83C9 !important;
 }
 
 .courses-index-title {
@@ -1108,7 +1108,7 @@ footer a:hover {
   .hero-simple button {
     padding: 12px 24px;
     border: none;
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff;
     border-radius: 8px;
     cursor: pointer;
@@ -1174,7 +1174,7 @@ footer a:hover {
   }
 
   .btn-details {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -1324,7 +1324,7 @@ footer a:hover {
 .custom-btn {
     width: 288px;        /* العرض */
     height: 64px;        /* الارتفاع */
-    background-color: #3B81B7;  /* اللون المطلوب */
+    background-color: #3E83C9;  /* اللون المطلوب */
     border: none;        /* إزالة البوردر الافتراضي */
     font-size: 1.2rem;   /* حجم الخط مناسب */
    /* عشان يبان قوي */
@@ -1333,17 +1333,17 @@ footer a:hover {
 }
 
 .custom-btn:hover {
-    background-color: #3570a1; /* لون أغمق شوية عند Hover */
+    background-color: #3270b3; /* لون أغمق شوية عند Hover */
     transform: translateY(-2px); /* تأثير رفع خفيف */
-    box-shadow: 0 6px 20px rgba(59,129,183,0.4); /* Shadow خفيف */
+    box-shadow: 0 6px 20px rgba(62, 131, 201, 0.4); /* Shadow خفيف */
 }
 
 
 /* ألوان مختلفة للكاردات */
 .card-1 { background-color: rgba(255, 165, 0, 0.8); }  /* #FFA500 بنصف شفافية */
-.card-2 { background-color: rgba(59, 129, 183, 0.8); } /* #3B81B7 بنصف شفافية */
+.card-2 { background-color: rgba(62, 131, 201, 0.8); } /* #3E83C9 بنصف شفافية */
 .card-3 { background-color: rgba(255, 165, 0, 0.8); }
-.card-4 { background-color: rgba(59, 129, 183, 0.8); }
+.card-4 { background-color: rgba(62, 131, 201, 0.8); }
 .card-5 { background-color: rgba(255, 165, 0, 0.8); }
 
 
@@ -1864,7 +1864,7 @@ footer a:hover {
 .sidebar h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #3B81B7;
+    color: #3E83C9;
 }
 
 .sidebar ul {
@@ -1883,7 +1883,7 @@ footer a:hover {
 }
 
 .sidebar ul li.active a {
-    color: #3B81B7;
+    color: #3E83C9;
     font-weight: 700;
 }
 
@@ -1913,7 +1913,7 @@ footer a:hover {
 }
 
 .tab-buttons button.active {
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff;
 }
 
@@ -1926,7 +1926,7 @@ footer a:hover {
 }
 .sidebar ul li a:hover {
     color: #fff;
-    background: #3B81B7;
+    background: #3E83C9;
     padding: 5px 10px;
     border-radius: 6px;
     transition: 0.3s;
@@ -1978,7 +1978,7 @@ footer a:hover {
 .video-card {
     flex: 0 0 300px;  /* عرض ثابت */
     height: 300px;
-    border: 2px solid #3B81B7;
+    border: 2px solid #3E83C9;
     border-radius: 20px;
     padding: 20px;
     background: #fff;
@@ -1988,14 +1988,14 @@ footer a:hover {
 
 .video-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(59, 129, 183, 0.2);
+    box-shadow: 0 10px 25px rgba(62, 131, 201, 0.2);
 }
 
 .card-top {
     position: absolute;
     top: 16px;
     right: 16px;
-    color: #3B81B7;
+    color: #3E83C9;
     font-weight: 600;
     font-size: 14px;
 }
@@ -2010,7 +2010,7 @@ footer a:hover {
 
 .view-btn {
     margin-top: 20px;
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff;
     border: none;
     padding: 12px;
@@ -2021,7 +2021,7 @@ footer a:hover {
 
 /* الأسهم */
 .arrow-btn {
-    background: #3B81B7;
+    background: #3E83C9;
     color: #fff;
     border: none;
     width: 44px;
@@ -2093,7 +2093,7 @@ footer a:hover {
 }
 
 .unit-quiz-section .quiz-btn:hover {
-    background-color: #3B81B7;
+    background-color: #3E83C9;
 }
 .lesson-card {
     background-color: #fff;

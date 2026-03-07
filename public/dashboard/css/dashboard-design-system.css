@@ -463,3 +463,55 @@
 .dashboard-v2 .delay-1-ds { animation-delay: .05s; }
 .dashboard-v2 .delay-2-ds { animation-delay: .1s; }
 .dashboard-v2 .delay-3-ds { animation-delay: .15s; }
+
+/* ── Responsive (جميع صفحات لوحة التحكم) ── */
+@media (max-width: 992px) {
+  .dashboard-v2 .table-wrap-ds {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dashboard-v2 .table-wrap-ds table { min-width: 700px; }
+  .dashboard-v2 .table-wrap-ds thead th,
+  .dashboard-v2 .table-wrap-ds tbody td { padding: 12px 14px; font-size: .82rem; }
+  .dashboard-v2 .filters-bar-ds { flex-direction: column; align-items: stretch; gap: .75rem; }
+  .dashboard-v2 .filters-right-ds,
+  .dashboard-v2 .filters-left-ds { flex-wrap: wrap; justify-content: flex-start; }
+  .dashboard-v2 .search-wrap-ds { width: 100%; max-width: 100%; }
+  .dashboard-v2 .filter-select-ds,
+  .dashboard-v2 .filters-bar-ds select.form-control { min-width: 140px; max-width: 100%; }
+  .dashboard-v2 .form-grid-ds { grid-template-columns: 1fr; }
+  .dashboard-v2 .form-grid-ds .col-span-2-ds { grid-column: span 1; }
+  .dashboard-v2 .page-header-ds { flex-direction: column; align-items: flex-start; }
+  .dashboard-v2 .page-header-actions { width: 100%; }
+  .dashboard-v2 .form-card-header-ds,
+  .dashboard-v2 .form-card-body-ds,
+  .dashboard-v2 .form-card-footer-ds { padding: 1.2rem 1.2rem; }
+  .dashboard-v2 .profile-sidebar-ds { position: static; }
+  .dashboard-v2 .section-head-ds,
+  .dashboard-v2 .section-body-ds { padding: 1.2rem 1.2rem; }
+  .dashboard-v2 .modal-dialog { margin: .5rem; max-width: calc(100% - 1rem); }
+  .dashboard-v2 .modal-header,
+  .dashboard-v2 .modal-body,
+  .dashboard-v2 .modal-footer { padding: 1rem 1.2rem; }
+}
+
+@media (max-width: 768px) {
+  .dashboard-v2 .dash-page { padding: 0; }
+  .dashboard-v2 .table-wrap-ds table { min-width: 600px; }
+  .dashboard-v2 .table-wrap-ds .row-avatar-ds,
+  .dashboard-v2 .table-wrap-ds .row-avatar-ph-ds { width: 32px; height: 32px; }
+  .dashboard-v2 .table-wrap-ds .actions-cell-ds { flex-wrap: wrap; }
+  .dashboard-v2 .table-wrap-ds .action-btn-ds { width: 30px; height: 30px; }
+  .dashboard-v2 .btn-add-ds,
+  .dashboard-v2 .filter-badge-ds { font-size: .8rem; padding: 8px 16px; }
+  .dashboard-v2 .form-card-ds { border-radius: 18px; }
+}
+
+@media (max-width: 560px) {
+  .dashboard-v2 .table-wrap-ds thead th,
+  .dashboard-v2 .table-wrap-ds tbody td { padding: 10px 12px; font-size: .78rem; }
+  .dashboard-v2 .page-header-ds h1 { font-size: 1.35rem; }
+  .dashboard-v2 .modal-dialog { margin: .5rem; }
+  .dashboard-v2 .modal-content { border-radius: 18px; }
+  .dashboard-v2 .modal-header .modal-title { font-size: .95rem; }
+}
