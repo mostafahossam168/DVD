@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 
 class SubscriptionController extends Controller
@@ -28,16 +29,20 @@ class SubscriptionController extends Controller
         $search = request('search');
         $student_id = request('student_id');
         $subject_id = request('subject_id');
+        $payment_status = request('payment_status');
+        $payment_method = request('payment_method');
+        $from_date = request('from_date');
+        $to_date = request('to_date');
 
-        $baseQuery = Subscription::with(['user', 'subject']);
+        $baseQuery = Subscription::with(['user', 'subject.teacher']);
 
         // المدرس يرى فقط اشتراكات الطلاب في مواده
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->pluck('id');
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
             $baseQuery->whereIn('subject_id', $teacherSubjectIds);
         }
 
-        $items = $baseQuery
+        $filteredQuery = $baseQuery
             ->when($search, function ($q) use ($search) {
                 $q->whereHas('user', function ($query) use ($search) {
                     $query->whereAny(['f_name', 'l_name', 'email', 'phone'], 'LIKE', "%$search%");
@@ -51,6 +56,12 @@ class SubscriptionController extends Controller
             ->when($subject_id, function ($q) use ($subject_id) {
                 $q->where('subject_id', $subject_id);
             })
+            ->when($payment_status, function ($q) use ($payment_status) {
+                $q->where('payment_status', $payment_status);
+            })
+            ->when($payment_method, function ($q) use ($payment_method) {
+                $q->where('payment_method', $payment_method);
+            })
             ->when($status, function ($q) use ($status) {
                 if ($status == 'yes') {
                     $q->active();
@@ -59,24 +70,68 @@ class SubscriptionController extends Controller
                     $q->inactive();
                 }
             })
+            ->when($from_date, function ($q) use ($from_date) {
+                $q->whereDate('created_at', '>=', $from_date);
+            })
+            ->when($to_date, function ($q) use ($to_date) {
+                $q->whereDate('created_at', '<=', $to_date);
+            });
+
+        $items = (clone $filteredQuery)
             ->latest()
             ->paginate(20);
 
         $countQuery = Subscription::query();
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->pluck('id');
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
             $countQuery->whereIn('subject_id', $teacherSubjectIds);
         }
         $count_all = $countQuery->count();
         $count_active = (clone $countQuery)->active()->count();
         $count_inactive = (clone $countQuery)->inactive()->count();
 
-        $students = User::students()->active()->get();
-        $subjects = auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')
-            ? Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))->active()->get()
-            : Subject::active()->get();
+        $paidCount = (clone $filteredQuery)->where('payment_status', 'paid')->count();
+        $pendingCount = (clone $filteredQuery)->where('payment_status', 'pending')->count();
+        $rejectedCount = (clone $filteredQuery)->where('payment_status', 'rejected')->count();
 
-        return view('dashboard.subscriptions.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'students', 'subjects'));
+        // إجماليات مالية دقيقة حتى لو amount_paid فارغ في سجلات قديمة
+        $paidAmount = (float) ((clone $filteredQuery)
+            ->leftJoin('subjects', 'subjects.id', '=', 'subscriptions.subject_id')
+            ->where('subscriptions.payment_status', 'paid')
+            ->selectRaw('SUM(COALESCE(subscriptions.amount_paid, subjects.price, 0)) as total_amount')
+            ->value('total_amount') ?? 0);
+
+        $allAmount = (float) ((clone $filteredQuery)
+            ->leftJoin('subjects', 'subjects.id', '=', 'subscriptions.subject_id')
+            ->selectRaw('SUM(COALESCE(subscriptions.amount_paid, subjects.price, 0)) as total_amount')
+            ->value('total_amount') ?? 0);
+
+        $students = User::students()->active()->get();
+        $subjects = Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')
+            ? Subject::where('teacher_id', Auth::id())->active()->get()
+            : Subject::active()->get();
+        $paymentMethods = Subscription::query()
+            ->select('payment_method')
+            ->whereNotNull('payment_method')
+            ->where('payment_method', '!=', '')
+            ->distinct()
+            ->orderBy('payment_method')
+            ->pluck('payment_method');
+
+        return view('dashboard.subscriptions.index', compact(
+            'items',
+            'count_all',
+            'count_active',
+            'count_inactive',
+            'students',
+            'subjects',
+            'paymentMethods',
+            'paidCount',
+            'pendingCount',
+            'rejectedCount',
+            'paidAmount',
+            'allAmount'
+        ));
     }
 
     /**
@@ -84,10 +139,15 @@ class SubscriptionController extends Controller
      */
     public function pending()
     {
-        $items = Subscription::with(['user', 'subject'])
-            ->where('payment_status', 'pending')
-            ->latest()
-            ->paginate(20);
+        $query = Subscription::with(['user', 'subject.teacher'])
+            ->where('payment_status', 'pending');
+
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
+            $query->whereIn('subject_id', $teacherSubjectIds);
+        }
+
+        $items = $query->latest()->paginate(20);
         return view('dashboard.subscriptions.pending', compact('items'));
     }
 
@@ -102,6 +162,7 @@ class SubscriptionController extends Controller
         $subscription->update([
             'status' => true,
             'payment_status' => 'paid',
+            'amount_paid' => $subscription->amount_paid ?: ($subscription->subject?->price ?? 0),
         ]);
         return redirect()->route('dashboard.subscriptions-pending')->with('success', 'تمت الموافقة على الاشتراك وتفعيله.');
     }
@@ -168,6 +229,7 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'الطالب مشترك بالفعل في هذا المادة');
         }
 
+        $data['amount_paid'] = Subject::find($data['subject_id'])?->price ?? 0;
         Subscription::create($data);
         return redirect()->route('dashboard.subscriptions.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
@@ -232,6 +294,8 @@ class SubscriptionController extends Controller
         if ($existing) {
             return redirect()->back()->with('error', 'الطالب مشترك بالفعل في هذا المادة');
         }
+
+        $data['amount_paid'] = Subject::find($data['subject_id'])?->price ?? ($subscription->amount_paid ?? 0);
 
         $subscription->update($data);
         return redirect()->route('dashboard.subscriptions.index')->with('success', 'تم حفظ البيانات بنجاح');

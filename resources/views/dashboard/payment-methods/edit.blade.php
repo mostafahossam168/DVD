@@ -38,6 +38,21 @@
                         @error('code')<span class="form-error-ds">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-group-ds">
+                        <label class="form-label-ds">اسم صاحب الحساب</label>
+                        <input type="text" name="account_name" class="form-control-ds" value="{{ old('account_name', $item->account_name) }}">
+                        @error('account_name')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رقم فودافون/إنستاباي</label>
+                        <input type="text" name="account_number" class="form-control-ds" value="{{ old('account_number', $item->account_number) }}">
+                        @error('account_number')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">ملاحظات للطالب</label>
+                        <input type="text" name="notes" class="form-control-ds" value="{{ old('notes', $item->notes) }}">
+                        @error('notes')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
                         <label class="form-label-ds">الحالة <span class="required-ds">*</span></label>
                         <select name="is_active" class="form-control-ds" required>
                             <option value="1" @selected(old('is_active', $item->is_active))>مفعلة</option>

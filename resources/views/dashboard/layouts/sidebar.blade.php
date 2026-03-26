@@ -199,6 +199,30 @@
                     </div>
                 </a>
             </li>
+            <li class="list-item {{ request()->routeIs('dashboard.payments.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.payments.index') }}">
+                    <div>
+                        <i class="fa-solid fa-wallet"></i>
+                        المدفوعات
+                    </div>
+                </a>
+            </li>
+            <li class="list-item {{ request()->routeIs('dashboard.expenses.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.expenses.index') }}">
+                    <div>
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        المصروفات
+                    </div>
+                </a>
+            </li>
+            <li class="list-item {{ request()->routeIs('dashboard.subscriptions.financials*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.subscriptions.financials') }}">
+                    <div>
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        مالية المدرسين
+                    </div>
+                </a>
+            </li>
             @can('update_subscriptions')
             <li class="list-item {{ request()->routeIs('dashboard.subscriptions-pending') ? 'active' : '' }} ">
                 <a href="{{ route('dashboard.subscriptions-pending') }}">
@@ -220,12 +244,12 @@
                 </a>
             </li>
         @endcan
-        @can('read_quiz_results')
-            <li class="list-item {{ request()->routeIs('dashboard.quiz-results.*') ? 'active' : '' }} ">
-                <a href="{{ route('dashboard.quiz-results.index') }}">
+        @can('read_assessment_results')
+            <li class="list-item {{ request()->routeIs('dashboard.assessment-results.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.assessment-results.index') }}">
                     <div>
                         <i class="fa-solid fa-list-check"></i>
-                        نتائج الاختبارات
+                        نتائج التقييمات
                     </div>
                 </a>
             </li>
@@ -291,22 +315,22 @@
             </li>
         @endcan
 
-        @can('read_quizes')
-            <li class="list-item {{ request()->routeIs('dashboard.quizes.*') ? 'active' : '' }} ">
-                <a href="{{ route('dashboard.quizes.index') }}">
+        @can('read_assessments')
+            <li class="list-item {{ request()->routeIs('dashboard.assessments.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.assessments.index') }}">
                     <div>
-                        <i class="fa-solid fa-clipboard-question"></i>
-                        الاختبارات
+                        <i class="fa-solid fa-file-pen"></i>
+                        التقييمات
                     </div>
                 </a>
             </li>
         @endcan
-        @can('read_questions')
-            <li class="list-item {{ request()->routeIs('dashboard.questions.*') ? 'active' : '' }} ">
-                <a href="{{ route('dashboard.questions.index') }}">
+        @can('read_question_bank')
+            <li class="list-item {{ request()->routeIs('dashboard.question-bank.*') ? 'active' : '' }} ">
+                <a href="{{ route('dashboard.question-bank.index') }}">
                     <div>
-                        <i class="fa-solid fa-question-circle"></i>
-                        الأسئلة
+                        <i class="fa-solid fa-database"></i>
+                        أسئلة التقييمات
                     </div>
                 </a>
             </li>

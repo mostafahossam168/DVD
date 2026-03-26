@@ -6,15 +6,15 @@ use App\Http\Controllers\Front\AuthController as FrontAuthController;
 use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Controllers\Front\PageController as FrontPageController;
 use App\Http\Controllers\Front\CourseController as FrontCourseController;
-use App\Http\Controllers\Front\QuizController as FrontQuizController;
+use App\Http\Controllers\Front\AssessmentController as FrontAssessmentController;
 use App\Http\Controllers\Front\ProfileController as FrontProfileController;
 use App\Http\Controllers\Front\StageController as FrontStageController;
 use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 
 // Front site
 
-Route::get('/', [HomeController::class, 'index'])->name('front.home');
 Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
+Route::get('/', [HomeController::class, 'index'])->name('front.home');
 Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
 Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('front.register');
@@ -76,9 +76,17 @@ Route::get('/courses/{subject}/lessons/{lecture}', [FrontCourseController::class
 Route::post('/courses/{subject}/rate', [FrontCourseController::class, 'rate'])->name('front.courses.rate');
 
 
-// Quizzes
-Route::get('/quizzes/{quiz}', [FrontQuizController::class, 'show'])->name('front.quizzes.show');
-// Route::get('/quizzes/{quiz}', [FrontQuizController::class, 'show'])->name('front.quizzes.show');
-Route::post('/quizzes/{quiz}', [FrontQuizController::class, 'submit'])->name('front.quizzes.submit');
-Route::get('/my-quizzes', [FrontQuizController::class, 'history'])->name('front.quizzes.history');
-Route::get('/quizzes/{quiz}/review', [FrontQuizController::class, 'review'])->name('front.quizzes.review');
+// Assessments (new system)
+Route::get('/assessments/{assessment}', [FrontAssessmentController::class, 'show'])->name('front.assessments.show');
+Route::post('/assessments/{assessment}', [FrontAssessmentController::class, 'submit'])->name('front.assessments.submit');
+Route::get('/assessments/{assessment}/review', [FrontAssessmentController::class, 'review'])->name('front.assessments.review');
+Route::get('/my-assessments', [FrontAssessmentController::class, 'history'])->name('front.assessments.history');
+
+
+
+Route::get('test', function () {
+    $user = App\Models\User::where('email', 'admin@gmail.com')->first();
+    // return $user;
+    $user->update(['password' => bcrypt('123456')]);
+    return response()->json($user);
+});

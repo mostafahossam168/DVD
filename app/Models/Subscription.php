@@ -20,7 +20,12 @@ class Subscription extends Model
         'payment_reference',
         'payment_phone',
         'payment_status',
+        'amount_paid',
         'payment_screenshot',
+    ];
+
+    protected $casts = [
+        'amount_paid' => 'decimal:2',
     ];
 
     public function user()

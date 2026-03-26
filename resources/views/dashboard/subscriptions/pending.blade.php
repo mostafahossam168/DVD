@@ -29,8 +29,10 @@
                     <th>#</th>
                     <th>الطالب</th>
                     <th>المادة</th>
+                    <th>المدرس</th>
                     <th>طريقة الدفع</th>
                     <th>الهاتف / المرجع</th>
+                    <th>المبلغ</th>
                     <th>صورة التحويل</th>
                     <th>التاريخ</th>
                     <th>العمليات</th>
@@ -47,12 +49,14 @@
                             @endif
                         </td>
                         <td style="font-size:.9rem">{{ $item->subject->name ?? '—' }}</td>
+                        <td style="font-size:.85rem">{{ $item->subject?->teacher?->full_name ?? '—' }}</td>
                         <td style="font-size:.9rem">{{ $item->payment_method ?? '—' }}</td>
                         <td style="font-size:.85rem">
                             @if($item->payment_phone) {{ $item->payment_phone }} @endif
                             @if($item->payment_reference) <br><small>مرجع: {{ $item->payment_reference }}</small> @endif
                             @if(!$item->payment_phone && !$item->payment_reference) — @endif
                         </td>
+                        <td style="font-weight:700">{{ number_format((float) ($item->amount_paid ?? $item->subject?->price ?? 0), 2) }}</td>
                         <td>
                             @if($item->payment_screenshot)
                                 <a href="{{ display_file($item->payment_screenshot) }}" target="_blank" rel="noopener" class="action-btn-ds edit-ds" title="عرض">
@@ -78,7 +82,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد طلبات اشتراك معلقة</td>
+                        <td colspan="10" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا توجد طلبات اشتراك معلقة</td>
                     </tr>
                 @endforelse
             </tbody>

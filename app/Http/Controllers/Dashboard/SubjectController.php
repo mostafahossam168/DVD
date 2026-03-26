@@ -7,6 +7,7 @@ use App\Models\Grade;
 use App\Models\Stage;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
 
@@ -29,13 +30,11 @@ class SubjectController extends Controller
         $grade_id = request('grade_id');
         $stage_id = request('stage_id');
 
-        $query = Subject::query();
+        $query = Subject::with(['teacher', 'grade.stage']);
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط المواد الخاصة به
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            });
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $query->where('teacher_id', Auth::id());
         }
 
         $items = $query->when($search, function ($q) use ($search) {
@@ -86,14 +85,11 @@ class SubjectController extends Controller
             'status' => 'required|boolean',
             'image' => 'required|image',
             'grade_id' => 'required|exists:grades,id',
-            'teacher_id' => 'nullable|array|exists:users,id',
+            'teacher_id' => 'required|integer|exists:users,id',
             'price' => 'nullable|numeric|min:0',
         ]);
         $data['image'] = store_file($request->image, 'subjects');
-        $subject = Subject::create($data);
-        if (!empty($request->teacher_id)) {
-            $subject->teachers()->attach($data['teacher_id']);
-        }
+        Subject::create($data);
         return redirect()->route('dashboard.subjects.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
 
@@ -125,6 +121,7 @@ class SubjectController extends Controller
             'status' => 'required|boolean',
             'image' => 'nullable|image',
             'grade_id' => 'required|exists:grades,id',
+            'teacher_id' => 'required|integer|exists:users,id',
             'price' => 'nullable|numeric|min:0',
         ]);
         if ($request->hasFile('image')) {

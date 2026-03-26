@@ -11,7 +11,8 @@
     $prevLecture = $prevLecture ?? null;
     $nextLecture = $nextLecture ?? null;
     $embedUrl = $embedUrl ?? null;
-    $hasQuizResult = $hasQuizResult ?? false;
+    $assessment = $assessment ?? null;
+    $hasAssessmentResult = $hasAssessmentResult ?? false;
     $materials = $materials ?? collect();
 @endphp
 
@@ -144,7 +145,7 @@
                     <div class="pl-num pl-num-active">▶</div>
                     <div class="pl-info">
                         <div class="pl-title">{{ $lec->title }}</div>
-                        <div class="pl-meta">{{ $lec->materials_count ?? 0 }} مادة @if($quiz && $lec->id === $lecture->id) • ١ اختبار @endif</div>
+                        <div class="pl-meta">{{ $lec->materials_count ?? 0 }} مادة @if($assessment && $lec->id === $lecture->id) • ١ تقييم @endif</div>
                     </div>
                     <span class="pl-status status-now">الآن</span>
                 </div>
@@ -170,21 +171,21 @@
             @endforeach
         </div>
 
-        @if($quiz)
+        @if($assessment)
         <div class="sidebar-section">
-            <div class="sidebar-title">اختبار الدرس</div>
+            <div class="sidebar-title">تقييمات المادة</div>
             <div class="quiz-card">
-                <div class="quiz-card-title">📝 {{ $quiz->title }}</div>
+                <div class="quiz-card-title">🧪 {{ $assessment->title }}</div>
                 <div class="quiz-info-row">
-                    <span class="quiz-info-text">عدد الأسئلة: {{ $quiz->questions_count ?? $quiz->questions()->count() }}</span>
-                    @if($hasQuizResult)
+                    <span class="quiz-info-text">عدد الأسئلة: {{ $assessment->questions_count ?? $assessment->questions()->count() }}</span>
+                    @if($hasAssessmentResult)
                     <span class="quiz-done-badge">✓ تم الحل مسبقاً</span>
                     @endif
                 </div>
-                @if($hasQuizResult)
-                <a href="{{ route('front.quizzes.review', $quiz) }}" class="btn-quiz-view">عرض الاختبار ←</a>
+                @if($hasAssessmentResult)
+                <a href="{{ route('front.assessments.review', $assessment) }}" class="btn-quiz-view">عرض التقييم ←</a>
                 @else
-                <a href="{{ route('front.quizzes.show', $quiz) }}" class="btn-quiz-view">بدء الاختبار ←</a>
+                <a href="{{ route('front.assessments.show', $assessment) }}" class="btn-quiz-view">بدء التقييم ←</a>
                 @endif
             </div>
         </div>

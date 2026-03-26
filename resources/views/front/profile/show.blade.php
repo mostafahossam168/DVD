@@ -86,7 +86,7 @@
                 </div>
                 <div class="profile-card-body" style="padding:12px">
                     <a href="{{ route('front.courses.my') }}" class="profile-quick-link"><span style="font-size:1.1rem">🎓</span> دوراتي المسجل فيها</a>
-                    <a href="{{ route('front.quizzes.history') }}" class="profile-quick-link"><span style="font-size:1.1rem">📝</span> اختباراتي</a>
+                    <a href="{{ route('front.assessments.history') }}" class="profile-quick-link"><span style="font-size:1.1rem">📝</span> تقييماتي</a>
                     <a href="{{ route('front.favorites.index') }}" class="profile-quick-link"><span style="font-size:1.1rem">❤️</span> الكورسات المفضلة</a>
                 </div>
             </div>

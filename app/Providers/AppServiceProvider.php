@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Stage;
 use App\Models\Subject;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
                 'navbarSubjectsCount' => Subject::active()->count(),
             ]);
         });
+
+        Paginator::useBootstrapFive();
     }
 }

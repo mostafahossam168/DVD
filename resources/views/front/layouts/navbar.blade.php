@@ -86,9 +86,9 @@
                         <div class="user-dropdown-icon" style="background:#F0FDF4">🎓</div>
                         دوراتي المسجل فيها
                     </a>
-                    <a href="{{ route('front.quizzes.history') }}" class="user-dropdown-item" role="menuitem">
+                    <a href="{{ route('front.assessments.history') }}" class="user-dropdown-item" role="menuitem">
                         <div class="user-dropdown-icon" style="background:#FFFBEB">📝</div>
-                        اختباراتي
+                        تقييماتي
                     </a>
                     @if ($student->type === 'student')
                         <a href="{{ route('front.favorites.index') }}" class="user-dropdown-item" role="menuitem">
@@ -133,7 +133,7 @@
             @auth
                 <a href="{{ route('front.profile.show') }}" class="nav-mobile-link">الملف الشخصي</a>
                 <a href="{{ route('front.courses.my') }}" class="nav-mobile-link">دوراتي</a>
-                <a href="{{ route('front.quizzes.history') }}" class="nav-mobile-link">اختباراتي</a>
+                <a href="{{ route('front.assessments.history') }}" class="nav-mobile-link">تقييماتي</a>
                 @if (auth()->user()->type === 'student')
                     <a href="{{ route('front.favorites.index') }}" class="nav-mobile-link">المفضلة</a>
                 @endif

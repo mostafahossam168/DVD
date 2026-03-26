@@ -30,8 +30,8 @@ class LectuerController extends Controller
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الدروس للمواد الخاصة به
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $query->whereHas('subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             });
         }
 
@@ -56,9 +56,7 @@ class LectuerController extends Controller
 
         // جلب المواد للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $subjects = Subject::whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            })->active()->get();
+            $subjects = Subject::where('teacher_id', auth()->id())->active()->get();
         } else {
             $subjects = Subject::active()->get();
         }
@@ -75,9 +73,7 @@ class LectuerController extends Controller
 
         // جلب المواد للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $subjects = Subject::whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            })->active()->get();
+            $subjects = Subject::where('teacher_id', auth()->id())->active()->get();
         } else {
             $subjects = Subject::active()->get();
         }
@@ -101,7 +97,7 @@ class LectuerController extends Controller
         // التحقق من أن المدرس يضيف درس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $subject = Subject::findOrFail($data['subject_id']);
-            if (!$subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة درس لهذه المادة');
             }
         }
@@ -128,16 +124,14 @@ class LectuerController extends Controller
 
         // التحقق من أن المدرس يعدل درس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بتعديل هذا الدرس');
             }
         }
 
         // جلب المواد للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $subjects = Subject::whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            })->active()->get();
+            $subjects = Subject::where('teacher_id', auth()->id())->active()->get();
         } else {
             $subjects = Subject::active()->get();
         }
@@ -154,7 +148,7 @@ class LectuerController extends Controller
 
         // التحقق من أن المدرس يعدل درس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بتعديل هذا الدرس');
             }
         }
@@ -170,7 +164,7 @@ class LectuerController extends Controller
         // التحقق من أن المدرس يضيف درس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $subject = Subject::findOrFail($data['subject_id']);
-            if (!$subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة درس لهذه المادة');
             }
         }
@@ -188,7 +182,7 @@ class LectuerController extends Controller
 
         // التحقق من أن المدرس يحذف درس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بحذف هذا الدرس');
             }
         }

@@ -23,7 +23,7 @@ class HomeController extends Controller
         $teacherStudentsCount = 0;
 
         if ($isTeacher) {
-            $teacherSubjectIds = Subject::whereHas('teachers', fn ($q) => $q->where('users.id', auth()->id()))
+            $teacherSubjectIds = Subject::where('teacher_id', auth()->id())
                 ->pluck('id');
             $teacherSubjectsCount = $teacherSubjectIds->count();
             $teacherLecturesCount = Lecture::whereIn('subject_id', $teacherSubjectIds)->count();

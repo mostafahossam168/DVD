@@ -96,7 +96,7 @@
                         @endif
                         <div class="card-tags">
                             <span class="tag">📹 فيديو</span>
-                            <span class="tag">✅ اختبارات</span>
+                            <span class="tag">✅ تقييمات</span>
                         </div>
                         <div class="card-footer">
                             <div>

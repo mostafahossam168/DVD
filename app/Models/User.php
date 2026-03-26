@@ -88,7 +88,7 @@ class User extends Authenticatable
 
     public function teachingSubjects()
     {
-        return $this->belongsToMany(Subject::class, 'subject_teachers', 'teacher_id', 'subject_id');
+        return $this->hasMany(Subject::class, 'teacher_id');
     }
 
 
@@ -119,5 +119,15 @@ class User extends Authenticatable
     public function onlineMeetings()
     {
         return $this->hasMany(OnlineMeeting::class, 'teacher_id');
+    }
+
+    public function assessments()
+    {
+        return $this->hasMany(Assessment::class, 'teacher_id');
+    }
+
+    public function questionBankQuestions()
+    {
+        return $this->hasMany(QuestionBankQuestion::class, 'teacher_id');
     }
 }

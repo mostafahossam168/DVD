@@ -9,6 +9,7 @@ use Database\Seeders\SettingSeeder;
 use Database\Seeders\SubjectSeeder;
 use Database\Seeders\StageSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\QuestionBankSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class,
             SettingSeeder::class,
             PaymentMethodSeeder::class,
+            QuestionBankSeeder::class,
             // PermissionTableSeeder::class,
         ]);
     }

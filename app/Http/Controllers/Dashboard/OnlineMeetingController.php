@@ -9,6 +9,8 @@ use App\Services\ZoomService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class OnlineMeetingController extends Controller
 {
@@ -23,7 +25,7 @@ class OnlineMeetingController extends Controller
     public function index()
     {
         $items = OnlineMeeting::with(['subject.grade.stage'])
-            ->where('teacher_id', auth()->id())
+            ->where('teacher_id', Auth::id())
             ->latest()
             ->paginate(20);
 
@@ -34,10 +36,8 @@ class OnlineMeetingController extends Controller
     {
         $stages = Stage::active()->get();
 
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $subjects = Subject::whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            })->active()->get();
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $subjects = Subject::where('teacher_id', Auth::id())->active()->get();
         } else {
             $subjects = Subject::active()->get();
         }
@@ -59,9 +59,9 @@ class OnlineMeetingController extends Controller
         $startTime = Carbon::parse($data['start_time']);
 
         // تأكيد أن المدرس يضيف محاضرة لمادة من مواده فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
             $subject = Subject::findOrFail($data['subject_id']);
-            if (! $subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $subject->teacher_id !== (int) Auth::id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة محاضرة لهذه المادة');
             }
 
@@ -77,7 +77,7 @@ class OnlineMeetingController extends Controller
         ]);
 
         OnlineMeeting::create([
-            'teacher_id' => auth()->id(),
+            'teacher_id' => Auth::id(),
             'stage_id' => $data['stage_id'] ?? null,
             'grade_id' => $data['grade_id'] ?? null,
             'subject_id' => $data['subject_id'],
@@ -101,10 +101,8 @@ class OnlineMeetingController extends Controller
 
         $stages = Stage::active()->get();
 
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $subjects = Subject::whereHas('teachers', function ($q) {
-                $q->where('users.id', auth()->id());
-            })->active()->get();
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
+            $subjects = Subject::where('teacher_id', Auth::id())->active()->get();
         } else {
             $subjects = Subject::active()->get();
         }
@@ -132,9 +130,9 @@ class OnlineMeetingController extends Controller
         $startTime = Carbon::parse($data['start_time']);
 
         // تأكيد أن المدرس يعدل محاضرة لمادة من مواده فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
+        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
             $subject = Subject::findOrFail($data['subject_id']);
-            if (! $subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $subject->teacher_id !== (int) Auth::id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بتعديل محاضرة لهذه المادة');
             }
 
@@ -167,18 +165,27 @@ class OnlineMeetingController extends Controller
     {
         $this->authorizeOwner($onlineMeeting);
 
+        $zoomDeleteFailed = false;
         if ($onlineMeeting->zoom_meeting_id) {
-            $zoom->deleteMeeting($onlineMeeting->zoom_meeting_id);
+            try {
+                $zoom->deleteMeeting($onlineMeeting->zoom_meeting_id);
+            } catch (Throwable $e) {
+                // لا نمنع حذف السجل المحلي إذا فشل حذف اجتماع زووم (مثلاً مشكلة صلاحيات التوكن).
+                $zoomDeleteFailed = true;
+            }
         }
 
         $onlineMeeting->delete();
 
-        return redirect()->route('dashboard.online-meetings.index')
-            ->with('success', 'تم حذف المحاضرة الأونلاين بنجاح.');
+        $message = $zoomDeleteFailed
+            ? 'تم حذف المحاضرة من النظام، لكن تعذر حذف اجتماع Zoom بسبب صلاحيات التوكن.'
+            : 'تم حذف المحاضرة الأونلاين بنجاح.';
+
+        return redirect()->route('dashboard.online-meetings.index')->with('success', $message);
     }
 
     protected function authorizeOwner(OnlineMeeting $meeting): void
     {
-        abort_unless($meeting->teacher_id === auth()->id(), 403);
+        abort_unless($meeting->teacher_id === Auth::id(), 403);
     }
 }

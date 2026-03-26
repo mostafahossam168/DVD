@@ -35,28 +35,14 @@
                             </select>
                         </div>
                     </div>
-                    {{-- <div class="col-12">
-                        <div class="form-group mb-3">
-                            <label for="teacher_id">المعلمين</label>
-
-                            <select name="teacher_id[]" id="teacher_id" class="form-control-ds" size="6"
-                                style="min-height: 150px;">
-                                @foreach ($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">
-                                        {{ $teacher->fullname }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> --}}
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="teacher_id">المعلم</label>
-
-                            <select name="teacher_id[]" id="teacher_id" class="form-control">
+                            <select name="teacher_id" id="teacher_id" class="form-control-ds">
+                                <option value="">-- اختر --</option>
                                 @foreach ($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">
-                                        {{ $teacher->fullname }}
+                                    <option value="{{ $teacher->id }}" @selected(old('teacher_id') == $teacher->id)>
+                                        {{ $teacher->full_name ?? $teacher->fullname ?? ($teacher->f_name . ' ' . $teacher->l_name) }}
                                     </option>
                                 @endforeach
                             </select>

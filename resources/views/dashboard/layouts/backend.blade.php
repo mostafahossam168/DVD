@@ -37,7 +37,7 @@
     <div class="main-v2">
         @include('dashboard.layouts.topbar-v2')
         <div class="content-v2">
-            <x-alert-component></x-alert-component>
+            {{-- <x-alert-component></x-alert-component> --}}
             @yield('contant')
         </div>
         {{-- الموديلات تُعرض هنا خارج منطقة التمرير حتى تظهر وتستجيب للنقر بشكل صحيح --}}

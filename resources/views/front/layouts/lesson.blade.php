@@ -37,7 +37,7 @@
             </div>
             <a href="{{ route('front.profile.show') }}" class="lesson-dropdown-item"><div class="lesson-dropdown-icon" style="background:#EFF6FF">👤</div>الملف الشخصي</a>
             <a href="{{ route('front.courses.my') }}" class="lesson-dropdown-item"><div class="lesson-dropdown-icon" style="background:#F0FDF4">🎓</div>دوراتي</a>
-            <a href="{{ route('front.quizzes.history') }}" class="lesson-dropdown-item"><div class="lesson-dropdown-icon" style="background:#FFFBEB">📝</div>اختباراتي</a>
+            <a href="{{ route('front.assessments.history') }}" class="lesson-dropdown-item"><div class="lesson-dropdown-icon" style="background:#FFFBEB">📝</div>تقييماتي</a>
             <a href="{{ route('front.favorites.index') }}" class="lesson-dropdown-item"><div class="lesson-dropdown-icon" style="background:#FDF4FF">❤️</div>المفضلة</a>
             <div class="lesson-dropdown-divider"></div>
             <form method="POST" action="{{ route('front.logout') }}" class="d-inline">

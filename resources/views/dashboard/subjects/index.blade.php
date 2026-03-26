@@ -68,7 +68,7 @@
                     <th>الحالة</th>
                     <th>الصف الدراسي</th>
                     <th>المرحلة الدراسية</th>
-                    <th>المعلمين</th>
+                    <th>المعلم</th>
                     <th>العمليات</th>
                 </tr>
             </thead>
@@ -94,9 +94,7 @@
                         </td>
                         <td style="font-size:.9rem">{{ $item->grade->name ?? '—' }}</td>
                         <td style="color:var(--muted);font-size:.9rem">{{ $item->grade->stage->name ?? '—' }}</td>
-                        <td>
-                            <a href="{{ route('dashboard.teachers.index', ['subject_id' => $item->id]) }}" class="count-badge-ds {{ $item->teachers()->count() > 0 ? 'high-ds' : 'zero-ds' }}">{{ $item->teachers()->count() }}</a>
-                        </td>
+                        <td>{{ $item->teacher?->full_name ?? '—' }}</td>
                         <td>
                             <div class="actions-cell-ds">
                                 @can('update_subjects')

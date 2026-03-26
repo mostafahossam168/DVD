@@ -17,6 +17,17 @@ class SettingController extends Controller
         $current_file = ['logo', 'fav'];
         $files = $request->file();
         $data = $request->except(array_keys($files), '_token');
+
+        // حفظ الأرقام المتعددة كنص منظم (سطر لكل رقم) للتوافق مع باقي المنظومة.
+        foreach (['vodafone_cash_numbers', 'instapay_numbers'] as $multiField) {
+            if (isset($data[$multiField]) && is_array($data[$multiField])) {
+                $data[$multiField] = collect($data[$multiField])
+                    ->map(fn ($item) => trim((string) $item))
+                    ->filter()
+                    ->implode(PHP_EOL);
+            }
+        }
+
         if (empty($files)) {
             foreach ($current_file as $ele) {
                 $data[$ele] = setting($ele);

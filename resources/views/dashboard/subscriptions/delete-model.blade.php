@@ -14,7 +14,9 @@
                 <div class="confirm-body-ds">
                     <div class="confirm-icon-ds danger-ds">⚠️</div>
                     <h3>هل أنت متأكد من الحذف؟</h3>
-                    <p>سيتم حذف الاشتراك للطالب «{{ $item->user->full_name ?? $item->user->fullname ?? $item->user->email }}» في المادة «{{ $item->subject->name }}» ولا يمكن التراجع.</p>
+                    <p>سيتم حذف الاشتراك للطالب
+                        «{{ $item->user->full_name ?? ($item->user->fullname ?? $item->user?->email) }}» في المادة
+                        «{{ $item->subject->name }}» ولا يمكن التراجع.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">نعم، احذف</button>

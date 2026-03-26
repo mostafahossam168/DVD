@@ -32,8 +32,8 @@ class QuestionController extends Controller
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الأسئلة للاختبارات الخاصة بالمواد الخاصة به
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('quize.lecture.subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $query->whereHas('quize.lecture.subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             });
         }
 
@@ -59,8 +59,8 @@ class QuestionController extends Controller
 
         // جلب الاختبارات للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $quizes = Quize::whereHas('lecture.subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $quizes = Quize::whereHas('lecture.subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             })->get();
         } else {
             $quizes = Quize::get();
@@ -76,8 +76,8 @@ class QuestionController extends Controller
     {
         // جلب الاختبارات للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $quizes = Quize::whereHas('lecture.subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $quizes = Quize::whereHas('lecture.subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             })->get();
         } else {
             $quizes = Quize::get();
@@ -105,7 +105,7 @@ class QuestionController extends Controller
         // التحقق من أن المدرس يضيف سؤال لاختبار لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $quize = Quize::with('lecture.subject')->findOrFail($data['quize_id']);
-            if (!$quize->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $quize->lecture->subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة سؤال لهذا الاختبار');
             }
         }
@@ -145,15 +145,15 @@ class QuestionController extends Controller
 
         // التحقق من أن المدرس يعدل سؤال لاختبار لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->quize->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->quize->lecture->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بتعديل هذا السؤال');
             }
         }
 
         // جلب الاختبارات للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $quizes = Quize::whereHas('lecture.subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $quizes = Quize::whereHas('lecture.subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             })->get();
         } else {
             $quizes = Quize::get();
@@ -171,7 +171,7 @@ class QuestionController extends Controller
 
         // التحقق من أن المدرس يعدل سؤال لاختبار لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->quize->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->quize->lecture->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بتعديل هذا السؤال');
             }
         }
@@ -190,7 +190,7 @@ class QuestionController extends Controller
         // التحقق من أن المدرس يضيف سؤال لاختبار لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $quize = Quize::with('lecture.subject')->findOrFail($data['quize_id']);
-            if (!$quize->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $quize->lecture->subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة سؤال لهذا الاختبار');
             }
         }
@@ -222,7 +222,7 @@ class QuestionController extends Controller
 
         // التحقق من أن المدرس يحذف سؤال لاختبار لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->quize->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->quize->lecture->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بحذف هذا السؤال');
             }
         }

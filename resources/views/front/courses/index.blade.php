@@ -113,10 +113,10 @@
                                     <div class="card-body">
                                         <div class="card-subject">{{ $subject->name }} — {{ $grade->name }}</div>
                                         <div class="card-title">{{ $subject->name }} {{ $grade->name }}</div>
-                                        <div class="card-meta">كورس كامل يغطي منهج المادة مع حصص فيديو واختبارات تفاعلية.</div>
+                                        <div class="card-meta">كورس كامل يغطي منهج المادة مع حصص فيديو وتقييمات تفاعلية.</div>
                                         <div class="card-tags">
                                             <span class="tag">📹 فيديو</span>
-                                            <span class="tag">✅ اختبارات</span>
+                                            <span class="tag">✅ تقييمات</span>
                                         </div>
                                         <div class="card-footer">
                                             <div class="card-stats">

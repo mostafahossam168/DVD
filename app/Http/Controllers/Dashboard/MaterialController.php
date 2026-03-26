@@ -30,8 +30,8 @@ class MaterialController extends Controller
 
         // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الملفات للدروس الخاصة بالمواد الخاصة به
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('lecture.subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $query->whereHas('lecture.subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             });
         }
 
@@ -56,8 +56,8 @@ class MaterialController extends Controller
 
         // جلب الدروس للمدرس فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $lectuers = Lecture::whereHas('subject.teachers', function ($q) {
-                $q->where('users.id', auth()->id());
+            $lectuers = Lecture::whereHas('subject', function ($q) {
+                $q->where('teacher_id', auth()->id());
             })->get();
         } else {
             $lectuers = Lecture::get();
@@ -91,7 +91,7 @@ class MaterialController extends Controller
         // التحقق من أن المدرس يضيف ملف لدرس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
-            if (!$lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $lecture->subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة ملف لهذا الدرس');
             }
         }
@@ -126,7 +126,7 @@ class MaterialController extends Controller
 
         // التحقق من أن المدرس يعدل ملف لدرس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->lecture->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بتعديل هذا الملف');
             }
         }
@@ -141,7 +141,7 @@ class MaterialController extends Controller
         // التحقق من أن المدرس يضيف ملف لدرس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
             $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
-            if (!$lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $lecture->subject->teacher_id !== (int) auth()->id()) {
                 return redirect()->back()->with('error', 'غير مصرح لك بإضافة ملف لهذا الدرس');
             }
         }
@@ -163,7 +163,7 @@ class MaterialController extends Controller
 
         // التحقق من أن المدرس يحذف ملف لدرس لمادة خاصة به فقط
         if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if (!$item->lecture->subject->teachers()->where('users.id', auth()->id())->exists()) {
+            if ((int) $item->lecture->subject->teacher_id !== (int) auth()->id()) {
                 abort(403, 'غير مصرح لك بحذف هذا الملف');
             }
         }

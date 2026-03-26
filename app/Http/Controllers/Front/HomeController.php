@@ -9,17 +9,17 @@ use App\Models\Subject;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function indexOld()
     {
         return view('front.home');
     }
 
     /** الصفحة الرئيسية بالتصميم القديم (للاعادة عند الحاجة) */
-    public function indexOld()
+    public function index()
     {
         $reviews = CourseReview::active()->orderBy('created_at', 'desc')->limit(3)->get();
         $stages = Stage::active()
-            ->with(['grades' => fn ($q) => $q->active()->withCount('subjects')])
+            ->with(['grades' => fn($q) => $q->active()->withCount('subjects')])
             ->orderBy('name')
             ->get();
         $subjects = Subject::active()->with('grade')->orderBy('name')->take(12)->get();

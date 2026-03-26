@@ -1,67 +1,69 @@
-@extends('front.layouts.front', ['title' => 'كورساتي'])
+@extends('front.layouts.front', ['title' => 'فاهم — كورساتي'])
 
 @section('content')
-    <section class="py-5">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="mb-1">كورساتي</h2>
-                    <p class="text-muted mb-0">جميع المواد التي أنت مشترك فيها حالياً.</p>
-                </div>
-            </div>
+@php
+    $subscriptions = $subscriptions ?? collect();
+@endphp
 
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+<div class="hero-band hero-courses">
+    <div class="hero-inner">
+        <div class="hero-eyebrow">🎓 كورساتي</div>
+        <h1>كل الكورسات التي <em>اشتركت فيها</em></h1>
+        <p>تابع دروسك وتقييماتك من مكان واحد بسرعة وسهولة.</p>
+    </div>
+</div>
 
-            @if ($subscriptions->count())
-                <div class="row g-3">
-                    @foreach ($subscriptions as $subscription)
-                        @php($subject = $subscription->subject)
-                        @continue(!$subject)
-                        <div class="col-md-6 col-lg-4 position-relative">
-                            <a href="{{ route('front.courses.subject', $subject) }}" class="course-card course-card-with-img card shadow-sm h-100 text-decoration-none overflow-hidden">
-                                <div class="favorite-btn-wrap position-absolute top-0 end-0 m-2">
-                                    @include('front.components.favorite-btn', ['subject' => $subject, 'isFavorite' => in_array($subject->id, $favoriteSubjectIds ?? [])])
-                                </div>
-                                @if ($subject->image)
-                                    <div class="course-card-img-wrap">
-                                        <img src="{{ display_file($subject->image) }}" alt="{{ $subject->name }}" class="course-card-img">
-                                    </div>
-                                @endif
-                                <div class="course-card-body">
-                                    <h5 class="course-title mb-1">{{ $subject->name }}</h5>
-                                    <p class="course-meta small text-muted mb-2">
-                                        {{ $subject->grade?->name }} - {{ $subject->grade?->stage?->name }}
-                                    </p>
-                                    <span class="badge bg-success mb-2">اشتراك مفعل</span>
-                                    <p class="small text-muted mb-3">
-                                        نوع الفترة:
-                                        @if ($subscription->period_type === 'term')
-                                            ترم @if ($subscription->term_number)
-                                                رقم {{ $subscription->term_number }}
-                                            @endif
-                                        @else
-                                            من {{ optional($subscription->start_date)->format('Y-m-d') }}
-                                            إلى {{ optional($subscription->end_date)->format('Y-m-d') }}
-                                        @endif
-                                    </p>
-                                    <span class="btn btn-primary btn-sm w-100">دخول الكورس</span>
-                                </div>
-                            </a>
+<div class="page-content courses-page-content" style="padding:32px 5% 80px">
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    @if($subscriptions->count())
+        <div class="courses-grid">
+            @foreach($subscriptions as $subscription)
+                @php($subject = $subscription->subject)
+                @continue(!$subject)
+                <a href="{{ route('front.courses.subject', $subject) }}" class="course-card course-card-with-img" style="position:relative">
+                    <div class="favorite-btn-wrap position-absolute top-0 start-0 m-2" style="z-index:2">
+                        @include('front.components.favorite-btn', ['subject' => $subject, 'isFavorite' => in_array($subject->id, $favoriteSubjectIds ?? [])])
+                    </div>
+                    <div class="course-card-img-wrap">
+                        @if($subject->image)
+                            <img src="{{ display_file($subject->image) }}" alt="{{ $subject->name }}" class="course-card-img">
+                        @else
+                            <div class="d-flex align-items-center justify-content-center h-100" style="font-size:2rem;color:#94a3b8">📘</div>
+                        @endif
+                    </div>
+                    <div class="course-card-body">
+                        <div class="card-subject">{{ $subject->name }}</div>
+                        <div class="card-title">{{ $subject->name }}</div>
+                        <div class="card-meta">{{ $subject->grade?->name ?? '—' }} — {{ $subject->grade?->stage?->name ?? '—' }}</div>
+                        <div class="card-tags">
+                            <span class="tag">✅ اشتراك مفعل</span>
+                            @if($subscription->period_type === 'term')
+                                <span class="tag">📅 ترم {{ $subscription->term_number ? 'رقم '.$subscription->term_number : '' }}</span>
+                            @else
+                                <span class="tag">📆 اشتراك شهري</span>
+                            @endif
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-muted">
-                    لا توجد كورسات مسجل فيها حالياً.
-                    <a href="{{ route('front.courses.index') }}">استكشف الكورسات المتاحة</a>.
-                </p>
-            @endif
+                        <div class="card-footer" style="margin-top:auto">
+                            <span class="btn-card">دخول الكورس</span>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
         </div>
-    </section>
+    @else
+        <div class="empty-state show">
+            <div class="empty-icon">📚</div>
+            <div class="empty-title">لا توجد كورسات مسجل فيها حاليًا</div>
+            <div class="empty-sub">ابدأ الآن واستكشف الكورسات المتاحة.</div>
+            <a href="{{ route('front.courses.index') }}" class="btn-browse">استكشف الكورسات</a>
+        </div>
+    @endif
+</div>
 @endsection
 

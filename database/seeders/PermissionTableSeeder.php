@@ -40,9 +40,9 @@ class PermissionTableSeeder extends Seeder
             'read_subjects',
             'create_lectuers', 'read_lectuers', 'update_lectuers', 'delete_lectuers',
             'create_materials', 'read_materials', 'update_materials', 'delete_materials',
-            'create_quizes', 'read_quizes', 'update_quizes', 'delete_quizes',
-            'create_questions', 'read_questions', 'update_questions', 'delete_questions',
-            'read_quiz_results',
+            'create_assessments', 'read_assessments', 'update_assessments', 'delete_assessments',
+            'create_question_bank', 'read_question_bank', 'update_question_bank', 'delete_question_bank',
+            'read_assessment_results',
             'read_contacts',
             'read_subscriptions',
         ];

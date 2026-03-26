@@ -38,6 +38,21 @@
                         <small class="form-hint-ds">يُستخدم في النظام (مثل: vodafone_cash, instapay)</small>
                     </div>
                     <div class="form-group-ds">
+                        <label class="form-label-ds">اسم صاحب الحساب</label>
+                        <input type="text" name="account_name" class="form-control-ds" value="{{ old('account_name') }}" placeholder="مثال: Mostafa Hossam">
+                        @error('account_name')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">رقم فودافون/إنستاباي</label>
+                        <input type="text" name="account_number" class="form-control-ds" value="{{ old('account_number') }}" placeholder="مثال: 01001234567">
+                        @error('account_number')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
+                        <label class="form-label-ds">ملاحظات للطالب</label>
+                        <input type="text" name="notes" class="form-control-ds" value="{{ old('notes') }}" placeholder="مثال: اكتب اسمك في المرجع">
+                        @error('notes')<span class="form-error-ds">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="form-group-ds">
                         <label class="form-label-ds">الحالة <span class="required-ds">*</span></label>
                         <select name="is_active" class="form-control-ds" required>
                             <option value="1" @selected(old('is_active', true))>مفعلة</option>

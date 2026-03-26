@@ -17,6 +17,7 @@
             </a>
         </div>
     </div>
+    <x-alert-component></x-alert-component>
 
     <div class="table-wrap-ds fade-up-ds delay-1-ds">
         <table>
@@ -63,13 +64,9 @@
                                 <a href="{{ route('dashboard.online-meetings.edit', $item->id) }}" class="action-btn-ds edit-ds" title="تعديل">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                 </a>
-                                <form action="{{ route('dashboard.online-meetings.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="action-btn-ds delete-ds" title="حذف">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                                    </button>
-                                </form>
+                                <button type="button" class="action-btn-ds delete-ds" data-bs-toggle="modal" data-bs-target="#delete{{ $item->id }}" title="حذف">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -86,4 +83,10 @@
     </div>
 </div>
 @endsection
+
+@push('modals')
+    @foreach($items as $item)
+        @include('dashboard.online-meetings.delete-model', ['item' => $item])
+    @endforeach
+@endpush
 

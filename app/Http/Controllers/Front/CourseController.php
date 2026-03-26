@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assessment;
 use App\Models\CourseReview;
 use App\Models\Lecture;
 use App\Models\PaymentMethod;
-use App\Models\Quize;
 use App\Models\Stage;
 use App\Models\Subject;
 use App\Models\Subscription;
@@ -49,7 +49,7 @@ class CourseController extends Controller
     {
         abort_unless($subject->status, 404);
 
-        $subject->load(['grade.stage', 'teachers']);
+        $subject->load(['grade.stage', 'teacher']);
 
         $lectures = Lecture::active()
             ->where('subject_id', $subject->id)
@@ -57,17 +57,6 @@ class CourseController extends Controller
             ->with('subject')
             ->orderBy('title')
             ->get();
-
-        $lectureIds = $lectures->pluck('id')->toArray();
-        $quizzesByLecture = \App\Models\Quize::active()
-            ->whereIn('lecture_id', $lectureIds)
-            ->pluck('id', 'lecture_id');
-        $lectures = $lectures->map(function ($lecture) use ($quizzesByLecture) {
-            $lecture->has_quiz = isset($quizzesByLecture[$lecture->id]);
-            $lecture->quiz_id = $quizzesByLecture[$lecture->id] ?? null;
-            return $lecture;
-        });
-        $firstLectureWithQuiz = $lectures->first(fn ($l) => $l->has_quiz);
 
         $student = Auth::check() && Auth::user()->type === 'student' ? Auth::user() : null;
 
@@ -108,7 +97,12 @@ class CourseController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        $firstQuiz = $firstLectureWithQuiz ? \App\Models\Quize::find($firstLectureWithQuiz->quiz_id) : null;
+        $assessments = Assessment::query()
+            ->withCount('questions')
+            ->where('subject_id', $subject->id)
+            ->where('status', true)
+            ->orderBy('start_time')
+            ->get();
 
         $ratingCount = CourseReview::active()->where('subject_id', $subject->id)->count();
         $ratingAvg = $ratingCount > 0
@@ -130,8 +124,7 @@ class CourseController extends Controller
         return view('front.courses.subject', [
             'subject' => $subject,
             'lectures' => $lectures,
-            'firstLectureWithQuiz' => $firstLectureWithQuiz,
-            'firstQuiz' => $firstQuiz,
+            'assessments' => $assessments,
             'reviews' => $reviews,
             'ratingAvg' => $ratingAvg,
             'ratingCount' => $ratingCount,
@@ -220,6 +213,7 @@ class CourseController extends Controller
         $payload['payment_phone'] = $data['payment_phone'] ?? null;
         $payload['payment_reference'] = $data['payment_reference'] ?? null;
         $payload['payment_status'] = 'pending';
+        $payload['amount_paid'] = $subject->price;
 
         if ($request->hasFile('payment_screenshot')) {
             $payload['payment_screenshot'] = store_file($request->file('payment_screenshot'), 'subscriptions');
@@ -332,15 +326,16 @@ class CourseController extends Controller
 
         $embedUrl = $this->makeYoutubeEmbedUrl($lecture->link);
 
-        $quiz = Quize::active()
-            ->where('lecture_id', $lecture->id)
+        $assessment = Assessment::active()
             ->withCount('questions')
+            ->where('subject_id', $subject->id)
+            ->orderBy('start_time')
             ->first();
 
-        $hasQuizResult = false;
-        if ($quiz && $user && $user->type === 'student') {
-            $hasQuizResult = \App\Models\QuizResult::where('user_id', $user->id)
-                ->where('quize_id', $quiz->id)
+        $hasAssessmentResult = false;
+        if ($assessment && $user && $user->type === 'student') {
+            $hasAssessmentResult = \App\Models\AssessmentResult::where('user_id', $user->id)
+                ->where('assessment_id', $assessment->id)
                 ->exists();
         }
 
@@ -368,8 +363,8 @@ class CourseController extends Controller
             'subject' => $subject->load(['grade.stage']),
             'lecture' => $lecture,
             'embedUrl' => $embedUrl,
-            'quiz' => $quiz,
-            'hasQuizResult' => $hasQuizResult,
+            'assessment' => $assessment,
+            'hasAssessmentResult' => $hasAssessmentResult,
             'materials' => $materials,
             'lectures' => $lectures,
             'prevLecture' => $prevLecture,

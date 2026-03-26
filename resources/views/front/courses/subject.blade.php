@@ -4,6 +4,16 @@
 @php
     $grade = $subject->grade;
     $stage = $grade?->stage;
+    $toList = function (?string $value) {
+        return collect(preg_split('/[\r\n,]+/', (string) $value))
+            ->map(fn ($line) => trim($line))
+            ->filter()
+            ->values();
+    };
+    $settingsNumbers = [
+        'vodafone_cash' => $toList(setting('vodafone_cash_numbers')),
+        'instapay' => $toList(setting('instapay_numbers')),
+    ];
 @endphp
 
 @if(session('success'))
@@ -39,8 +49,8 @@
         @endif
         <div class="course-badges">
             <span class="course-badge">📹 فيديو مسجل</span>
-            @if(($firstLectureWithQuiz ?? null) || ($lectures->contains(fn($l) => $l->has_quiz ?? false)))
-                <span class="course-badge">✅ اختبارات تفاعلية</span>
+            @if(($assessments ?? collect())->count() > 0)
+                <span class="course-badge">✅ تقييمات تفاعلية</span>
             @endif
             @if(($ratingCount ?? 0) > 0)
                 <span class="course-badge">⭐ {{ $ratingAvg }} تقييم</span>
@@ -85,7 +95,7 @@
                             <div class="lesson-desc">{{ \Illuminate\Support\Str::limit($lecture->description ?? '', 80) }}</div>
                             <div class="lesson-meta">
                                 <span class="lesson-tag">📁 {{ $lecture->materials_count ?? 0 }} مواد</span>
-                                @if($lecture->has_quiz ?? false)<span class="lesson-tag">📝 اختبار</span>@endif
+                                @if(($assessments ?? collect())->count() > 0)<span class="lesson-tag">🧪 تقييم</span>@endif
                             </div>
                         </div>
                         <div class="lesson-action">
@@ -100,7 +110,7 @@
                             <div class="lesson-desc">اشترك في الكورس لتتمكن من مشاهدة هذا الدرس والوصول لكل المحتوى</div>
                             <div class="lesson-meta">
                                 <span class="lesson-tag">📁 {{ $lecture->materials_count ?? 0 }} مواد</span>
-                                @if($lecture->has_quiz ?? false)<span class="lesson-tag">📝 اختبار</span>@endif
+                                @if(($assessments ?? collect())->count() > 0)<span class="lesson-tag">🧪 تقييم</span>@endif
                             </div>
                         </div>
                         <div class="lesson-action">
@@ -143,20 +153,64 @@
                 <div class="resource-title">ملخص الكورس</div>
                 <div class="resource-desc">تأكد من فهمك لكل الدروس عبر مراجعة المحتوى</div>
             </a>
-            @if($firstQuiz && $hasActiveSubscription && $student)
-                <a href="{{ route('front.quizzes.show', $firstQuiz) }}" class="resource-card amber">
+            @php
+                $firstAssessment = ($assessments ?? collect())->first();
+            @endphp
+            @if($firstAssessment && $hasActiveSubscription && $student)
+                <a href="{{ route('front.assessments.show', $firstAssessment) }}" class="resource-card amber">
                     <div class="resource-icon">📝</div>
-                    <div class="resource-title">اختبارات الدروس</div>
-                    <div class="resource-desc">اختبر مستواك وفهمك لكل درس</div>
-                    <div style="color:#F59E0B;font-size:0.78rem;font-weight:700;margin-top:6px">ابدأ الامتحان ←</div>
+                    <div class="resource-title">تقييمات المادة</div>
+                    <div class="resource-desc">اختبر مستواك وفهمك من خلال التقييمات</div>
+                    <div style="color:#F59E0B;font-size:0.78rem;font-weight:700;margin-top:6px">ابدأ التقييم ←</div>
                 </a>
             @else
                 <div class="resource-card amber" style="cursor:default;opacity:0.9">
                     <div class="resource-icon">📝</div>
-                    <div class="resource-title">اختبارات الدروس</div>
-                    <div class="resource-desc">اشترك في الكورس لفتح الاختبارات</div>
+                    <div class="resource-title">تقييمات المادة</div>
+                    <div class="resource-desc">اشترك في الكورس لفتح التقييمات</div>
                 </div>
             @endif
+        </div>
+
+        {{-- New Assessment System --}}
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-card-title">🧪 التقييمات <span class="section-card-badge">{{ ($assessments ?? collect())->count() }}</span></div>
+            </div>
+            @forelse(($assessments ?? collect()) as $assessment)
+                @php
+                    $now = now();
+                    $hasStarted = !$assessment->start_time || $now->gte($assessment->start_time);
+                    $notEnded = !$assessment->end_time || $now->lte($assessment->end_time);
+                    $canOpenAssessment = ($hasActiveSubscription ?? false) && ($student ?? false) && $hasStarted && $notEnded;
+                @endphp
+                <div class="live-item">
+                    <div class="live-dot red"></div>
+                    <div class="live-info">
+                        <div class="live-title">{{ $assessment->title }} <span class="lesson-tag">{{ $assessment->type }}</span></div>
+                        <div class="live-time">
+                            {{ $assessment->start_time?->translatedFormat('l j F Y') ?? 'بدون موعد' }}
+                            @if($assessment->duration)
+                                — {{ $assessment->duration }} دقيقة
+                            @endif
+                            — {{ $assessment->questions_count }} سؤال
+                        </div>
+                    </div>
+                    @if($canOpenAssessment)
+                        <a href="{{ route('front.assessments.show', $assessment) }}" class="btn-zoom">📝 دخول التقييم</a>
+                    @elseif(!($hasActiveSubscription ?? false) || !($student ?? false))
+                        <span class="btn-zoom" style="cursor:default;opacity:0.85">اشترك للدخول</span>
+                    @elseif(!$hasStarted)
+                        <span class="btn-zoom" style="cursor:default;opacity:0.85">لم يبدأ بعد</span>
+                    @else
+                        <span class="btn-zoom" style="cursor:default;opacity:0.85">انتهى الوقت</span>
+                    @endif
+                </div>
+            @empty
+                <div class="review-item">
+                    <div class="review-body text-muted">لا توجد تقييمات مضافة على هذه المادة حتى الآن.</div>
+                </div>
+            @endforelse
         </div>
 
         {{-- Ratings & Reviews --}}
@@ -299,13 +353,23 @@
                                 <label class="enroll-label">طريقة الدفع <span style="color:#EF4444">*</span></label>
                                 <div class="payment-methods">
                                     @foreach($paymentMethods as $pm)
-                                        <div class="payment-option" data-code="{{ $pm->code }}" onclick="subjectPageSelectPayment(this)">
+                                        @php
+                                            $numbers = $settingsNumbers[$pm->code] ?? collect();
+                                            if ($numbers->isEmpty() && !empty($pm->account_number)) {
+                                                $numbers = collect([$pm->account_number]);
+                                            }
+                                        @endphp
+                                        <div class="payment-option" data-code="{{ $pm->code }}" data-account-name="{{ $pm->account_name }}" data-account-numbers="{{ $numbers->implode(' | ') }}" data-notes="{{ $pm->notes }}" onclick="subjectPageSelectPayment(this)">
                                             <div class="payment-radio"></div>
                                             <div class="payment-icon">📲</div>
                                             <div class="payment-name">{{ $pm->name }}</div>
                                         </div>
                                     @endforeach
                                 </div>
+                            </div>
+                            <div id="paymentAccountInfo" class="enroll-info-box" style="display:none">
+                                <span style="color:#3b82f6;font-size:0.9rem">💳</span>
+                                <span id="paymentAccountText"></span>
                             </div>
                             <div id="vodafoneFields" class="form-group-enroll" style="display:none">
                                 <label class="enroll-label">رقم فودافون كاش <span style="color:#EF4444">*</span></label>
@@ -337,20 +401,17 @@
 
         {{-- Instructor --}}
         <div class="instructor-card">
-            <div class="section-card-title" style="margin-bottom:14px">👨‍🏫 المدرسون</div>
-            @if($subject->teachers->count() > 0)
-                @foreach($subject->teachers as $teacher)
+            <div class="section-card-title" style="margin-bottom:14px">👨‍🏫 المدرس</div>
+            @if($subject->teacher)
                 <div class="instructor-inner">
-                    <div class="instructor-avatar">{{ mb_substr($teacher->full_name ?? ($teacher->f_name . ' ' . $teacher->l_name), 0, 1) }}</div>
+                    <div class="instructor-avatar">{{ mb_substr($subject->teacher->full_name ?? ($subject->teacher->f_name . ' ' . $subject->teacher->l_name), 0, 1) }}</div>
                     <div>
-                        <div class="instructor-name">{{ $teacher->full_name ?? ($teacher->f_name . ' ' . $teacher->l_name) }}</div>
+                        <div class="instructor-name">{{ $subject->teacher->full_name ?? ($subject->teacher->f_name . ' ' . $subject->teacher->l_name) }}</div>
                         <div class="instructor-role">مدرس {{ $subject->name }}</div>
                     </div>
                 </div>
-                @if(!$loop->last)<div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px"></div>@endif
-                @endforeach
             @else
-                <p class="text-muted small mb-0">سيتم إضافة المدرسين قريباً.</p>
+                <p class="text-muted small mb-0">لم يتم تحديد مدرس لهذه المادة بعد.</p>
             @endif
         </div>
 
@@ -367,7 +428,7 @@
             </div>
             <div class="course-details-row">
                 <span class="course-details-label">نوع الكورس</span>
-                <span class="course-details-val">فيديو + اختبارات</span>
+                <span class="course-details-val">فيديو + تقييمات</span>
             </div>
             <div class="course-details-row">
                 <span class="course-details-label">اللغة</span>
@@ -382,7 +443,7 @@
     <div class="lock-modal" onclick="event.stopPropagation()">
         <div class="lock-modal-icon">🔒</div>
         <div class="lock-modal-title">هذا الدرس مقفول!</div>
-        <div class="lock-modal-text">لمشاهدة هذا الدرس والوصول لكل محتوى الكورس، يجب عليك الاشتراك أولاً. اشترك الآن واستمتع بكل الدروس والاختبارات التفاعلية.</div>
+        <div class="lock-modal-text">لمشاهدة هذا الدرس والوصول لكل محتوى الكورس، يجب عليك الاشتراك أولاً. اشترك الآن واستمتع بكل الدروس والتقييمات التفاعلية.</div>
         <div class="lock-modal-actions">
             <button type="button" class="btn-lock-enroll" onclick="subjectPageCloseLockGoEnroll()">اشترك الآن ←</button>
             <button type="button" class="btn-lock-close" onclick="subjectPageCloseLockModal()">إغلاق</button>
@@ -420,13 +481,31 @@ window.subjectPageSelectPayment = function(el){
     document.querySelectorAll('.payment-option').forEach(function(o){ o.classList.remove('selected'); });
     el.classList.add('selected');
     var code = el.getAttribute('data-code');
+    var accountName = el.getAttribute('data-account-name') || '';
+    var accountNumbers = el.getAttribute('data-account-numbers') || '';
+    var notes = el.getAttribute('data-notes') || '';
     var input = document.getElementById('paymentMethodInput');
     if (input) input.value = code || '';
     var vodafoneFields = document.getElementById('vodafoneFields');
     var referenceFields = document.getElementById('referenceFields');
+    var paymentInfo = document.getElementById('paymentAccountInfo');
+    var paymentInfoText = document.getElementById('paymentAccountText');
     var isVodafone = code === 'vodafone_cash';
     if (vodafoneFields) vodafoneFields.style.display = isVodafone ? 'block' : 'none';
     if (referenceFields) referenceFields.style.display = code ? 'block' : 'none';
+    if (paymentInfo && paymentInfoText) {
+        if (accountName || accountNumbers || notes) {
+            var chunks = [];
+            if (accountName) chunks.push('الاسم: ' + accountName);
+            if (accountNumbers) chunks.push('الأرقام: ' + accountNumbers.replaceAll('|', '—'));
+            if (notes) chunks.push(notes);
+            paymentInfoText.textContent = chunks.join(' — ');
+            paymentInfo.style.display = 'flex';
+        } else {
+            paymentInfoText.textContent = '';
+            paymentInfo.style.display = 'none';
+        }
+    }
 };
 
 window.subjectPageHandleFileUpload = function(input){
