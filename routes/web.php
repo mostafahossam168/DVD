@@ -39,7 +39,8 @@ Route::get('/stages/{stage}', [FrontStageController::class, 'show'])->name('fron
 Route::get('/grades/{grade}', [FrontStageController::class, 'showGrade'])->name('front.grades.show');
 
 Route::get('/subjects', function () {
-    $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->get();
+    // $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(12);
+    $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(15);
     $favoriteSubjectIds = [];
     if (auth()->check() && auth()->user()->type === 'student') {
         $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
@@ -85,8 +86,8 @@ Route::get('/my-assessments', [FrontAssessmentController::class, 'history'])->na
 
 
 Route::get('test', function () {
-    $user = App\Models\User::where('email', 'admin@gmail.com')->first();
-    // return $user;
-    $user->update(['password' => bcrypt('123456')]);
-    return response()->json($user);
+    // $user = App\Models\User::where('email', 'admin@gmail.com')->first();
+    // // return $user;
+    // $user->update(['password' => bcrypt('123456')]);
+    // return response()->json($user);
 });

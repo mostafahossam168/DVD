@@ -31,7 +31,6 @@ class AppServiceProvider extends ServiceProvider
                 'navbarSubjectsCount' => Subject::active()->count(),
             ]);
         });
-
         Paginator::useBootstrapFive();
     }
 }
