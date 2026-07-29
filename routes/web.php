@@ -13,81 +13,86 @@ use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
 
 // Front site
 
-Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
-Route::get('/', [HomeController::class, 'index'])->name('front.home');
-Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
-Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
-Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('front.register');
-Route::post('/register', [FrontAuthController::class, 'register'])->name('front.register.submit');
-Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.logout');
-// Student profile & favorites
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [FrontProfileController::class, 'show'])->name('front.profile.show');
-    Route::post('/profile', [FrontProfileController::class, 'update'])->name('front.profile.update');
-    Route::get('/my-favorites', [FrontFavoriteController::class, 'index'])->name('front.favorites.index');
-    Route::post('/courses/{subject}/favorite', [FrontFavoriteController::class, 'toggle'])->name('front.favorites.toggle');
-});
+Route::middleware('front.access')->group(function () {
 
-Route::get('/contact', function () {
-    return view('front.contact');
-})->name('front.contact');
+    // Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
+    // Route::get('/', [HomeController::class, 'index'])->name('front.home');
+    Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
+    Route::get('/', [HomeController::class, 'index'])->name('front.home');
+    Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
+    Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
+    Route::get('/register', [FrontAuthController::class, 'showRegisterForm'])->name('front.register');
+    Route::post('/register', [FrontAuthController::class, 'register'])->name('front.register.submit');
+    Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.logout');
+    // Student profile & favorites
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [FrontProfileController::class, 'show'])->name('front.profile.show');
+        Route::post('/profile', [FrontProfileController::class, 'update'])->name('front.profile.update');
+        Route::get('/my-favorites', [FrontFavoriteController::class, 'index'])->name('front.favorites.index');
+        Route::post('/courses/{subject}/favorite', [FrontFavoriteController::class, 'toggle'])->name('front.favorites.toggle');
+    });
 
-Route::post('/contact', [FrontContactController::class, 'store'])->name('front.contact.store');
+    Route::get('/contact', function () {
+        return view('front.contact');
+    })->name('front.contact');
 
-Route::get('/stages', [FrontStageController::class, 'index'])->name('front.stages.index');
-Route::get('/stages/{stage}', [FrontStageController::class, 'show'])->name('front.stages.show');
-Route::get('/grades/{grade}', [FrontStageController::class, 'showGrade'])->name('front.grades.show');
+    Route::post('/contact', [FrontContactController::class, 'store'])->name('front.contact.store');
 
-Route::get('/subjects', function () {
-    // $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(12);
-    $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(15);
-    $favoriteSubjectIds = [];
-    if (auth()->check() && auth()->user()->type === 'student') {
-        $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
-    }
-    $activeStage = request('stage', 'الكل');
-    if (!in_array($activeStage, ['الكل', 'اعدادي', 'ثانوي', 'بكالوريا'])) {
-        $activeStage = 'الكل';
-    }
-    return view('front.subjects', compact('subjects', 'favoriteSubjectIds', 'activeStage'));
-})->name('front.subjects.index');
+    Route::get('/stages', [FrontStageController::class, 'index'])->name('front.stages.index');
+    Route::get('/stages/{stage}', [FrontStageController::class, 'show'])->name('front.stages.show');
+    Route::get('/grades/{grade}', [FrontStageController::class, 'showGrade'])->name('front.grades.show');
 
-// الصفحات الثابتة
-Route::get('/privacy', [FrontPageController::class, 'privacy'])->name('front.page.privacy');
-Route::get('/terms', [FrontPageController::class, 'terms'])->name('front.page.terms');
-Route::get('/usage-policy', [FrontPageController::class, 'usagePolicy'])->name('front.page.usage');
-Route::get('/about', [FrontPageController::class, 'about'])->name('front.page.about');
-Route::get('/vision', [FrontPageController::class, 'vision'])->name('front.page.vision');
-Route::get('/team', [FrontPageController::class, 'team'])->name('front.page.team');
-Route::get('/faq', [FrontPageController::class, 'faq'])->name('front.page.faq');
-Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
-// Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
+    Route::get('/subjects', function () {
+        // $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(12);
+        $subjects = \App\Models\Subject::active()->with('grade.stage')->orderBy('name')->paginate(15);
+        $favoriteSubjectIds = [];
+        if (auth()->check() && auth()->user()->type === 'student') {
+            $favoriteSubjectIds = auth()->user()->favorites()->pluck('subject_id')->all();
+        }
+        $activeStage = request('stage', 'الكل');
+        if (!in_array($activeStage, ['الكل', 'اعدادي', 'ثانوي', 'بكالوريا'])) {
+            $activeStage = 'الكل';
+        }
+        return view('front.subjects', compact('subjects', 'favoriteSubjectIds', 'activeStage'));
+    })->name('front.subjects.index');
 
-// Vodafone Cash info page
-Route::get('/vodafone-cash', function () {
-    return view('front.pages.vodafone-cash');
-})->name('front.page.vodafone');
+    // الصفحات الثابتة
+    Route::get('/privacy', [FrontPageController::class, 'privacy'])->name('front.page.privacy');
+    Route::get('/terms', [FrontPageController::class, 'terms'])->name('front.page.terms');
+    Route::get('/usage-policy', [FrontPageController::class, 'usagePolicy'])->name('front.page.usage');
+    Route::get('/about', [FrontPageController::class, 'about'])->name('front.page.about');
+    Route::get('/vision', [FrontPageController::class, 'vision'])->name('front.page.vision');
+    Route::get('/team', [FrontPageController::class, 'team'])->name('front.page.team');
+    Route::get('/faq', [FrontPageController::class, 'faq'])->name('front.page.faq');
+    Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
+    // Route::get('/support', [FrontPageController::class, 'support'])->name('front.page.support');
 
-// Courses & lessons (student front)
-Route::get('/courses', [FrontCourseController::class, 'index'])->name('front.courses.index');
-Route::get('/my-courses', [FrontCourseController::class, 'myCourses'])->name('front.courses.my');
-Route::get('/courses/{subject}', [FrontCourseController::class, 'showSubject'])->name('front.courses.subject');
-Route::post('/courses/{subject}/subscribe', [FrontCourseController::class, 'subscribe'])->name('front.courses.subscribe');
-Route::get('/courses/{subject}/lessons/{lecture}', [FrontCourseController::class, 'showLesson'])->name('front.courses.lesson');
-Route::post('/courses/{subject}/rate', [FrontCourseController::class, 'rate'])->name('front.courses.rate');
+    // Vodafone Cash info page
+    Route::get('/vodafone-cash', function () {
+        return view('front.pages.vodafone-cash');
+    })->name('front.page.vodafone');
 
-
-// Assessments (new system)
-Route::get('/assessments/{assessment}', [FrontAssessmentController::class, 'show'])->name('front.assessments.show');
-Route::post('/assessments/{assessment}', [FrontAssessmentController::class, 'submit'])->name('front.assessments.submit');
-Route::get('/assessments/{assessment}/review', [FrontAssessmentController::class, 'review'])->name('front.assessments.review');
-Route::get('/my-assessments', [FrontAssessmentController::class, 'history'])->name('front.assessments.history');
+    // Courses & lessons (student front)
+    Route::get('/courses', [FrontCourseController::class, 'index'])->name('front.courses.index');
+    Route::get('/my-courses', [FrontCourseController::class, 'myCourses'])->name('front.courses.my');
+    Route::get('/courses/{subject}', [FrontCourseController::class, 'showSubject'])->name('front.courses.subject');
+    Route::post('/courses/{subject}/subscribe', [FrontCourseController::class, 'subscribe'])->name('front.courses.subscribe');
+    Route::get('/courses/{subject}/lessons/{lecture}', [FrontCourseController::class, 'showLesson'])->name('front.courses.lesson');
+    Route::post('/courses/{subject}/rate', [FrontCourseController::class, 'rate'])->name('front.courses.rate');
 
 
+    // Assessments (new system)
+    Route::get('/assessments/{assessment}', [FrontAssessmentController::class, 'show'])->name('front.assessments.show');
+    Route::post('/assessments/{assessment}', [FrontAssessmentController::class, 'submit'])->name('front.assessments.submit');
+    Route::get('/assessments/{assessment}/review', [FrontAssessmentController::class, 'review'])->name('front.assessments.review');
+    Route::get('/my-assessments', [FrontAssessmentController::class, 'history'])->name('front.assessments.history');
 
-Route::get('test', function () {
-    // $user = App\Models\User::where('email', 'admin@gmail.com')->first();
-    // // return $user;
-    // $user->update(['password' => bcrypt('123456')]);
-    // return response()->json($user);
+
+
+    Route::get('test', function () {
+        $user = App\Models\User::where('email', 'admin@gmail.com')->first();
+        // // return $user;
+        $user->update(['password' => bcrypt('123456')]);
+        return response()->json($user);
+    });
 });

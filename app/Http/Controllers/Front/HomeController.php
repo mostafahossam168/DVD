@@ -9,13 +9,13 @@ use App\Models\Subject;
 
 class HomeController extends Controller
 {
-    public function indexOld()
+    public function index()
     {
         return view('front.home');
     }
 
     /** الصفحة الرئيسية بالتصميم القديم (للاعادة عند الحاجة) */
-    public function index()
+    public function indexOld()
     {
         $reviews = CourseReview::active()->orderBy('created_at', 'desc')->limit(3)->get();
         $stages = Stage::active()

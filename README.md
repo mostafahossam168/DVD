@@ -1,59 +1,193 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# منصة فاهم — Fahem Platform
 
-## About Laravel
+### منصة التعليم الذكي للمراحل الإعدادية والثانوية والبكالوريا
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## نظرة عامة
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+**فاهم** منصة تعليمية إلكترونية متكاملة مبنية بـ Laravel، تستهدف طلاب المراحل الإعدادية والثانوية والبكالوريا. توفر بيئة تعليمية شاملة تجمع بين المحتوى المسجّل، الحصص المباشرة عبر Zoom، ونظام اختبارات متكامل — كل ذلك من منصة واحدة.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## المميزات الرئيسية
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### للطلاب
 
-### Premium Partners
+#### التسجيل والدخول
+- تسجيل حساب جديد واختيار المرحلة الدراسية
+- تسجيل دخول آمن مع إدارة الجلسات
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### المسارات التعليمية
+- ثلاث مراحل دراسية: **الإعدادي** / **الثانوي** / **البكالوريا**
+- دعم مسار **عربي** ومسار **لغات**
+- تصفح المواد والكورسات لكل مرحلة وصف دراسي
 
-## Contributing
+#### الكورسات والمحتوى
+- مشاهدة **دروس فيديو** منظمة داخل كل مادة
+- تحميل **الملفات والمواد** المرفقة بكل درس
+- إضافة الكورسات المفضلة لقائمة المفضلة
+- نظام اشتراك بالفترات: **ترم 1 / ترم 2 / سنوي**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### الاختبارات والتقييمات
+- **كويزات** تفاعلية داخل الكورس
+- مراجعة نتائج الكويزات السابقة مع تصحيح الإجابات
+- **تقييمات رسمية** بوقت محدد، درجات، وترتيب أسئلة
 
-## Code of Conduct
+#### خدمات أخرى
+- تقييم الكورسات ومشاركة الرأي
+- نموذج "تواصل معنا" للدعم الفني
+- صفحات ثابتة: عن المنصة، الشروط، الخصوصية، الأسئلة الشائعة، الرؤية
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+### الحصص المباشرة — تكامل Zoom
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- إنشاء حصص أونلاين مباشرة من داخل المنصة عبر **Zoom API**
+- إدارة رابط الاجتماع وكلمة المرور تلقائياً
+- غرفة انتظار للطلاب قبل دخول المعلم
+- كتم الميكروفون عند الدخول بشكل افتراضي
+- إمكانية تعديل وحذف الحصة من الداشبورد
+
+---
+
+### لوحة تحكم الأدمن
+
+#### إدارة المحتوى التعليمي
+
+| القسم | الوظائف |
+|---|---|
+| المراحل الدراسية | إضافة / تعديل / حذف مراحل (إعدادي، ثانوي، بكالوريا) |
+| الصفوف | إدارة الصفوف الدراسية لكل مرحلة |
+| المواد | إنشاء مواد مرتبطة بمراحل وصفوف محددة |
+| الدروس | رفع وإدارة دروس الفيديو داخل كل مادة |
+| الملفات المرفقة | إضافة ملفات PDF وموارد تعليمية لكل درس |
+| الكويزات | إنشاء اختبارات قصيرة وإدارة أسئلتها |
+| بنك الأسئلة | مكتبة أسئلة مركزية قابلة للإعادة الاستخدام |
+| التقييمات الرسمية | إنشاء اختبارات رسمية بوقت ودرجات محددة |
+
+#### إدارة المستخدمين
+
+- **الطلاب**: إضافة، تعديل، حذف، متابعة النشاط والنتائج
+- **المعلمون**: إدارة الملفات الشخصية، الاشتراكات، والأرباح
+- **المشرفون**: إضافة أدمنز متعددين بصلاحيات مختلفة
+
+#### نظام الصلاحيات (Roles & Permissions)
+
+- إنشاء **أدوار مخصصة** بصلاحيات دقيقة لكل قسم
+- تحكم كامل في عمليات: عرض / إضافة / تعديل / حذف
+- فصل الصلاحيات بحسب الوظيفة (دعم فني، إدارة محتوى، مالية...)
+
+#### نظام الاشتراكات
+
+- استقبال **طلبات الاشتراك** ومراجعتها من الداشبورد
+- موافقة أو رفض الطلب بضغطة واحدة
+- تتبع حالة الدفع وطريقة الدفع ولقطة شاشة الإيصال
+- نظام فترات (ترم 1 / ترم 2 / سنوي) لكل اشتراك
+
+#### نظام الكوبونات
+
+- كوبونات **خصم نسبي (%)** أو **خصم ثابت**
+- تحديد تاريخ بداية ونهاية صلاحية الكوبون
+- تحديد الحد الأقصى لعدد مرات الاستخدام
+- تحديد حد أدنى لقيمة الطلب
+- تفعيل وتعطيل الكوبون في أي وقت
+
+#### الإدارة المالية
+
+- **خطط اشتراك المعلمين (Plans)**: سعر، عدد الطلاب المسموح، عدد المواد
+- **اشتراكات المعلمين**: ربط المعلم بخطة محددة ومتابعة حالتها
+- **أرباح المعلمين**: متابعة الإيرادات وتسجيل السحوبات
+- **المصروفات**: تسجيل مصروفات التشغيل ومتابعتها
+- **طرق الدفع**: إضافة وإدارة وسائل الدفع المتاحة للطلاب
+
+#### تقارير ومتابعة
+
+- نتائج الكويزات لكل طالب بالتفصيل
+- نتائج التقييمات الرسمية
+- تقييمات الطلاب للكورسات
+- رسائل "تواصل معنا" مع إمكانية العرض والمتابعة
+
+#### إدارة المحتوى الثابت
+
+- تعديل محتوى الصفحات الثابتة من الداشبورد مباشرة
+- (عن المنصة، الشروط، الخصوصية، الرؤية، الأسئلة الشائعة)
+
+---
+
+## المميزات التقنية
+
+| الميزة | التفاصيل |
+|---|---|
+| تصميم متجاوب | يعمل على الموبايل والتابلت والكمبيوتر |
+| دعم اللغة العربية | واجهة كاملة بالعربي مع دعم RTL |
+| نظام أمان محكم | Roles & Permissions + Middleware للحماية |
+| تكامل Zoom | حصص مباشرة تُدار بالكامل من المنصة |
+| بنك أسئلة مرن | إعادة استخدام الأسئلة عبر تقييمات متعددة |
+| قابلية التوسع | مبني على Laravel وسهل التطوير والإضافة |
+
+---
+
+## التقنيات المستخدمة
+
+- **Backend**: Laravel 12 / PHP 8.2+
+- **Frontend**: Blade Templates / Bootstrap / Vanilla JS
+- **Database**: MySQL
+- **Build Tool**: Vite
+- **Live Classes**: Zoom API
+- **Authentication**: Laravel Auth
+
+---
+
+## متطلبات التشغيل
+
+- PHP >= 8.2
+- Composer
+- MySQL
+- Node.js & NPM
+- حساب Zoom Developer (للحصص المباشرة)
+
+---
+
+## تشغيل المشروع
+
+```bash
+# تثبيت الحزم
+composer install
+npm install
+
+# إعداد البيئة
+cp .env.example .env
+php artisan key:generate
+
+# تهيئة قاعدة البيانات
+php artisan migrate --seed
+
+# بناء الـ Assets
+npm run build
+
+# تشغيل السيرفر
+php artisan serve
+```
+
+### إعداد Zoom في `.env`
+
+```env
+ZOOM_ACCOUNT_ID=your_account_id
+ZOOM_CLIENT_ID=your_client_id
+ZOOM_CLIENT_SECRET=your_client_secret
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Fahem Platform is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

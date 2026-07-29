@@ -40,11 +40,11 @@ class Subscription extends Model
 
     public function scopeActive($q)
     {
-        return $q->where('status', true);
+        return $q->where('subscriptions.status', true);
     }
 
     public function scopeInactive($q)
     {
-        return $q->where('status', false);
+        return $q->where('subscriptions.status', false);
     }
 }
