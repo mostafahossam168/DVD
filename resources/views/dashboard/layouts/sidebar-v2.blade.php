@@ -17,7 +17,7 @@
 
         @can('read_settings')
             @php
-                $settingsActive = request()->routeIs('dashboard.settings') || request()->routeIs('dashboard.pages.*');
+                $settingsActive = request()->routeIs('dashboard.settings') || request()->routeIs('dashboard.pages.*') || request()->routeIs('dashboard.export-database*');
                 $currentStaticPage = request()->route('page');
             @endphp
             <div class="nav-section">
@@ -70,6 +70,11 @@
                         <div class="ni-icon"><i class="fa-solid fa-circle-dot"></i></div>
                         <span class="ni-label">سياسة الاستخدام</span>
                     </a>
+                    <a href="{{ route('dashboard.export-database') }}"
+                        class="nav-item nav-item-sub {{ request()->routeIs('dashboard.export-database*') ? 'active' : '' }}">
+                        <div class="ni-icon"><i class="fa-solid fa-file-export"></i></div>
+                        <span class="ni-label">تصدير قاعدة البيانات</span>
+                    </a>
                 </div>
             </div>
         @endcan
@@ -87,17 +92,6 @@
                     @endif
                 </a>
             @endcan
-            @can('read_teachers')
-                <a href="{{ route('dashboard.teachers.index') }}"
-                    class="nav-item {{ request()->routeIs('dashboard.teachers.*') ? 'active' : '' }}">
-                    <div class="ni-icon"><i class="fa-solid fa-person-chalkboard"></i></div>
-                    <span class="ni-label">المعلمين</span>
-                    @php $teachersCount = \App\Models\User::teachers()->count(); @endphp
-                    @if ($teachersCount > 0)
-                        <span class="ni-count">{{ $teachersCount }}</span>
-                    @endif
-                </a>
-            @endcan
             @can('read_students')
                 <a href="{{ route('dashboard.students.index') }}"
                     class="nav-item {{ request()->routeIs('dashboard.students.*') ? 'active' : '' }}">
@@ -106,6 +100,17 @@
                     @php $studentsCount = \App\Models\User::students()->count(); @endphp
                     @if ($studentsCount > 0)
                         <span class="ni-count">{{ $studentsCount }}</span>
+                    @endif
+                </a>
+            @endcan
+            @can('read_parents')
+                <a href="{{ route('dashboard.parents.index') }}"
+                    class="nav-item {{ request()->routeIs('dashboard.parents.*') ? 'active' : '' }}">
+                    <div class="ni-icon"><i class="fa-solid fa-people-roof"></i></div>
+                    <span class="ni-label">أولياء الأمور</span>
+                    @php $parentsCount = \App\Models\User::parents()->count(); @endphp
+                    @if ($parentsCount > 0)
+                        <span class="ni-count">{{ $parentsCount }}</span>
                     @endif
                 </a>
             @endcan
@@ -174,24 +179,10 @@
                     <span class="ni-label">الملفات</span>
                 </a>
             @endcan
-            @can('read_plans')
-                <a href="{{ route('dashboard.plans.index') }}"
-                    class="nav-item {{ request()->routeIs('dashboard.plans.*') ? 'active' : '' }}">
-                    <div class="ni-icon"><i class="fa-solid fa-credit-card"></i></div>
-                    <span class="ni-label">الخطط</span>
-                </a>
-            @endcan
         </div>
 
         <div class="nav-section">
             <span class="nav-label">الاشتراكات والمدفوعات</span>
-            @can('read_teacher_subscriptions')
-                <a href="{{ route('dashboard.teacher-subscriptions.index') }}"
-                    class="nav-item {{ request()->routeIs('dashboard.teacher-subscriptions.*') ? 'active' : '' }}">
-                    <div class="ni-icon"><i class="fa-solid fa-user-check"></i></div>
-                    <span class="ni-label">اشتراكات المدرسين</span>
-                </a>
-            @endcan
             @can('read_subscriptions')
                 <a href="{{ route('dashboard.subscriptions.index') }}"
                     class="nav-item {{ request()->routeIs('dashboard.subscriptions.index') && !request()->routeIs('dashboard.subscriptions-pending') ? 'active' : '' }}">
@@ -207,11 +198,6 @@
                     class="nav-item {{ request()->routeIs('dashboard.expenses.*') ? 'active' : '' }}">
                     <div class="ni-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
                     <span class="ni-label">المصروفات</span>
-                </a>
-                <a href="{{ route('dashboard.subscriptions.financials') }}"
-                    class="nav-item {{ request()->routeIs('dashboard.subscriptions.financials*') ? 'active' : '' }}">
-                    <div class="ni-icon"><i class="fa-solid fa-sack-dollar"></i></div>
-                    <span class="ni-label">مالية المدرسين</span>
                 </a>
                 @can('update_subscriptions')
                     <a href="{{ route('dashboard.subscriptions-pending') }}"
@@ -298,7 +284,7 @@
             <div class="admin-info">
                 <div class="admin-name">{{ auth()->user()->full_name ?? (auth()->user()->f_name ?? 'المشرف') }}</div>
                 <div class="admin-role">
-                    {{ auth()->user()->getRoleNames()->first() ?: (auth()->user()->type === 'admin' ? 'Super Admin' : (auth()->user()->type === 'teacher' ? 'مدرّس' : 'مشرف')) }}
+                    {{ auth()->user()->getRoleNames()->first() ?: (auth()->user()->type === 'admin' ? 'Super Admin' : 'مشرف') }}
                 </div>
             </div>
             <div class="admin-more">⋯</div>

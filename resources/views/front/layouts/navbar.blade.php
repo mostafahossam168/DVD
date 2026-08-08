@@ -82,15 +82,20 @@
                         <div class="user-dropdown-icon" style="background:#EFF6FF">👤</div>
                         الملف الشخصي
                     </a>
-                    <a href="{{ route('front.courses.my') }}" class="user-dropdown-item" role="menuitem">
-                        <div class="user-dropdown-icon" style="background:#F0FDF4">🎓</div>
-                        دوراتي المسجل فيها
-                    </a>
-                    <a href="{{ route('front.assessments.history') }}" class="user-dropdown-item" role="menuitem">
-                        <div class="user-dropdown-icon" style="background:#FFFBEB">📝</div>
-                        تقييماتي
-                    </a>
-                    @if ($student->type === 'student')
+                    @if ($student->type === 'parent')
+                        <a href="{{ route('front.parent.dashboard') }}" class="user-dropdown-item" role="menuitem">
+                            <div class="user-dropdown-icon" style="background:#F0FDF4">👨‍👩‍👧</div>
+                            متابعة أبنائي
+                        </a>
+                    @else
+                        <a href="{{ route('front.courses.my') }}" class="user-dropdown-item" role="menuitem">
+                            <div class="user-dropdown-icon" style="background:#F0FDF4">🎓</div>
+                            دوراتي المسجل فيها
+                        </a>
+                        <a href="{{ route('front.assessments.history') }}" class="user-dropdown-item" role="menuitem">
+                            <div class="user-dropdown-icon" style="background:#FFFBEB">📝</div>
+                            تقييماتي
+                        </a>
                         <a href="{{ route('front.favorites.index') }}" class="user-dropdown-item" role="menuitem">
                             <div class="user-dropdown-icon" style="background:#FDF4FF">❤️</div>
                             المفضلة
@@ -132,9 +137,11 @@
             </div>
             @auth
                 <a href="{{ route('front.profile.show') }}" class="nav-mobile-link">الملف الشخصي</a>
-                <a href="{{ route('front.courses.my') }}" class="nav-mobile-link">دوراتي</a>
-                <a href="{{ route('front.assessments.history') }}" class="nav-mobile-link">تقييماتي</a>
-                @if (auth()->user()->type === 'student')
+                @if (auth()->user()->type === 'parent')
+                    <a href="{{ route('front.parent.dashboard') }}" class="nav-mobile-link">متابعة أبنائي</a>
+                @else
+                    <a href="{{ route('front.courses.my') }}" class="nav-mobile-link">دوراتي</a>
+                    <a href="{{ route('front.assessments.history') }}" class="nav-mobile-link">تقييماتي</a>
                     <a href="{{ route('front.favorites.index') }}" class="nav-mobile-link">المفضلة</a>
                 @endif
                 <form action="{{ route('front.logout') }}" method="POST" class="nav-mobile-logout">

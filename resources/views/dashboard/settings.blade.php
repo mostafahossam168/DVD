@@ -1,65 +1,6 @@
 @extends('dashboard.layouts.backend', ['title' => 'الاعدادات'])
 @section('css')
-    <style>
-        .multi-accounts-ds {
-            border: 1px solid #e8ecf4;
-            border-radius: 14px;
-            padding: 14px;
-            background: #fff;
-        }
-
-        .multi-accounts-title-ds {
-            font-weight: 800;
-            color: #1f2a44;
-            margin-bottom: 4px;
-            font-size: .98rem;
-        }
-
-        .multi-accounts-help-ds {
-            color: #7a859f;
-            font-size: .8rem;
-            margin-bottom: 12px;
-        }
-
-        .multi-row-ds {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .multi-row-ds input {
-            flex: 1;
-        }
-
-        .multi-del-ds {
-            border: 0;
-            background: transparent;
-            color: #dc2626;
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .multi-del-ds:hover {
-            background: #fef2f2;
-        }
-
-        .multi-actions-ds {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .multi-actions-ds {
-                flex-wrap: wrap;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('dashboard/css/pages/settings.css') }}">
 @endsection
 @section('contant')
     @php

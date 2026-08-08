@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\AssessmentResult;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 
 class AssessmentResultController extends Controller
 {
@@ -24,12 +23,6 @@ class AssessmentResultController extends Controller
         $toDate = $request->input('to_date');
 
         $query = AssessmentResult::with(['user', 'assessment.subject.grade.stage']);
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $query->whereHas('assessment', function ($q) {
-                $q->where('teacher_id', Auth::id());
-            });
-        }
 
         $query
             ->when($search, function ($q) use ($search) {
@@ -57,11 +50,6 @@ class AssessmentResultController extends Controller
             ->join('users', 'users.id', '=', 'assessment_results.user_id')
             ->select('users.id', 'users.f_name', 'users.l_name', 'users.email')
             ->distinct();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $studentsQuery
-                ->join('assessments', 'assessments.id', '=', 'assessment_results.assessment_id')
-                ->where('assessments.teacher_id', Auth::id());
-        }
         $students = $studentsQuery->orderBy('users.f_name')->get();
 
         $subjectsQuery = AssessmentResult::query()
@@ -69,9 +57,6 @@ class AssessmentResultController extends Controller
             ->join('subjects', 'subjects.id', '=', 'assessments.subject_id')
             ->select('subjects.id', 'subjects.name')
             ->distinct();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $subjectsQuery->where('assessments.teacher_id', Auth::id());
-        }
         $subjects = $subjectsQuery->orderBy('subjects.name')->get();
 
         $typesQuery = AssessmentResult::query()
@@ -79,9 +64,6 @@ class AssessmentResultController extends Controller
             ->select('assessments.type')
             ->whereNotNull('assessments.type')
             ->distinct();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $typesQuery->where('assessments.teacher_id', Auth::id());
-        }
         $types = $typesQuery->orderBy('assessments.type')->pluck('assessments.type');
 
         return view('dashboard.assessment-results.index', compact('results', 'students', 'subjects', 'types'));
@@ -91,12 +73,6 @@ class AssessmentResultController extends Controller
     {
         $result = AssessmentResult::with(['user', 'assessment.subject.grade.stage', 'assessment.questions'])
             ->findOrFail($id);
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            if ((int) ($result->assessment?->teacher_id ?? 0) !== (int) Auth::id()) {
-                abort(403, 'غير مصرح لك بعرض هذه النتيجة');
-            }
-        }
 
         $assessment = $result->assessment;
         $subject = $assessment?->subject;

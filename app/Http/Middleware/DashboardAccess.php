@@ -21,7 +21,7 @@ class DashboardAccess
             return redirect()->route('front.login');
         }
 
-        if ($user->type === 'student') {
+        if (in_array($user->type, ['student', 'parent'])) {
             return redirect()->route('front.home');
         }
 

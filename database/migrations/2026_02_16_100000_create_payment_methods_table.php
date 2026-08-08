@@ -12,6 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code', 50)->unique();
+            $table->string('account_name')->nullable();
+            $table->string('account_number')->nullable();
+            $table->string('notes')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

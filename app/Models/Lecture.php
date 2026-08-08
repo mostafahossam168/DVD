@@ -25,6 +25,11 @@ class Lecture extends Model
         return $this->hasMany(Material::class);
     }
 
+    public function progress()
+    {
+        return $this->hasMany(LectureProgress::class);
+    }
+
     public function scopeActive($q)
     {
         return $q->where('status', true);

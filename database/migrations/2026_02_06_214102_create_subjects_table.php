@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('image');
             $table->foreignId('grade_id')->constrained('grades')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('teacher_id')->nullable()->constrained('users')->nullOnDelete()->cascadeOnUpdate();
             $table->boolean('status')->default(true);
+            $table->decimal('price', 10, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreOnlineMeetingRequest;
+use App\Http\Requests\Dashboard\UpdateOnlineMeetingRequest;
 use App\Models\OnlineMeeting;
 use App\Models\Stage;
 use App\Models\Subject;
 use App\Services\ZoomService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -25,7 +26,6 @@ class OnlineMeetingController extends Controller
     public function index()
     {
         $items = OnlineMeeting::with(['subject.grade.stage'])
-            ->where('teacher_id', Auth::id())
             ->latest()
             ->paginate(20);
 
@@ -35,40 +35,16 @@ class OnlineMeetingController extends Controller
     public function create()
     {
         $stages = Stage::active()->get();
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $subjects = Subject::where('teacher_id', Auth::id())->active()->get();
-        } else {
-            $subjects = Subject::active()->get();
-        }
+        $subjects = Subject::active()->get();
 
         return view('dashboard.online-meetings.create', compact('stages', 'subjects'));
     }
 
-    public function store(Request $request, ZoomService $zoom)
+    public function store(StoreOnlineMeetingRequest $request, ZoomService $zoom)
     {
-        $data = $request->validate([
-            'topic' => 'required|string|max:255',
-            'start_time' => 'required|date',
-            'duration' => 'nullable|integer|min:15',
-            'stage_id' => 'required|exists:stages,id',
-            'grade_id' => 'required|exists:grades,id',
-            'subject_id' => 'required|exists:subjects,id',
-        ]);
+        $data = $request->validated();
 
         $startTime = Carbon::parse($data['start_time']);
-
-        // تأكيد أن المدرس يضيف محاضرة لمادة من مواده فقط
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $subject = Subject::findOrFail($data['subject_id']);
-            if ((int) $subject->teacher_id !== (int) Auth::id()) {
-                return redirect()->back()->with('error', 'غير مصرح لك بإضافة محاضرة لهذه المادة');
-            }
-
-            // تأمين stage و grade من المادة نفسها
-            $data['grade_id'] = optional($subject->grade)->id;
-            $data['stage_id'] = optional(optional($subject->grade)->stage)->id;
-        }
 
         $zoomResponse = $zoom->createMeeting([
             'topic' => $data['topic'],
@@ -97,15 +73,8 @@ class OnlineMeetingController extends Controller
 
     public function edit(OnlineMeeting $onlineMeeting)
     {
-        $this->authorizeOwner($onlineMeeting);
-
         $stages = Stage::active()->get();
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $subjects = Subject::where('teacher_id', Auth::id())->active()->get();
-        } else {
-            $subjects = Subject::active()->get();
-        }
+        $subjects = Subject::active()->get();
 
         return view('dashboard.online-meetings.edit', [
             'item' => $onlineMeeting,
@@ -114,31 +83,11 @@ class OnlineMeetingController extends Controller
         ]);
     }
 
-    public function update(Request $request, OnlineMeeting $onlineMeeting, ZoomService $zoom)
+    public function update(UpdateOnlineMeetingRequest $request, OnlineMeeting $onlineMeeting, ZoomService $zoom)
     {
-        $this->authorizeOwner($onlineMeeting);
-
-        $data = $request->validate([
-            'topic' => 'required|string|max:255',
-            'start_time' => 'required|date',
-            'duration' => 'nullable|integer|min:15',
-            'stage_id' => 'required|exists:stages,id',
-            'grade_id' => 'required|exists:grades,id',
-            'subject_id' => 'required|exists:subjects,id',
-        ]);
+        $data = $request->validated();
 
         $startTime = Carbon::parse($data['start_time']);
-
-        // تأكيد أن المدرس يعدل محاضرة لمادة من مواده فقط
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $subject = Subject::findOrFail($data['subject_id']);
-            if ((int) $subject->teacher_id !== (int) Auth::id()) {
-                return redirect()->back()->with('error', 'غير مصرح لك بتعديل محاضرة لهذه المادة');
-            }
-
-            $data['grade_id'] = optional($subject->grade)->id;
-            $data['stage_id'] = optional(optional($subject->grade)->stage)->id;
-        }
 
         if ($onlineMeeting->zoom_meeting_id) {
             $zoom->updateMeeting($onlineMeeting->zoom_meeting_id, [
@@ -163,8 +112,6 @@ class OnlineMeetingController extends Controller
 
     public function destroy(OnlineMeeting $onlineMeeting, ZoomService $zoom)
     {
-        $this->authorizeOwner($onlineMeeting);
-
         $zoomDeleteFailed = false;
         if ($onlineMeeting->zoom_meeting_id) {
             try {
@@ -182,10 +129,5 @@ class OnlineMeetingController extends Controller
             : 'تم حذف المحاضرة الأونلاين بنجاح.';
 
         return redirect()->route('dashboard.online-meetings.index')->with('success', $message);
-    }
-
-    protected function authorizeOwner(OnlineMeeting $meeting): void
-    {
-        abort_unless($meeting->teacher_id === Auth::id(), 403);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\LoginRequest;
+use App\Http\Requests\Dashboard\UpdateProfileRequest;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -14,12 +16,8 @@ class AuthController extends Controller
     }
 
 
-    public function submitLogin(Request $request)
+    public function submitLogin(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // return auth()->user();
             return redirect()->route('dashboard.home');
@@ -34,17 +32,10 @@ class AuthController extends Controller
         return view('dashboard.profile', compact('user'));
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
         $user = auth()->user();
-        $data = $request->validate([
-            'f_name' => 'required|string|min:3|max:255',
-            'l_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'required|string|unique:users,phone,' . $user->id,
-            'image' => 'nullable|mimes:jpg,png',
-            'password' => ['nullable', 'min:3', 'confirmed', 'string'],
-        ]);
+        $data = $request->validated();
         if ($request->image) {
             $data['image'] = store_file($request->image, 'users');
             delete_file($user->image);

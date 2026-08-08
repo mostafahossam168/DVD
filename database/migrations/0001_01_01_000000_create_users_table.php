@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('image')->nullable();
             $table->longText('more_information')->nullable();
-            $table->enum('type', ['admin', 'teacher', 'student']);
+            $table->enum('type', ['admin', 'student', 'parent']);
             $table->boolean('status')->default(true);
+            $table->timestamp('last_seen_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

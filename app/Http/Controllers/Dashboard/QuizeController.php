@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreQuizeRequest;
+use App\Http\Requests\Dashboard\UpdateQuizeRequest;
 use App\Models\Quize;
 use App\Models\Lecture;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class QuizeController extends Controller
@@ -28,13 +29,6 @@ class QuizeController extends Controller
 
         $query = Quize::with(['lecture.subject', 'questions']);
 
-        // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط الاختبارات للدروس الخاصة بالمواد الخاصة به
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('lecture.subject', function ($q) {
-                $q->where('teacher_id', auth()->id());
-            });
-        }
-
         $items = $query->when($search, function ($q) use ($search) {
             $q->where('title', 'LIKE', "%$search%");
         })->when($lecture_id, function ($q) use ($lecture_id) {
@@ -53,14 +47,7 @@ class QuizeController extends Controller
         $count_active = (clone $query)->active()->count();
         $count_inactive = (clone $query)->inactive()->count();
 
-        // جلب الدروس للمدرس فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $lectuers = Lecture::whereHas('subject', function ($q) {
-                $q->where('teacher_id', auth()->id());
-            })->get();
-        } else {
-            $lectuers = Lecture::get();
-        }
+        $lectuers = Lecture::get();
 
         return view('dashboard.quizes.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'lectuers'));
     }
@@ -76,22 +63,9 @@ class QuizeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreQuizeRequest $request)
     {
-        $data = $request->validate([
-            'title' => 'required|max:255',
-            'lecture_id' => 'required|exists:lectures,id',
-            'duration_minutes' => 'required|integer|min:1|max:300',
-            'status' => 'required|boolean',
-        ]);
-
-        // التحقق من أن المدرس يضيف اختبار لدرس لمادة خاصة به فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
-            if ((int) $lecture->subject->teacher_id !== (int) auth()->id()) {
-                return redirect()->back()->with('error', 'غير مصرح لك بإضافة اختبار لهذا الدرس');
-            }
-        }
+        $data = $request->validated();
 
         Quize::create($data);
         return redirect()->route('dashboard.quizes.index')->with('success', 'تم حفظ البيانات بنجاح');
@@ -116,31 +90,11 @@ class QuizeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateQuizeRequest $request, string $id)
     {
         $item = Quize::with(['lecture.subject'])->findOrFail($id);
 
-        // التحقق من أن المدرس يعدل اختبار لدرس لمادة خاصة به فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if ((int) $item->lecture->subject->teacher_id !== (int) auth()->id()) {
-                abort(403, 'غير مصرح لك بتعديل هذا الاختبار');
-            }
-        }
-
-        $data = $request->validate([
-            'title' => 'required|max:255',
-            'lecture_id' => 'required|exists:lectures,id',
-            'duration_minutes' => 'required|integer|min:1|max:300',
-            'status' => 'required|boolean',
-        ]);
-
-        // التحقق من أن المدرس يضيف اختبار لدرس لمادة خاصة به فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $lecture = Lecture::with('subject')->findOrFail($data['lecture_id']);
-            if ((int) $lecture->subject->teacher_id !== (int) auth()->id()) {
-                return redirect()->back()->with('error', 'غير مصرح لك بإضافة اختبار لهذا الدرس');
-            }
-        }
+        $data = $request->validated();
 
         $item->update($data);
         return redirect()->route('dashboard.quizes.index')->with('success', 'تم حفظ البيانات بنجاح');
@@ -152,13 +106,6 @@ class QuizeController extends Controller
     public function destroy(string $id)
     {
         $item = Quize::with(['lecture.subject'])->findOrFail($id);
-
-        // التحقق من أن المدرس يحذف اختبار لدرس لمادة خاصة به فقط
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if ((int) $item->lecture->subject->teacher_id !== (int) auth()->id()) {
-                abort(403, 'غير مصرح لك بحذف هذا الاختبار');
-            }
-        }
 
         $item->delete();
         return redirect()->route('dashboard.quizes.index')->with('success', 'تم حذف البيانات بنجاح');

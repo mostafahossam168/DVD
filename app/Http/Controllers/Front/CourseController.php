@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Assessment;
 use App\Models\CourseReview;
 use App\Models\Lecture;
+use App\Models\LectureProgress;
 use App\Models\PaymentMethod;
 use App\Models\Stage;
 use App\Models\Subject;
@@ -325,6 +326,11 @@ class CourseController extends Controller
         }
 
         $embedUrl = $this->makeYoutubeEmbedUrl($lecture->link);
+        $videoId = $embedUrl ? basename(parse_url($embedUrl, PHP_URL_PATH)) : null;
+
+        $progress = LectureProgress::where('user_id', $user->id)
+            ->where('lecture_id', $lecture->id)
+            ->first();
 
         $assessment = Assessment::active()
             ->withCount('questions')
@@ -363,6 +369,8 @@ class CourseController extends Controller
             'subject' => $subject->load(['grade.stage']),
             'lecture' => $lecture,
             'embedUrl' => $embedUrl,
+            'videoId' => $videoId,
+            'progress' => $progress,
             'assessment' => $assessment,
             'hasAssessmentResult' => $hasAssessmentResult,
             'materials' => $materials,
@@ -374,6 +382,51 @@ class CourseController extends Controller
             'progressPct' => $progressPct,
             'title' => 'فاهم — ' . $lecture->title,
         ]);
+    }
+
+    public function saveProgress(Request $request, Subject $subject, Lecture $lecture)
+    {
+        $user = Auth::user();
+
+        if (! $user || $user->type !== 'student') {
+            abort(403);
+        }
+
+        if ($lecture->subject_id !== $subject->id) {
+            abort(404);
+        }
+
+        $hasActiveSubscription = Subscription::active()
+            ->where('user_id', $user->id)
+            ->where('subject_id', $subject->id)
+            ->exists();
+
+        if (! $hasActiveSubscription) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'position' => 'required|integer|min:0',
+            'duration' => 'nullable|integer|min:0',
+            'completed' => 'nullable|boolean',
+        ]);
+
+        $duration = $data['duration'] ?? null;
+        $percent = $duration ? min(100, (int) round(($data['position'] / max($duration, 1)) * 100)) : 0;
+        $completed = $request->boolean('completed') || $percent >= 90;
+
+        LectureProgress::updateOrCreate(
+            ['user_id' => $user->id, 'lecture_id' => $lecture->id],
+            [
+                'last_position_seconds' => $data['position'],
+                'duration_seconds' => $duration,
+                'percent_watched' => $completed ? 100 : $percent,
+                'completed' => $completed,
+                'last_watched_at' => now(),
+            ]
+        );
+
+        return response()->json(['ok' => true]);
     }
 
     protected function makeYoutubeEmbedUrl(?string $url): ?string

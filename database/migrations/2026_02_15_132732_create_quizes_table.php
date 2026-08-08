@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('lecture_id')->constrained('lectures')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->unsignedSmallInteger('duration_minutes')->default(60);
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

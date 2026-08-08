@@ -8,7 +8,7 @@ class AttachAssessmentQuestionsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check() && in_array(auth()->user()->type, ['admin', 'teacher'], true);
+        return auth()->check() && auth()->user()->type === 'admin';
     }
 
     public function rules(): array

@@ -17,13 +17,6 @@ class QuizResultController extends Controller
     {
         $query = QuizResult::with(['user', 'quiz.lecture.subject.grade.stage']);
 
-        // المدرس يرى فقط نتائج الاختبارات لدروسه
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            $query->whereHas('quiz.lecture.subject', function ($q) {
-                $q->where('teacher_id', auth()->id());
-            });
-        }
-
         $results = $query->latest()->paginate(20);
 
         return view('dashboard.quiz-results.index', compact('results'));
@@ -32,13 +25,6 @@ class QuizResultController extends Controller
     public function show(string $id)
     {
         $result = QuizResult::with(['user', 'quiz.lecture.subject.grade.stage'])->findOrFail($id);
-
-        // المدرس لا يرى إلا نتائج اختبارات دروسه
-        if (auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin')) {
-            if ((int) ($result->quiz?->lecture?->subject?->teacher_id ?? 0) !== (int) auth()->id()) {
-                abort(403, 'غير مصرح لك بعرض هذه النتيجة');
-            }
-        }
 
         $quiz = $result->quiz;
         $subject = $quiz?->lecture?->subject;

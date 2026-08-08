@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreGradeRequest;
+use App\Http\Requests\Dashboard\UpdateGradeRequest;
 use App\Models\Grade;
 use App\Models\Stage;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class GradeController extends Controller
@@ -49,13 +50,9 @@ class GradeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreGradeRequest $request)
     {
-        $data =  $request->validate([
-            'name' => 'required|string',
-            'status' => 'required|boolean',
-            'stage_id' => 'required|exists:stages,id'
-        ]);
+        $data = $request->validated();
         Grade::create($data);
         return redirect()->route('dashboard.grades.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
@@ -79,14 +76,10 @@ class GradeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateGradeRequest $request, string $id)
     {
         $grade = Grade::findOrFail($id);
-        $data =  $request->validate([
-            'name' => 'required|string',
-            'status' => 'required|boolean',
-            'stage_id' => 'required|exists:stages,id'
-        ]);
+        $data = $request->validated();
         $grade->update($data);
         return redirect()->route('dashboard.grades.index')->with('success', 'تم حفظ البيانات بنجاح');
     }

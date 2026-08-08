@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreAdminRequest;
+use App\Http\Requests\Dashboard\UpdateAdminRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller;
 
@@ -51,19 +52,9 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAdminRequest $request)
     {
-        $data = $request->validate([
-            'f_name' => 'required|string|min:3|max:255',
-            'l_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|unique:users,phone',
-            'image' => 'nullable|mimes:jpg,png',
-            'status' => 'required|boolean',
-            'role' => 'required|required|exists:roles,name',
-            'password' => ['required', 'min:3', 'confirmed', 'string'],
-        ]);
-        $data['passsword'] = bcrypt($request->password);
+        $data = $request->validated();
         $data['type'] = 'admin';
         if ($request->image != null) {
             $data['image'] = store_file($request->image, 'admins');
@@ -94,19 +85,10 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateAdminRequest $request, string $id)
     {
         $user = User::findOrFail($id);
-        $data = $request->validate([
-            'f_name' => 'required|string|min:3|max:255',
-            'l_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'required|string|unique:users,phone,' . $user->id,
-            'image' => 'nullable|mimes:jpg,png',
-            'status' => 'required|boolean',
-            'role' => 'required|required|exists:roles,name',
-            'password' => ['nullable', 'min:3', 'confirmed', 'string'],
-        ]);
+        $data = $request->validated();
         if ($request->password && !empty($request->password)) {
             $data['password'] = bcrypt($request->password);
         } else {

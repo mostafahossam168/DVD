@@ -47,19 +47,6 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-3">
-                            <label for="">المعلم</label>
-                            <select name="teacher_id" class="form-control-ds">
-                                <option value="">-- اختر --</option>
-                                @foreach ($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}" @selected($item->teacher_id == $teacher->id)>
-                                        {{ $teacher->full_name ?? $teacher->fullname ?? ($teacher->f_name . ' ' . $teacher->l_name) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group mb-3">
                             <label for="">السعر (جنيه)</label>
                             <input type="number" name="price" step="0.01" min="0" placeholder="0.00" class="form-control-ds" value="{{ old('price', $item->price ?? '') }}">
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreExpenseRequest;
 use App\Models\Expense;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
@@ -60,21 +61,9 @@ class ExpenseController extends Controller
         return view('dashboard.expenses.index', compact('items', 'wallets', 'walletCards', 'totalExpenses'));
     }
 
-    public function store(Request $request)
+    public function store(StoreExpenseRequest $request)
     {
-        $walletIds = PaymentMethod::active()
-            ->whereIn('code', ['vodafone_cash', 'instapay'])
-            ->pluck('id')
-            ->toArray();
-
-        $data = $request->validate([
-            'payment_method_id' => 'required|integer|in:' . implode(',', $walletIds),
-            'amount' => 'required|numeric|min:0.01',
-            'category' => 'required|string|max:100',
-            'description' => 'nullable|string|max:191',
-            'expense_date' => 'required|date',
-        ]);
-
+        $data = $request->validated();
         $data['created_by'] = Auth::id();
         Expense::create($data);
 

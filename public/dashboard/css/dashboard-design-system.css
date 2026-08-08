@@ -97,14 +97,27 @@
 .dashboard-v2 .filter-select-ds,
 .dashboard-v2 .filters-bar-ds select.form-control,
 .dashboard-v2 .filters-bar-ds select.form-control-sm {
-  min-width: 140px; max-width: 220px; padding: 8px 14px;
-  border-radius: 12px; border: 1.5px solid var(--border);
-  background: #fff; font-family: 'Cairo', sans-serif; font-size: .84rem; font-weight: 700;
-  color: var(--text); cursor: pointer; transition: all .25s;
+  min-width: 172px; max-width: 240px; height: 42px !important; padding: 7px 12px;
+  border-radius: 8px; border: 1px solid #cfd8ea !important;
+  background-color: #fff; font-family: 'Cairo', sans-serif; font-size: .84rem; font-weight: 700;
+  color: var(--text); cursor: pointer; transition: border-color .2s, box-shadow .2s;
+  box-shadow: none; direction: rtl;
 }
 .dashboard-v2 .filter-select-ds:focus,
 .dashboard-v2 .filters-bar-ds select:focus {
-  outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow);
+  outline: none; border-color: var(--blue) !important; box-shadow: 0 0 0 3px var(--blue-glow);
+}
+
+/* A single, compact surface keeps filters aligned across every index page. */
+.dashboard-v2 .filters-bar-ds {
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, .05);
+}
+.dashboard-v2 .filter-grade-stage-ds {
+  margin-inline-start: 0 !important;
 }
 
 /* ── Table ── */
@@ -326,13 +339,21 @@
 .dashboard-v2 .form-hint-ds { font-size: .75rem; color: var(--muted); margin-top: 4px; display: block; }
 .dashboard-v2 textarea.form-control-ds { min-height: 100px; resize: vertical; }
 .dashboard-v2 .form-card-ds {
-  background: #fff; border-radius: 28px;
+  background: #fff; border-radius: 8px;
   border: 1.5px solid var(--border-2);
   box-shadow: var(--sh2); overflow: hidden;
 }
 .dashboard-v2 .form-card-header-ds {
   padding: 1.5rem 1.8rem; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 12px;
+}
+.dashboard-v2 .empty-state-ds {
+  padding: 2.25rem 1.5rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 700;
+  text-align: center;
 }
 .dashboard-v2 .form-card-header-ds .fch-icon-ds {
   width: 44px; height: 44px; border-radius: 13px;

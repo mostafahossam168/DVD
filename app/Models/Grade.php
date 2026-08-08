@@ -15,6 +15,7 @@ class Grade extends Model
     {
         return $this->hasMany(Subject::class);
     }
+    public function monthlyFeeRules() { return $this->hasMany(MonthlyFeeRule::class); }
 
     public function scopeActive($q)
     {

@@ -14,7 +14,7 @@ class QuestionBankSeeder extends Seeder
      */
     public function run(): void
     {
-        $teacher = User::where('type', 'teacher')->first();
+        $teacher = User::where('type', 'admin')->first();
 
         if (!$teacher) {
             return;

@@ -3,6 +3,7 @@
         $facebookLink = (string) (setting('facebook') ?? '');
         $instagramLink = (string) (setting('instagram') ?? '');
         $whatsappRaw = (string) (setting('whatsapp') ?? '');
+        $youtubeRaw = (string) (setting('youtube') ?? '');
         $whatsappDigits = preg_replace('/\D+/', '', $whatsappRaw);
         $whatsappLink = $whatsappDigits ? 'https://wa.me/' . $whatsappDigits : '';
     @endphp
@@ -26,14 +27,14 @@
                     الدراسية.</p>
                 <div class="social-row">
                     <a href="{{ $facebookLink ?: '#' }}" class="social-btn facebook" aria-label="Facebook"
-                        @if($facebookLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
+                        @if ($facebookLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                         </svg>
                         <span>Facebook</span>
                     </a>
                     <a href="{{ $instagramLink ?: '#' }}" class="social-btn instagram" aria-label="Instagram"
-                        @if($instagramLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
+                        @if ($instagramLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -43,12 +44,20 @@
                         <span>Instagram</span>
                     </a>
                     <a href="{{ $whatsappLink ?: '#' }}" class="social-btn whatsapp" aria-label="WhatsApp"
-                        @if($whatsappLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
+                        @if ($whatsappLink) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
                         </svg>
                         <span>WhatsApp</span>
+                    </a>
+                    <a href="{{ $youtubeRaw ?: '#' }}" class="social-btn youtube" aria-label="YouTube"
+                        @if ($youtubeRaw) target="_blank" rel="noopener" @else style="opacity:.6;pointer-events:none" @endif>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23.498 6.186a2.994 2.994 0 0 0-2.11-2.11C19.796 3.5 12 3.5 12 3.5s-7.796 0-9.388.576a2.994 2.994 0 0 0-2.11 2.11C0 7.778 0 12 0 12s0 4.222.502 5.814a2.994 2.994 0 0 0 2.11 2.11C4.204 20.5 12 20.5 12 20.5s7.796 0 9.388-.576a2.994 2.994 0 0 0 2.11-2.11C24 16.222 24 12 24 12s0-4.222-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                        <span>YouTube</span>
                     </a>
                 </div>
             </div>

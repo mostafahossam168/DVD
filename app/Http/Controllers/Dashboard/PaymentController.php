@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Subject;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -27,11 +25,6 @@ class PaymentController extends Controller
 
         $query = Subscription::with(['user', 'subject.teacher'])
             ->whereIn('payment_method', $allowedMethods);
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
-            $query->whereIn('subject_id', $teacherSubjectIds);
-        }
 
         $query
             ->when($method, fn ($q) => $q->where('payment_method', $method))

@@ -17,7 +17,7 @@ class FrontAccess
     {
         $user = $request->user();
 
-        if ($user && $user->type !== 'student') {
+        if ($user && !in_array($user->type, ['student', 'parent'])) {
             return redirect()->route('dashboard.home');
         }
 

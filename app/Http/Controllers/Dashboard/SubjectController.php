@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\User;
+use App\Http\Requests\Dashboard\StoreSubjectRequest;
+use App\Http\Requests\Dashboard\UpdateSubjectRequest;
 use App\Models\Grade;
 use App\Models\Stage;
 use App\Models\Subject;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
@@ -31,11 +31,6 @@ class SubjectController extends Controller
         $stage_id = request('stage_id');
 
         $query = Subject::with(['teacher', 'grade.stage']);
-
-        // إذا كان المستخدم مدرس (وليس admin)، يعرض فقط المواد الخاصة به
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $query->where('teacher_id', Auth::id());
-        }
 
         $items = $query->when($search, function ($q) use ($search) {
             $q->where('name', 'LIKE',  "%$search%");
@@ -62,8 +57,7 @@ class SubjectController extends Controller
         $count_inactive = (clone $query)->inactive()->count();
         $grades = Grade::all();
         $stages = Stage::active()->get();
-        $teachers = User::teachers()->get();
-        return view('dashboard.subjects.index', compact('items', 'count_all', 'teachers', 'count_active', 'count_inactive', 'grades', 'stages'));
+        return view('dashboard.subjects.index', compact('items', 'count_all', 'count_active', 'count_inactive', 'grades', 'stages'));
     }
 
     /**
@@ -77,18 +71,11 @@ class SubjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSubjectRequest $request)
     {
-        $request->merge(['price' => $request->input('price') ?: null]);
-        $data =  $request->validate([
-            'name' => 'required|string',
-            'status' => 'required|boolean',
-            'image' => 'required|image',
-            'grade_id' => 'required|exists:grades,id',
-            'teacher_id' => 'required|integer|exists:users,id',
-            'price' => 'nullable|numeric|min:0',
-        ]);
+        $data = $request->validated();
         $data['image'] = store_file($request->image, 'subjects');
+        $data['teacher_id'] = Auth::id();
         Subject::create($data);
         return redirect()->route('dashboard.subjects.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
@@ -112,18 +99,10 @@ class SubjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSubjectRequest $request, string $id)
     {
         $item =  Subject::findOrFail($id);
-        $request->merge(['price' => $request->input('price') ?: null]);
-        $data =  $request->validate([
-            'name' => 'required|string',
-            'status' => 'required|boolean',
-            'image' => 'nullable|image',
-            'grade_id' => 'required|exists:grades,id',
-            'teacher_id' => 'required|integer|exists:users,id',
-            'price' => 'nullable|numeric|min:0',
-        ]);
+        $data = $request->validated();
         if ($request->hasFile('image')) {
             delete_file($item->image);
             $data['image'] = store_file($request->image, 'subjects');

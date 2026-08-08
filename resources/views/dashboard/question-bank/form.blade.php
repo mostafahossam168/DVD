@@ -57,18 +57,6 @@
                 </select>
                 @error('subject_id')<span class="form-error-ds">{{ $message }}</span>@enderror
             </div>
-            @if(auth()->user()->type === 'admin')
-            <div class="form-group-ds">
-                <label class="form-label-ds">المعلم</label>
-                <select name="teacher_id" class="form-control-ds">
-                    <option value="">اختر</option>
-                    @foreach($teachers as $teacher)
-                        <option value="{{ $teacher->id }}" @selected(old('teacher_id', $item->teacher_id ?? '') == $teacher->id)>{{ $teacher->full_name }}</option>
-                    @endforeach
-                </select>
-                @error('teacher_id')<span class="form-error-ds">{{ $message }}</span>@enderror
-            </div>
-            @endif
             <div class="form-group-ds">
                 <label class="form-label-ds">الحالة</label>
                 <select name="status" class="form-control-ds">

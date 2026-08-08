@@ -10,14 +10,12 @@ use App\Http\Controllers\Front\AssessmentController as FrontAssessmentController
 use App\Http\Controllers\Front\ProfileController as FrontProfileController;
 use App\Http\Controllers\Front\StageController as FrontStageController;
 use App\Http\Controllers\Front\FavoriteController as FrontFavoriteController;
+use App\Http\Controllers\Front\ParentPortalController;
 
 // Front site
 
 Route::middleware('front.access')->group(function () {
 
-    // Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
-    // Route::get('/', [HomeController::class, 'index'])->name('front.home');
-    Route::get('/home-old', [HomeController::class, 'indexOld'])->name('front.home.old');
     Route::get('/', [HomeController::class, 'index'])->name('front.home');
     Route::get('/login', [FrontAuthController::class, 'showLoginForm'])->name('front.login');
     Route::post('/login', [FrontAuthController::class, 'login'])->name('front.login.submit');
@@ -30,6 +28,13 @@ Route::middleware('front.access')->group(function () {
         Route::post('/profile', [FrontProfileController::class, 'update'])->name('front.profile.update');
         Route::get('/my-favorites', [FrontFavoriteController::class, 'index'])->name('front.favorites.index');
         Route::post('/courses/{subject}/favorite', [FrontFavoriteController::class, 'toggle'])->name('front.favorites.toggle');
+        Route::post('/courses/{subject}/lessons/{lecture}/progress', [FrontCourseController::class, 'saveProgress'])->name('front.courses.progress');
+
+        // بوابة ولي الأمر
+        Route::prefix('parent')->name('front.parent.')->group(function () {
+            Route::get('/', [ParentPortalController::class, 'dashboard'])->name('dashboard');
+            Route::get('/children/{student}', [ParentPortalController::class, 'child'])->name('child');
+        });
     });
 
     Route::get('/contact', function () {

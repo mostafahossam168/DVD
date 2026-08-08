@@ -30,16 +30,6 @@
                 </div>
             </a>
         @endcan
-        @can('read_teachers')
-            <a href="{{ route('dashboard.teachers.index') }}" class="qs-card-v2 c-green anim-v2 d2-v2">
-                <div class="qs-icon-v2">🎓</div>
-                <div class="qs-info-v2">
-                    <div class="qs-value-v2">{{ $teachersCount ?? 0 }}</div>
-                    <div class="qs-label-v2">المعلمون النشطون</div>
-                    <div class="qs-change-v2 up">↑ نشط</div>
-                </div>
-            </a>
-        @endcan
         @can('read_subjects')
             <a href="{{ route('dashboard.subjects.index') }}" class="qs-card-v2 c-purple anim-v2 d3-v2">
                 <div class="qs-icon-v2">📖</div>
@@ -78,25 +68,6 @@
                 <div class="stat-footer-v2">
                     <span class="stat-link-v2">عرض جميع المشرفين ←</span>
                     <span class="mini-badge-v2" style="background:#eff6ff;color:var(--blue)">نشط</span>
-                </div>
-            </a>
-        @endcan
-        @can('read_teachers')
-            <a href="{{ route('dashboard.teachers.index') }}" class="stat-card-v2 sc-green anim-v2 d2-v2">
-                <div class="stat-card-top-v2">
-                    <div class="stat-icon-wrap-v2">🎓</div>
-                    <div class="stat-menu-v2">⋯</div>
-                </div>
-                <div class="stat-num-v2">{{ $teachersCount ?? 0 }}</div>
-                <div class="stat-title-v2">المعلمين</div>
-                <div class="stat-sub-v2">معلمون مسجلون ومفعّلون على المنصة</div>
-                <div class="stat-bar-v2">
-                    <div class="stat-bar-fill-v2" style="width:{{ $teachersCount ? min(100, $teachersCount * 40) : 0 }}%">
-                    </div>
-                </div>
-                <div class="stat-footer-v2">
-                    <span class="stat-link-v2">عرض جميع المعلمين ←</span>
-                    <span class="mini-badge-v2" style="background:#f0fdf4;color:#16a34a">{{ $teachersCount ?? 0 }} نشط</span>
                 </div>
             </a>
         @endcan

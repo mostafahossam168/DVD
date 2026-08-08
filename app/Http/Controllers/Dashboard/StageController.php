@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreStageRequest;
+use App\Http\Requests\Dashboard\UpdateStageRequest;
 use App\Models\Stage;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class StageController extends Controller
@@ -52,12 +53,9 @@ class StageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStageRequest $request)
     {
-        $data =  $request->validate([
-            'name' => 'required|string|unique:stages,name',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
         Stage::create($data);
         return redirect()->route('dashboard.stages.index')->with('success', 'تم حفظ البيانات بنجاح');
     }
@@ -81,13 +79,10 @@ class StageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateStageRequest $request, string $id)
     {
         $stage = Stage::findOrFail($id);
-        $data =  $request->validate([
-            'name' => 'required|string|unique:stages,name,' . $stage->id,
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
         $stage->update($data);
         return redirect()->route('dashboard.stages.index')->with('success', 'تم حفظ البيانات بنجاح');
     }

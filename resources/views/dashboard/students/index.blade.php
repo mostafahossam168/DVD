@@ -52,6 +52,7 @@
                     <th>الاسم</th>
                     <th>البريد الإلكتروني</th>
                     <th>الهاتف</th>
+                    <th>متصل الآن</th>
                     <th>الحالة</th>
                     <th>العمليات</th>
                 </tr>
@@ -71,6 +72,13 @@
                         <td style="color:var(--muted);font-size:.83rem">{{ $item->email ?? '—' }}</td>
                         <td style="font-size:.83rem;direction:ltr;text-align:right">{{ $item->phone ?? '—' }}</td>
                         <td>
+                            @if($item->isOnline())
+                                <span class="status-badge-ds enabled-ds" title="{{ $item->last_seen_label }}">● أونلاين</span>
+                            @else
+                                <span class="status-badge-ds disabled-ds" title="{{ $item->last_seen_label }}">أوفلاين</span>
+                            @endif
+                        </td>
+                        <td>
                             @if($item->status)
                                 <span class="status-badge-ds enabled-ds">مفعل</span>
                             @else
@@ -79,6 +87,11 @@
                         </td>
                         <td>
                             <div class="actions-cell-ds">
+                                @can('read_students')
+                                    <a href="{{ route('dashboard.students.show', $item->id) }}" class="action-btn-ds edit-ds" title="الملف الشخصي">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                @endcan
                                 @can('update_students')
                                     <a href="{{ route('dashboard.students.edit', $item->id) }}" class="action-btn-ds edit-ds" title="تعديل">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -94,7 +107,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا يوجد طلاب</td>
+                        <td colspan="8" style="text-align:center;padding:3rem;color:var(--muted);font-weight:600">لا يوجد طلاب</td>
                     </tr>
                 @endforelse
             </tbody>

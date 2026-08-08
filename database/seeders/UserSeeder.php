@@ -31,14 +31,5 @@ class UserSeeder extends Seeder
             'type' => 'student',
             'password' => bcrypt('123456'),
         ]);
-        User::create([
-            'f_name' => 'Teacher',
-            'l_name' => 'khale',
-            'email' => 'teacher@teacher.com',
-            'phone' => '01064564855',
-            'status' => true,
-            'type' => 'teacher',
-            'password' => bcrypt('123456'),
-        ]);
     }
 }

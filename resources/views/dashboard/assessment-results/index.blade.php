@@ -1,5 +1,9 @@
 @extends('dashboard.layouts.backend', ['title' => 'نتائج التقييمات'])
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('dashboard/css/pages/assessment-results.css') }}">
+@endsection
+
 @section('contant')
 <div class="dash-page">
     <div class="page-breadcrumb fade-up-ds">
@@ -12,62 +16,6 @@
         <h1>نتائج التقييمات</h1>
     </div>
     <x-alert-component></x-alert-component>
-
-    <style>
-        .assessment-score-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-weight: 800;
-            font-size: .85rem;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-            white-space: nowrap;
-        }
-        .assessment-score-badge.pass {
-            background: #ecfdf5;
-            color: #047857;
-            border-color: #a7f3d0;
-        }
-        .assessment-score-badge.fail {
-            background: #fef2f2;
-            color: #b91c1c;
-            border-color: #fecaca;
-        }
-        .assessment-type-chip {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: #f1f5f9;
-            color: #334155;
-            font-size: .78rem;
-            font-weight: 700;
-        }
-        .assessment-view-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: .84rem;
-            color: #2563eb;
-            background: #eaf2ff;
-            border: 1px solid #bfdbfe;
-            text-decoration: none;
-            transition: .2s ease;
-        }
-        .assessment-view-btn:hover {
-            color: #1d4ed8;
-            background: #dbeafe;
-            border-color: #93c5fd;
-            transform: translateY(-1px);
-        }
-    </style>
 
     <div class="filters-bar-ds fade-up-ds delay-1-ds" style="margin-bottom:12px">
         <div class="filters-right-ds">

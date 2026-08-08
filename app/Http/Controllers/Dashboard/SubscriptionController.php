@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreSubscriptionRequest;
+use App\Http\Requests\Dashboard\UpdateSubscriptionRequest;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Subscription;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 
 
 class SubscriptionController extends Controller
@@ -35,12 +35,6 @@ class SubscriptionController extends Controller
         $to_date = request('to_date');
 
         $baseQuery = Subscription::with(['user', 'subject.teacher']);
-
-        // المدرس يرى فقط اشتراكات الطلاب في مواده
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
-            $baseQuery->whereIn('subject_id', $teacherSubjectIds);
-        }
 
         $filteredQuery = $baseQuery
             ->when($search, function ($q) use ($search) {
@@ -82,10 +76,6 @@ class SubscriptionController extends Controller
             ->paginate(20);
 
         $countQuery = Subscription::query();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
-            $countQuery->whereIn('subject_id', $teacherSubjectIds);
-        }
         $count_all = $countQuery->count();
         $count_active = (clone $countQuery)->active()->count();
         $count_inactive = (clone $countQuery)->inactive()->count();
@@ -107,9 +97,7 @@ class SubscriptionController extends Controller
             ->value('total_amount') ?? 0);
 
         $students = User::students()->active()->get();
-        $subjects = Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')
-            ? Subject::where('teacher_id', Auth::id())->active()->get()
-            : Subject::active()->get();
+        $subjects = Subject::active()->get();
         $paymentMethods = Subscription::query()
             ->select('payment_method')
             ->whereNotNull('payment_method')
@@ -141,11 +129,6 @@ class SubscriptionController extends Controller
     {
         $query = Subscription::with(['user', 'subject.teacher'])
             ->where('payment_status', 'pending');
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $teacherSubjectIds = Subject::where('teacher_id', Auth::id())->pluck('id');
-            $query->whereIn('subject_id', $teacherSubjectIds);
-        }
 
         $items = $query->latest()->paginate(20);
         return view('dashboard.subscriptions.pending', compact('items'));
@@ -192,17 +175,9 @@ class SubscriptionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSubscriptionRequest $request)
     {
-        $data = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'subject_id' => 'required|exists:subjects,id',
-            'status' => 'required|boolean',
-            'period_type' => 'required|in:term,month',
-            'term_number' => 'required_if:period_type,term|nullable|integer|min:1|max:3',
-            'start_date' => 'required_if:period_type,month|nullable|date',
-            'end_date' => 'required_if:period_type,month|nullable|date|after_or_equal:start_date',
-        ]);
+        $data = $request->validated();
 
         // التحقق من أن المستخدم طالب
         $user = User::findOrFail($data['user_id']);
@@ -256,18 +231,10 @@ class SubscriptionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSubscriptionRequest $request, string $id)
     {
         $subscription = Subscription::findOrFail($id);
-        $data = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'subject_id' => 'required|exists:subjects,id',
-            'status' => 'required|boolean',
-            'period_type' => 'required|in:term,month',
-            'term_number' => 'required_if:period_type,term|nullable|integer|min:1|max:3',
-            'start_date' => 'required_if:period_type,month|nullable|date',
-            'end_date' => 'required_if:period_type,month|nullable|date|after_or_equal:start_date',
-        ]);
+        $data = $request->validated();
 
         // التحقق من أن المستخدم طالب
         $user = User::findOrFail($data['user_id']);

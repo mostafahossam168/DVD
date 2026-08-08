@@ -4,10 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionTableSeeder extends Seeder
 {
@@ -16,9 +15,9 @@ class PermissionTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         $models = array_keys(config()->get('permissionsname.models'));
-        $maps = config()->get('permissionsname.map');
         $permissions = [];
         foreach ($models as $model) {
             foreach (config()->get('permissionsname.models.' . $model) as $map) {
@@ -26,16 +25,15 @@ class PermissionTableSeeder extends Seeder
             }
         }
 
-        Permission::truncate();
-        Role::truncate();
-        $admin_role = Role::create(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-            $admin_role->givePermissionTo($permission);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // صلاحيات المدرس (بدون إدارة النظام)
-        $teacher_permissions = [
+        $adminRole->syncPermissions(Permission::all());
+
+        $teacherPermissions = [
             'read_statistics_home',
             'read_subjects',
             'create_lectuers', 'read_lectuers', 'update_lectuers', 'delete_lectuers',
@@ -46,24 +44,18 @@ class PermissionTableSeeder extends Seeder
             'read_contacts',
             'read_subscriptions',
         ];
-        $teacher_role = Role::create(['name' => 'teacher']);
-        foreach ($teacher_permissions as $perm) {
-            $teacher_role->givePermissionTo($perm);
-        }
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
+        $teacherRole->syncPermissions($teacherPermissions);
 
-        $admin = User::find(1);
+        $admin = User::where('email', 'admin@admin.com')->first();
         if ($admin) {
-            $admin->syncRoles($admin_role);
+            $admin->syncRoles([$adminRole]);
         }
 
-        // تعيين دور teacher لجميع المستخدمين من نوع teacher الذين ليس لديهم دور admin
-        $teachers = User::where('type', 'teacher')->get();
-        foreach ($teachers as $t) {
-            if (!$t->hasRole('admin')) {
-                $t->syncRoles($teacher_role);
-            }
-        }
+        User::where('type', 'teacher')
+            ->whereDoesntHave('roles', fn ($query) => $query->where('name', 'admin'))
+            ->each(fn (User $teacher) => $teacher->syncRoles([$teacherRole]));
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

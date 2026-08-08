@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\User;
 use App\Models\Stage;
 use App\Models\Assessment;
 use App\Models\QuestionBankQuestion;
@@ -26,10 +25,6 @@ class AssessmentController extends Controller
     public function index()
     {
         $query = Assessment::with(['teacher', 'stage', 'grade', 'subject', 'questions.categories']);
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $query->where('teacher_id', Auth::id());
-        }
 
         $search = request('search');
         $type = request('type');
@@ -59,13 +54,12 @@ class AssessmentController extends Controller
     public function store(StoreAssessmentRequest $request)
     {
         $data = $request->validated();
-        $data['teacher_id'] = $this->resolveTeacherId($data['teacher_id'] ?? null);
         $data['status'] = $data['status'] ?? true;
 
         $assessment = Assessment::create([
             'title' => $data['title'],
             'type' => $data['type'],
-            'teacher_id' => $data['teacher_id'],
+            'teacher_id' => Auth::id(),
             'stage_id' => $data['stage_id'],
             'grade_id' => $data['grade_id'],
             'subject_id' => $data['subject_id'],
@@ -77,18 +71,6 @@ class AssessmentController extends Controller
 
         if (!empty($data['questions']) || !empty($data['random'])) {
             $payload = $this->assessmentQuestionService->buildSyncPayload($data);
-            if (!empty($payload)) {
-                $allowedIds = QuestionBankQuestion::query()
-                    ->where('teacher_id', $assessment->teacher_id)
-                    ->whereIn('id', array_map('intval', array_keys($payload)))
-                    ->pluck('id')
-                    ->map(fn ($id) => (int) $id)
-                    ->all();
-
-                $payload = collect($payload)
-                    ->filter(fn ($pivotData, $questionId) => in_array((int) $questionId, $allowedIds, true))
-                    ->all();
-            }
             $assessment->questions()->sync($payload);
         }
 
@@ -97,21 +79,15 @@ class AssessmentController extends Controller
 
     public function create()
     {
-        $teachers = User::teachers()->active()->get();
         $stages = Stage::with(['grades.subjects'])->active()->get();
-        $questionsQuery = QuestionBankQuestion::with('categories')->active();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $questionsQuery->where('teacher_id', Auth::id());
-        }
-        $allQuestions = $questionsQuery->latest()->get();
+        $allQuestions = QuestionBankQuestion::with('categories')->active()->latest()->get();
 
-        return view('dashboard.assessments.create', compact('teachers', 'allQuestions', 'stages'));
+        return view('dashboard.assessments.create', compact('allQuestions', 'stages'));
     }
 
     public function show(string $id)
     {
         $assessment = Assessment::with(['teacher', 'stage', 'grade', 'subject', 'questions.categories'])->findOrFail($id);
-        $this->authorizeAssessment($assessment);
 
         return view('dashboard.assessments.show', compact('assessment'));
     }
@@ -119,10 +95,8 @@ class AssessmentController extends Controller
     public function update(UpdateAssessmentRequest $request, string $id)
     {
         $assessment = Assessment::findOrFail($id);
-        $this->authorizeAssessment($assessment);
 
         $data = $request->validated();
-        $data['teacher_id'] = $this->resolveTeacherId($data['teacher_id'] ?? $assessment->teacher_id);
 
         $assessment->update($data);
 
@@ -132,26 +106,16 @@ class AssessmentController extends Controller
     public function edit(string $id)
     {
         $item = Assessment::with(['questions.categories'])->findOrFail($id);
-        $this->authorizeAssessment($item);
 
         $stages = Stage::with(['grades.subjects'])->active()->get();
-        $questionsQuery = QuestionBankQuestion::with('categories')->active();
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $questionsQuery->where('teacher_id', Auth::id());
-        } elseif (Auth::user()->type === 'admin') {
-            $questionsQuery->where('teacher_id', $item->teacher_id);
-        }
-        $allQuestions = $questionsQuery->latest()->get();
+        $allQuestions = QuestionBankQuestion::with('categories')->active()->latest()->get();
 
-        $teachers = User::teachers()->active()->get();
-
-        return view('dashboard.assessments.edit', compact('item', 'allQuestions', 'teachers', 'stages'));
+        return view('dashboard.assessments.edit', compact('item', 'allQuestions', 'stages'));
     }
 
     public function destroy(string $id)
     {
         $assessment = Assessment::findOrFail($id);
-        $this->authorizeAssessment($assessment);
         $assessment->delete();
 
         return redirect()->route('dashboard.assessments.index')->with('success', 'تم حذف البيانات بنجاح');
@@ -160,7 +124,6 @@ class AssessmentController extends Controller
     public function attachQuestions(AttachAssessmentQuestionsRequest $request, string $id)
     {
         $assessment = Assessment::with('questions')->findOrFail($id);
-        $this->authorizeAssessment($assessment);
 
         $payload = $this->assessmentQuestionService->buildSyncPayload($request->validated());
         $this->assessmentQuestionService->attachWithoutDuplicates($assessment, $payload);
@@ -170,32 +133,9 @@ class AssessmentController extends Controller
     public function syncQuestions(AttachAssessmentQuestionsRequest $request, string $id)
     {
         $assessment = Assessment::findOrFail($id);
-        $this->authorizeAssessment($assessment);
 
         $payload = $this->assessmentQuestionService->buildSyncPayload($request->validated());
         $assessment->questions()->sync($payload);
         return redirect()->route('dashboard.assessments.edit', $assessment->id)->with('success', 'تم مزامنة الأسئلة بنجاح');
-    }
-
-    protected function authorizeAssessment(Assessment $assessment): void
-    {
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin') && $assessment->teacher_id !== Auth::id()) {
-            abort(403, 'غير مصرح لك');
-        }
-    }
-
-    protected function resolveTeacherId(?int $teacherId): int
-    {
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            return Auth::id();
-        }
-
-        if ($teacherId) {
-            $teacher = User::where('id', $teacherId)->where('type', 'teacher')->firstOrFail();
-
-            return $teacher->id;
-        }
-
-        return Auth::id();
     }
 }

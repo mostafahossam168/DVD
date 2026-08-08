@@ -1,0 +1,24 @@
+.db-stats-ds {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.db-stat-ds {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.db-stat-ds .label {
+    font-size: .78rem;
+    color: #1e40af;
+}
+
+.db-stat-ds .value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1d4ed8;
+}

@@ -1,21 +1,11 @@
 @extends('dashboard.layouts.backend', ['title' => 'تفاصيل نتيجة تقييم'])
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('dashboard/css/pages/assessment-results.css') }}">
+@endsection
+
 @section('contant')
 <div class="dash-page">
-    <style>
-        .assessment-summary-value {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-            font-weight: 800;
-            font-size: .85rem;
-        }
-    </style>
     <div class="page-breadcrumb fade-up-ds">
         <a href="{{ route('dashboard.home') }}">الرئيسية</a>
         <span class="sep">/</span>

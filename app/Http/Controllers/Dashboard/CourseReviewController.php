@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreCourseReviewRequest;
+use App\Http\Requests\Dashboard\UpdateCourseReviewRequest;
 use App\Models\Subject;
 use App\Models\CourseReview;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CourseReviewController extends Controller
@@ -44,17 +45,9 @@ class CourseReviewController extends Controller
         return view('dashboard.course-reviews.create', compact('subjects'));
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseReviewRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'subject_field' => 'nullable|string|max:100',
-            'rating' => 'required|numeric|min:0|max:5',
-            'review_text' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'subject_id' => 'nullable|exists:subjects,id',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
 
         if ($request->hasFile('image')) {
             $data['image'] = store_file($request->file('image'), 'course-reviews');
@@ -70,17 +63,9 @@ class CourseReviewController extends Controller
         return view('dashboard.course-reviews.edit', ['item' => $courseReview, 'subjects' => $subjects]);
     }
 
-    public function update(Request $request, CourseReview $courseReview)
+    public function update(UpdateCourseReviewRequest $request, CourseReview $courseReview)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'subject_field' => 'nullable|string|max:100',
-            'rating' => 'required|numeric|min:0|max:5',
-            'review_text' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'subject_id' => 'nullable|exists:subjects,id',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($courseReview->image) {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Dashboard\UpdatePageContentRequest;
 
 class PageContentController extends Controller
 {
@@ -64,13 +64,11 @@ class PageContentController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $page)
+    public function update(UpdatePageContentRequest $request, string $page)
     {
         $pageConfig = $this->resolvePage($page);
 
-        $data = $request->validate([
-            'content' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         setting([
             $pageConfig['setting_key'] => $data['content'] ?? '',

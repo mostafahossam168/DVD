@@ -7,7 +7,6 @@ use App\Http\Requests\Dashboard\UpdateQuestionBankQuestionRequest;
 use App\Models\Stage;
 use App\Models\QuestionBankQuestion;
 use App\Models\QuestionCategory;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -25,10 +24,6 @@ class QuestionBankController extends Controller
     public function index(Request $request)
     {
         $query = QuestionBankQuestion::with(['teacher', 'categories', 'stage', 'grade', 'subject']);
-
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            $query->where('teacher_id', Auth::id());
-        }
 
         if ($request->filled('search')) {
             $query->where('question_text', 'like', '%' . $request->search . '%');
@@ -62,7 +57,6 @@ class QuestionBankController extends Controller
     public function store(StoreQuestionBankQuestionRequest $request)
     {
         $data = $request->validated();
-        $data['teacher_id'] = $this->resolveTeacherId($data['teacher_id'] ?? null);
         $this->ensureAcademicChain($data);
         $data['status'] = $data['status'] ?? true;
 
@@ -73,7 +67,7 @@ class QuestionBankController extends Controller
             'type' => $data['type'],
             'default_mark' => $data['default_mark'] ?? null,
             'difficulty' => $data['difficulty'] ?? 'medium',
-            'teacher_id' => $data['teacher_id'],
+            'teacher_id' => Auth::id(),
             'stage_id' => $data['stage_id'],
             'grade_id' => $data['grade_id'],
             'subject_id' => $data['subject_id'],
@@ -89,7 +83,6 @@ class QuestionBankController extends Controller
     public function create()
     {
         $categories = QuestionCategory::orderBy('name')->get();
-        $teachers = User::teachers()->active()->get();
         $stages = Stage::query()
             ->with(['grades' => function ($q) {
                 $q->with('subjects')->active();
@@ -97,13 +90,12 @@ class QuestionBankController extends Controller
             ->active()
             ->get();
 
-        return view('dashboard.question-bank.create', compact('categories', 'teachers', 'stages'));
+        return view('dashboard.question-bank.create', compact('categories', 'stages'));
     }
 
     public function show(string $id)
     {
         $question = QuestionBankQuestion::with(['teacher', 'categories', 'stage', 'grade', 'subject'])->findOrFail($id);
-        $this->authorizeQuestion($question);
 
         return view('dashboard.question-bank.show', compact('question'));
     }
@@ -111,10 +103,8 @@ class QuestionBankController extends Controller
     public function update(UpdateQuestionBankQuestionRequest $request, string $id)
     {
         $question = QuestionBankQuestion::findOrFail($id);
-        $this->authorizeQuestion($question);
 
         $data = $request->validated();
-        $data['teacher_id'] = $this->resolveTeacherId($data['teacher_id'] ?? $question->teacher_id);
         $this->ensureAcademicChain($data);
 
         $question->update([
@@ -124,7 +114,6 @@ class QuestionBankController extends Controller
             'type' => $data['type'],
             'default_mark' => $data['default_mark'] ?? null,
             'difficulty' => $data['difficulty'] ?? 'medium',
-            'teacher_id' => $data['teacher_id'],
             'stage_id' => $data['stage_id'],
             'grade_id' => $data['grade_id'],
             'subject_id' => $data['subject_id'],
@@ -140,9 +129,7 @@ class QuestionBankController extends Controller
     public function edit(string $id)
     {
         $item = QuestionBankQuestion::with('categories')->findOrFail($id);
-        $this->authorizeQuestion($item);
         $categories = QuestionCategory::orderBy('name')->get();
-        $teachers = User::teachers()->active()->get();
         $stages = Stage::query()
             ->with(['grades' => function ($q) {
                 $q->with('subjects')->active();
@@ -150,13 +137,12 @@ class QuestionBankController extends Controller
             ->active()
             ->get();
 
-        return view('dashboard.question-bank.edit', compact('item', 'categories', 'teachers', 'stages'));
+        return view('dashboard.question-bank.edit', compact('item', 'categories', 'stages'));
     }
 
     public function destroy(string $id)
     {
         $question = QuestionBankQuestion::findOrFail($id);
-        $this->authorizeQuestion($question);
         $question->delete();
 
         return redirect()->route('dashboard.question-bank.index')->with('success', 'تم حذف البيانات بنجاح');
@@ -179,28 +165,6 @@ class QuestionBankController extends Controller
         }
 
         $question->categories()->sync($categoryIds->unique()->values()->all());
-    }
-
-    protected function authorizeQuestion(QuestionBankQuestion $question): void
-    {
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin') && $question->teacher_id !== Auth::id()) {
-            abort(403, 'غير مصرح لك');
-        }
-    }
-
-    protected function resolveTeacherId(?int $teacherId): int
-    {
-        if (Auth::user()->type === 'teacher' && !Auth::user()->hasRole('admin')) {
-            return Auth::id();
-        }
-
-        if ($teacherId) {
-            $teacher = User::where('id', $teacherId)->where('type', 'teacher')->firstOrFail();
-
-            return $teacher->id;
-        }
-
-        return Auth::id();
     }
 
     protected function prepareAnswers(array $data): ?array

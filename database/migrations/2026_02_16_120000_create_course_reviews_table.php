@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('course_reviews', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('name');
             $table->string('subject_field', 100)->nullable()->comment('المادة مثل: فيزياء، رياضيات');
             $table->decimal('rating', 3, 1)->default(5)->comment('من 0 إلى 5');

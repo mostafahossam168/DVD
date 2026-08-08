@@ -22,22 +22,22 @@ class AuthController extends Controller
         ]);
 
         $login = $data['login'];
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-        $credentials = [
-            'password' => $data['password'],
-            'type' => 'student',
-        ];
+        foreach (['student', 'parent'] as $type) {
+            $credentials = [
+                $field => $login,
+                'password' => $data['password'],
+                'type' => $type,
+            ];
 
-        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
-            $credentials['email'] = $login;
-        } else {
-            $credentials['phone'] = $login;
-        }
+            if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                $request->session()->regenerate();
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+                $redirect = $type === 'parent' ? route('front.parent.dashboard') : route('front.home');
 
-            return redirect()->intended(route('front.home'));
+                return redirect()->intended($redirect);
+            }
         }
 
         return back()

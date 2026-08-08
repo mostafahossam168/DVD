@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Dashboard\StoreRoleRequest;
+use App\Http\Requests\Dashboard\UpdateRoleRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -40,12 +41,8 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
-        ]);
         $role = Role::create(['name' => $request->name]);
         $role->syncPermissions($request->permission);
         return redirect()->route('dashboard.roles.index')->with('success', 'تم حفظ البيانات بنجاح');
@@ -84,12 +81,8 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRoleRequest $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|unique:roles,name,' . $id,
-            'permission' => 'required',
-        ]);
         $role = Role::findOrFail($id);
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permission);

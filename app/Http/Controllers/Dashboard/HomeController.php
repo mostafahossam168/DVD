@@ -16,26 +16,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $isTeacher = auth()->user()->type === 'teacher' && !auth()->user()->hasRole('admin');
-
-        $teacherSubjectsCount = 0;
-        $teacherLecturesCount = 0;
-        $teacherStudentsCount = 0;
-
-        if ($isTeacher) {
-            $teacherSubjectIds = Subject::where('teacher_id', auth()->id())
-                ->pluck('id');
-            $teacherSubjectsCount = $teacherSubjectIds->count();
-            $teacherLecturesCount = Lecture::whereIn('subject_id', $teacherSubjectIds)->count();
-            $teacherStudentsCount = Subscription::active()
-                ->whereIn('subject_id', $teacherSubjectIds)
-                ->pluck('user_id')
-                ->unique()
-                ->count();
-        }
-
         $adminsCount = User::admins()->count();
-        $teachersCount = User::teachers()->count();
         $studentsCount = User::students()->count();
         $stagesCount = Stage::count();
         $subjectsCount = Subject::count();
@@ -50,12 +31,7 @@ class HomeController extends Controller
             ->get();
 
         return view('dashboard.home', compact(
-            'isTeacher',
-            'teacherSubjectsCount',
-            'teacherLecturesCount',
-            'teacherStudentsCount',
             'adminsCount',
-            'teachersCount',
             'studentsCount',
             'stagesCount',
             'subjectsCount',

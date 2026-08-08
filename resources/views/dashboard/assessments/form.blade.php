@@ -43,18 +43,6 @@
                 </select>
                 @error('subject_id')<span class="form-error-ds">{{ $message }}</span>@enderror
             </div>
-            @if(auth()->user()->type === 'admin')
-            <div class="form-group-ds">
-                <label class="form-label-ds">المعلم</label>
-                <select name="teacher_id" class="form-control-ds">
-                    <option value="">اختر</option>
-                    @foreach($teachers as $teacher)
-                        <option value="{{ $teacher->id }}" @selected(old('teacher_id', $item->teacher_id ?? '') == $teacher->id)>{{ $teacher->full_name }}</option>
-                    @endforeach
-                </select>
-                @error('teacher_id')<span class="form-error-ds">{{ $message }}</span>@enderror
-            </div>
-            @endif
             <div class="form-group-ds">
                 <label class="form-label-ds">البداية</label>
                 <input type="datetime-local" name="start_time" class="form-control-ds" value="{{ old('start_time', isset($item) && $item->start_time ? $item->start_time->format('Y-m-d\TH:i') : '') }}">
@@ -93,7 +81,7 @@
                             <select class="form-control-ds" name="questions[{{ $qIndex }}][question_id]">
                                 <option value="">اختر سؤال</option>
                                 @foreach($allQuestions as $one)
-                                    <option value="{{ $one->id }}" data-teacher-id="{{ $one->teacher_id }}" @selected(($row['question_id'] ?? null) == $one->id)>{{ \Illuminate\Support\Str::limit($one->question_text, 90) }}</option>
+                                    <option value="{{ $one->id }}" @selected(($row['question_id'] ?? null) == $one->id)>{{ \Illuminate\Support\Str::limit($one->question_text, 90) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -227,7 +215,7 @@
 @if(($showQuestionSelector ?? false) && isset($allQuestions))
 @php
     $questionOptionsHtml = implode('', $allQuestions->map(function ($one) {
-        return '<option value="'.$one->id.'" data-teacher-id="'.$one->teacher_id.'">'
+        return '<option value="'.$one->id.'">'
             .e(\Illuminate\Support\Str::limit($one->question_text, 90))
             .'</option>';
     })->toArray());
@@ -242,7 +230,6 @@
     var randomFields = document.querySelectorAll('.random-field-create');
     if (!rowsWrap || !addBtn || !randomEnabled || !randomEnabledHidden) return;
 
-    var teacherSelect = document.querySelector('select[name="teacher_id"]');
     var allOptions = `{!! addslashes($questionOptionsHtml) !!}`;
     var basePlaceholder = '<option value="">اختر سؤال</option>';
 
@@ -250,27 +237,6 @@
         var on = randomEnabled.value === '1';
         randomEnabledHidden.value = on ? '1' : '0';
         randomFields.forEach(function (el) { el.disabled = !on; });
-    }
-
-    function filterQuestionsByTeacher() {
-        if (!teacherSelect) return;
-        var teacherId = teacherSelect.value;
-        rowsWrap.querySelectorAll('select[name$="[question_id]"]').forEach(function (select) {
-            var current = select.value;
-            var optionsHtml = basePlaceholder;
-            var temp = document.createElement('div');
-            temp.innerHTML = allOptions;
-            var optionElements = temp.querySelectorAll('option');
-            optionElements.forEach(function (opt) {
-                if (!teacherId || opt.getAttribute('data-teacher-id') === teacherId) {
-                    optionsHtml += opt.outerHTML;
-                }
-            });
-            select.innerHTML = optionsHtml;
-            if (current && select.querySelector('option[value="' + current + '"]')) {
-                select.value = current;
-            }
-        });
     }
 
     randomEnabled.addEventListener('change', toggleRandom);
@@ -283,7 +249,6 @@
         div.style = 'margin-bottom:12px;border-bottom:1px dashed #e2e8f0;padding-bottom:8px';
         div.innerHTML = '<div class="form-group-ds"><label class="form-label-ds">السؤال</label><select class="form-control-ds" name="questions['+idx+'][question_id]">'+(basePlaceholder + allOptions)+'</select></div><div class="form-group-ds"><label class="form-label-ds">الدرجة</label><input type="number" min="1" class="form-control-ds" name="questions['+idx+'][mark]"></div><div class="form-group-ds"><label class="form-label-ds">الترتيب</label><input type="number" min="1" class="form-control-ds" name="questions['+idx+'][order]" value="'+(idx+1)+'"></div><div class="form-group-ds" style="align-self:end"><button type="button" class="btn-ds btn-danger-ds remove-question-row-create">حذف الصف</button></div>';
         rowsWrap.appendChild(div);
-        filterQuestionsByTeacher();
     });
 
     rowsWrap.addEventListener('click', function (e) {
@@ -292,11 +257,6 @@
             if (row) row.remove();
         }
     });
-
-    if (teacherSelect) {
-        teacherSelect.addEventListener('change', filterQuestionsByTeacher);
-    }
-    filterQuestionsByTeacher();
 })();
 </script>
 @endpush

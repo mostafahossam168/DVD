@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreCouponRequest;
+use App\Http\Requests\Dashboard\UpdateCouponRequest;
 use App\Models\Coupon;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CouponController extends Controller
@@ -60,20 +61,9 @@ class CouponController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCouponRequest $request)
     {
-        $data = $request->validate([
-            'code' => 'required|string|unique:coupons,code|max:50',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
-            'min_amount' => 'nullable|numeric|min:0',
-            'usage_limit' => 'nullable|integer|min:1',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
 
         // التحقق من قيمة الخصم حسب النوع
         if ($data['type'] === 'percentage' && $data['value'] > 100) {
@@ -105,21 +95,10 @@ class CouponController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCouponRequest $request, string $id)
     {
         $coupon = Coupon::findOrFail($id);
-        $data = $request->validate([
-            'code' => 'required|string|unique:coupons,code,' . $id . '|max:50',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
-            'min_amount' => 'nullable|numeric|min:0',
-            'usage_limit' => 'nullable|integer|min:1',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
 
         // التحقق من قيمة الخصم حسب النوع
         if ($data['type'] === 'percentage' && $data['value'] > 100) {

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StoreStudentRequest;
+use App\Http\Requests\Dashboard\UpdateStudentRequest;
+use App\Models\AssessmentResult;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class StudentController extends Controller
@@ -50,18 +52,9 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $data = $request->validate([
-            'f_name' => 'required|string|min:3|max:255',
-            'l_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|unique:users,phone',
-            'image' => 'nullable|mimes:jpg,png',
-            'status' => 'required|boolean',
-            'password' => ['required', 'min:3', 'confirmed', 'string'],
-        ]);
-        $data['passsword'] = bcrypt($request->password);
+        $data = $request->validated();
         $data['type'] = 'student';
         if ($request->image != null) {
             $data['image'] = store_file($request->image, 'students');
@@ -75,7 +68,21 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $student = User::students()
+            ->with([
+                'courseSubscriptions' => fn ($q) => $q->latest(),
+                'courseSubscriptions.subject.grade.stage',
+                'guardians',
+            ])
+            ->findOrFail($id);
+
+        $assessmentResults = AssessmentResult::where('user_id', $student->id)
+            ->with('assessment.subject')
+            ->latest('submitted_at')
+            ->get();
+
+            
+        return view('dashboard.students.show', compact('student', 'assessmentResults'));
     }
 
     /**
@@ -90,18 +97,10 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateStudentRequest $request, string $id)
     {
         $user = User::findOrFail($id);
-        $data = $request->validate([
-            'f_name' => 'required|string|min:3|max:255',
-            'l_name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'required|string|unique:users,phone,' . $user->id,
-            'image' => 'nullable|mimes:jpg,png',
-            'status' => 'required|boolean',
-            'password' => ['nullable', 'min:3', 'confirmed', 'string'],
-        ]);
+        $data = $request->validated();
         if ($request->password && !empty($request->password)) {
             $data['password'] = bcrypt($request->password);
         } else {

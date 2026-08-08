@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\Dashboard\StorePaymentMethodRequest;
+use App\Http\Requests\Dashboard\UpdatePaymentMethodRequest;
 use App\Models\PaymentMethod;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class PaymentMethodController extends Controller
@@ -28,16 +29,9 @@ class PaymentMethodController extends Controller
         return view('dashboard.payment-methods.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePaymentMethodRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:payment_methods,code',
-            'account_name' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:191',
-            'notes' => 'nullable|string|max:255',
-            'is_active' => 'required|boolean',
-        ]);
+        $data = $request->validated();
         PaymentMethod::create($data);
         return redirect()->route('dashboard.payment-methods.index')->with('success', 'تم حفظ طريقة الدفع بنجاح');
     }
@@ -47,16 +41,9 @@ class PaymentMethodController extends Controller
         return view('dashboard.payment-methods.edit', ['item' => $paymentMethod]);
     }
 
-    public function update(Request $request, PaymentMethod $paymentMethod)
+    public function update(UpdatePaymentMethodRequest $request, PaymentMethod $paymentMethod)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:payment_methods,code,' . $paymentMethod->id,
-            'account_name' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:191',
-            'notes' => 'nullable|string|max:255',
-            'is_active' => 'required|boolean',
-        ]);
+        $data = $request->validated();
         $paymentMethod->update($data);
         return redirect()->route('dashboard.payment-methods.index')->with('success', 'تم تحديث طريقة الدفع بنجاح');
     }

@@ -20,10 +20,15 @@ return new class extends Migration
         Schema::create('question_bank_questions', function (Blueprint $table) {
             $table->id();
             $table->text('question_text');
+            $table->json('answers')->nullable();
+            $table->string('correct_answer')->nullable();
             $table->enum('type', ['mcq', 'true_false', 'text']);
             $table->unsignedInteger('default_mark')->nullable();
             $table->enum('difficulty', ['easy', 'medium', 'hard'])->default('medium');
             $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('stage_id')->nullable()->constrained('stages')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('grade_id')->nullable()->constrained('grades')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('subject_id')->nullable()->constrained('subjects')->nullOnDelete()->cascadeOnUpdate();
             $table->boolean('status')->default(true);
             $table->timestamps();
         });
@@ -41,6 +46,9 @@ return new class extends Migration
             $table->string('title');
             $table->enum('type', ['exam', 'quiz', 'assignment']);
             $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('stage_id')->nullable()->constrained('stages')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('grade_id')->nullable()->constrained('grades')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('subject_id')->nullable()->constrained('subjects')->nullOnDelete()->cascadeOnUpdate();
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
             $table->unsignedInteger('duration')->nullable();
